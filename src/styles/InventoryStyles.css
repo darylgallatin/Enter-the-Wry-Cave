@@ -1,0 +1,804 @@
+/* Inventory Panel Styles */
+.inventory {
+    padding: 15px;
+  }
+  
+  .inventory h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #E0F7FA;
+  }
+  
+
+
+  /* Torch */
+  .torch-level-container {
+    width: 100%;
+    height: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 5px;
+  }
+  
+  .torch-container {
+    margin-bottom: 10px; /* Increase this value for more space */
+    padding-bottom: 10px; /* Additional padding */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Optional divider line */
+  }
+
+  .torch-level {
+    height: 100%;
+    position: relative;
+  }
+  
+  .torch-level-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff4500, #ffa500);
+    transition: width 0.5s ease;
+  }
+  
+  .level-good {
+    background: linear-gradient(90deg, #ffa500, #ffff00);
+  }
+  
+  .level-warning {
+    background: linear-gradient(90deg, #ff4500, #ffa500);
+  }
+  
+  .level-danger {
+    background: linear-gradient(90deg, #ff0000, #ff4500);
+  }
+  
+  .item-icon {
+  font-size: 26px;    /* Increased from 22px */
+  margin-right: 12px;  /* Slightly more spacing */
+}
+  
+  .item-name {
+    font-weight: bold;
+    font-size: 20px;
+  }
+  
+  .water-level-container {
+    width: 100%;
+  }
+  
+  .water-level {
+    height: 15px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 7px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .water-level-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2193b0, #6dd5ed);
+    border-radius: 7px;
+    transition: width 0.5s ease;
+  }
+  
+  /* Water level colors based on fullness */
+  .level-good .water-level-fill {
+    background: linear-gradient(90deg, #2193b0, #6dd5ed);
+  }
+  
+  .level-warning .water-level-fill {
+    background: linear-gradient(90deg, #f6d365, #fda085);
+  }
+  
+  .level-danger .water-level-fill {
+    background: linear-gradient(90deg, #ff416c, #ff4b2b);
+  }
+  
+  /* Thirst status */
+  .thirst-status {
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: right;
+    padding-right: 5px;
+    font-style: italic;
+  }
+  
+  .status-normal {
+    color: #AED6F1;
+  }
+  
+  .status-warning {
+    color: #F9E79F;
+  }
+  
+  .status-danger {
+    color: #F5B7B1;
+    font-weight: bold;
+  }
+  
+  /* Inventory items */
+.inventory-items {
+  max-height: calc(70vh - 150px);  /* 70% of viewport minus space for title and torch */
+  min-height: 300px;
+  overflow-y: auto;
+  background-color: rgba(80, 33, 33, 0.2);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+  
+.inventory-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;  /* Increased from 8px 12px */
+  margin-bottom: 10px;  /* Slightly more space between items */
+  background: linear-gradient(135deg, #3a2b1f, #2a1a10);
+  border: 1px solid #85693f;
+  border-radius: 5px;
+  transition: all 0.2s ease;
+  position: relative; /* Add this for tooltip positioning */
+  cursor: help; /* Change cursor to indicate hoverable */
+}
+
+/* Hover effect for inventory items */
+.inventory-item:hover {
+  background: linear-gradient(135deg, #42301f, #32201a);
+  border-color: #b39359;
+}
+
+/* Tooltip on hover */
+.inventory-item[data-description]:hover::after {
+  content: attr(data-description);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+    padding: 8px 12px;  /* Increased padding */
+  border-radius: 4px;
+  white-space: normal;
+  max-width: 300px;     /* Increased from 300px */
+  font-size: 18px;      /* Increased from 14px */
+  line-height: 1.4;     /* Add line height for readability */
+  z-index: 1000;
+  pointer-events: none;
+  border: 1px solid #85693f;
+  
+  /* Position below for first 2 items, above for others */
+  bottom: auto;
+  top: 100%;
+  margin-top: 5px;
+}
+
+/* For items that aren't in the first two positions, show tooltip above */
+.inventory-item:nth-child(n+3)[data-description]:hover::after {
+  bottom: 100%;
+  top: auto;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+/* Arrow positioning - below items for first 2 */
+.inventory-item[data-description]:hover::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.9);
+  z-index: 1001;
+  pointer-events: none;
+  top: 100%;
+  margin-top: -1px;
+}
+
+/* Arrow above for items 3+ */
+.inventory-item:nth-child(n+3)[data-description]:hover::before {
+  border-bottom-color: transparent;
+  border-top-color: rgba(0, 0, 0, 0.9);
+  top: auto;
+  bottom: 100%;
+  margin-top: 0;
+  margin-bottom: -1px;
+}
+
+ /* Disable parent tooltip when hovering over the button */
+.inventory-item:has(.use-item-btn:hover)::after,
+.inventory-item:has(.use-item-btn:hover)::before {
+  display: none !important;
+}
+
+
+  .item-details {
+    display: flex;
+    align-items: center;
+  }
+  
+  .use-item-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+  padding: 8px 16px;  /* Increased from 4px 8px */
+  font-size: 16px;    /* Increased from 14px */
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .use-item-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+  }
+  
+  .empty-inventory {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+  }
+
+  * Orb glowing effect */
+  .orb-glowing {
+    background-color: rgba(100, 149, 237, 0.2);
+    border: 1px solid rgba(100, 149, 237, 0.5);
+    box-shadow: 0 0 10px rgba(100, 149, 237, 0.3);
+    animation: pulse-orb-temporary 2s 3; /* Pulse 3 times over 6 seconds total */
+  }
+  
+  .pulse-orb {
+    animation: pulse-orb 2s 3; /* 3 pulses only, not infinite */
+  }
+  
+  .orb-hint {
+    color: #64ed64; /* Cornflower blue */
+    font-style: italic;
+    font-size: 0.9em;
+    margin-left: 5px;
+  }
+  
+  .use-orb-btn-glow {
+    background-color: #04712c;
+    color: #000;
+    animation: pulse-orb-btn 2s 3; /* 3 pulses only, not infinite */
+  }
+  
+  @keyframes pulse-orb-temporary {
+    0% {
+      background-color: rgba(194, 215, 74, 0.2);
+      border: 1px solid rgba(173, 200, 73, 0.5);
+      box-shadow: 0 4 30px rgba(203, 225, 11, 0.3);
+    }
+    50% {
+      background-color: rgba(194, 215, 74, 0.2);
+      border: 1px solid rgba(173, 200, 73, 0.5);
+      box-shadow: 0 4 30px rgba(203, 225, 11, 0.3);
+    }
+    100% {
+      background-color: rgba(194, 215, 74, 0.2);
+      border: 1px solid rgba(173, 200, 73, 0.5);
+      box-shadow: 0 4 30px rgba(203, 225, 11, 0.3);
+    }
+  }
+  
+  @keyframes pulse-orb {
+    0% {
+      text-shadow: 0 0 5px rgba(100, 149, 237, 0.5);
+    }
+    50% {
+      text-shadow: 0 0 15px rgba(100, 149, 237, 1);
+    }
+    100% {
+      text-shadow: 0 0 5px rgba(100, 149, 237, 0.5);
+    }
+  }
+  
+  @keyframes pulse-orb-btn {
+    0% {
+      box-shadow: 0 0 5px rgba(100, 149, 237, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 15px rgba(100, 149, 237, 1);
+    }
+    100% {
+      box-shadow: 0 0 5px rgba(100, 149, 237, 0.5);
+    }
+  }
+
+  
+  /* Glowing key effect */
+  .key-glowing {
+    background-color: rgba(255, 215, 0, 0.2);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    animation: pulse-key-temporary 2s 3; /* Pulse 3 times over 6 seconds total */
+  }
+  
+  .pulse-glow {
+    animation: pulse-key 1s 2; /* 3 pulses only, not infinite */
+  }
+  
+  .key-hint {
+    color: #FFD700;
+    font-style: italic;
+    font-size: 0.9em;
+    margin-left: 5px;
+  }
+  
+  .use-key-btn-glow {
+    background-color: #FFD700;
+    color: #000;
+    animation: pulse-key-btn 1s 2; /* 3 pulses only, not infinite */
+  }
+  
+  @keyframes pulse-key-temporary {
+    0% {
+      background-color: rgba(255, 215, 0, 0.2);
+      border: 1px solid rgba(255, 215, 0, 0.5);
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+    50% {
+      background-color: rgba(255, 215, 0, 0.3);
+      border: 1px solid rgba(0, 255, 60, 0.8);
+      box-shadow: 0 0 20px rgba(37, 151, 45, 0.6);
+    }
+    100% {
+      background-color: rgba(255, 215, 0, 0.2);
+      border: 1px solid rgba(0, 225, 255, 0.5);
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+  }
+  
+  @keyframes pulse-key {
+    0% {
+      text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+    }
+    50% {
+      text-shadow: 0 0 15px rgb(33, 189, 74);
+    }
+    100% {
+      text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+    }
+  }
+  
+  @keyframes pulse-key-btn {
+    0% {
+      box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 15px rgb(22, 197, 103);
+    }
+    100% {
+      box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+    }
+  }
+
+
+/* Wyrmglass glowing effects */
+.wyrmglass-glowing {
+  animation: pulse-wyrmglass-container 1s 6; /* 6 pulses to match other items */
+  background-color: rgba(138, 43, 226, 0.15) !important; /* Purple glow */
+  border: 1px solid rgba(138, 43, 226, 0.5);
+}
+
+@keyframes pulse-wyrmglass-container {
+  0% {
+    background-color: rgba(138, 43, 226, 0.15);
+    border: 1px solid rgba(138, 43, 226, 0.5);
+    box-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
+  }
+  50% {
+    background-color: rgba(147, 112, 219, 0.25); /* Medium purple */
+    border: 1px solid rgba(147, 112, 219, 0.8);
+    box-shadow: 0 0 20px rgba(147, 112, 219, 0.6);
+  }
+  100% {
+    background-color: rgba(138, 43, 226, 0.15);
+    border: 1px solid rgba(138, 43, 226, 0.5);
+    box-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
+  }
+}
+
+/* Wyrmglass icon pulse */
+.pulse-wyrmglass {
+  animation: pulse-wyrmglass-icon 1s 6; /* 6 pulses */
+}
+
+@keyframes pulse-wyrmglass-icon {
+  0% {
+    text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+    filter: brightness(1);
+  }
+  50% {
+    text-shadow: 
+      0 0 15px rgba(147, 112, 219, 0.9),
+      0 0 25px rgba(138, 43, 226, 0.7),
+      0 0 35px rgba(75, 0, 130, 0.5);
+    filter: brightness(1.3);
+  }
+  100% {
+    text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+    filter: brightness(1);
+  }
+}
+
+/* Wyrmglass button glow */
+.use-wyrmglass-btn-glow {
+  background-color: #8A2BE2 !important; /* Bright purple */
+  color: #FFF !important;
+  animation: pulse-wyrmglass-btn 1s 6; /* 6 pulses */
+}
+
+@keyframes pulse-wyrmglass-btn {
+  0% {
+    box-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+    background-color: #8A2BE2;
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(147, 112, 219, 0.9);
+    background-color: #9370DB; /* Medium purple */
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+    background-color: #8A2BE2;
+  }
+}
+
+/* Optional: Add a special effect for wyrmglass in specific rooms */
+.wyrmglass-glowing .item-icon::before {
+  content: '✨';
+  position: absolute;
+  animation: sparkle-rotate 2s linear infinite;
+  font-size: 0.8em;
+  top: -5px;
+  right: -5px;
+}
+
+@keyframes sparkle-rotate {
+  from {
+    transform: rotate(0deg) translateX(5px);
+  }
+  to {
+    transform: rotate(360deg) translateX(5px);
+  }
+}
+
+
+
+
+/* Crystal Orb icon sparkle effect when teleporting */
+.item-icon.orb-teleporting {
+  animation: orb-teleport-glow 1.5s ease-out;
+  position: relative;
+}
+
+@keyframes orb-teleport-glow {
+  0% {
+    filter: brightness(1);
+    text-shadow: 0 0 5px rgba(0, 206, 209, 0.5);
+  }
+  50% {
+    filter: brightness(1.8);
+    text-shadow: 
+      0 0 20px rgba(0, 255, 255, 1),
+      0 0 30px rgba(0, 206, 209, 0.8),
+      0 0 40px rgba(135, 206, 235, 0.6);
+    transform: scale(1.2);
+  }
+  100% {
+    filter: brightness(1);
+    text-shadow: 0 0 5px rgba(0, 206, 209, 0.5);
+    transform: scale(1);
+  }
+}
+
+/* Sparkle particles around the orb icon */
+.item-icon.orb-teleporting::before,
+.item-icon.orb-teleporting::after {
+  content: '✨';
+  position: absolute;
+  font-size: 0.8em;
+  animation: orb-sparkle-rotate 1.5s ease-out;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.item-icon.orb-teleporting::before {
+  top: -8px;
+  left: -8px;
+  animation-delay: 0s;
+}
+
+.item-icon.orb-teleporting::after {
+  top: -8px;
+  right: -8px;
+  animation-delay: 0.2s;
+}
+
+/* Additional sparkle elements using CSS */
+.orb-sparkle-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.orb-sparkle-wrapper::before,
+.orb-sparkle-wrapper::after {
+  content: '✨';
+  position: absolute;
+  font-size: 0.7em;
+  animation: orb-sparkle-float 1.5s ease-out;
+}
+
+.orb-sparkle-wrapper::before {
+  bottom: -5px;
+  left: -5px;
+  animation-delay: 0.4s;
+}
+
+.orb-sparkle-wrapper::after {
+  bottom: -5px;
+  right: -5px;
+  animation-delay: 0.6s;
+}
+
+@keyframes orb-sparkle-rotate {
+  0% {
+    opacity: 0;
+    transform: rotate(0deg) translateY(0) scale(0);
+  }
+  20% {
+    opacity: 1;
+    transform: rotate(180deg) translateY(-15px) scale(1);
+  }
+  80% {
+    opacity: 1;
+    transform: rotate(360deg) translateY(-20px) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(540deg) translateY(-25px) scale(0.5);
+  }
+}
+
+@keyframes orb-sparkle-float {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30px) scale(1.5);
+  }
+}
+
+/* Magic ring pulse around the orb */
+.item-icon.orb-teleporting {
+  position: relative;
+}
+
+.item-icon.orb-teleporting .magic-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  border: 2px solid rgba(0, 255, 255, 0.8);
+  border-radius: 50%;
+  animation: magic-ring-expand 1.5s ease-out;
+  pointer-events: none;
+}
+
+@keyframes magic-ring-expand {
+  0% {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    border-width: 2px;
+  }
+  100% {
+    width: 200%;
+    height: 200%;
+    opacity: 0;
+    border-width: 0px;
+  }
+}
+
+/* Use button still gets a glow but no sparkles */
+.use-orb-btn-glow {
+  background-color: #00CED1 !important;
+  color: #000 !important;
+  animation: pulse-orb-btn 1s 3;
+}
+
+@keyframes pulse-orb-btn {
+  0% {
+    box-shadow: 0 0 5px rgba(0, 206, 209, 0.5);
+    background-color: #00CED1;
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.9);
+    background-color: #00FFFF;
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(0, 206, 209, 0.5);
+    background-color: #00CED1;
+  }
+}
+
+/* Cursed item styling */
+.inventory-item.cursed-item {
+  background-color: rgba(139, 0, 0, 0.1);
+  border: 1px solid rgba(139, 0, 0, 0.3);
+}
+
+.cursed-item .item-name {
+  color: #ff6b6b;
+  text-decoration: line-through;
+}
+
+.cursed-item .item-icon {
+  filter: grayscale(50%) sepia(100%) hue-rotate(300deg);
+  opacity: 0.8;
+}
+
+/* Disabled item styling (like the neutralized invisibility cloak) */
+.inventory-item.disabled-item {
+  opacity: 0.6;
+}
+
+.disabled-item .item-name {
+  color: #888;
+  font-style: italic;
+}
+
+.disabled-item .item-icon {
+  filter: grayscale(80%);
+}
+
+/* Cursed item hover effect */
+.cursed-item:hover::before {
+  content: "CURSED";
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #8b0000;
+  color: white;
+  padding: 2px 6px;
+  font-size: 0.7rem;
+  border-radius: 3px;
+  font-weight: bold;
+  animation: curse-pulse 1s ease-in-out infinite;
+}
+
+@keyframes curse-pulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+
+
+  /* Add this CSS for the lantern fuel bar to your styles: */
+
+  .lantern-info {
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+    font-size: 0.8em;
+  }
+  
+  .lantern-status {
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-right: 8px;
+  }
+  
+  .lantern-status.active {
+    background-color: rgba(76, 175, 80, 0.3);
+    color: #4CAF50;
+  }
+  
+  .lantern-status.inactive {
+    background-color: rgba(158, 158, 158, 0.3);
+    color: #9E9E9E;
+  }
+  
+  
+
+.fuel-bar-container {
+  width: 60px;
+  height: 6px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.fuel-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #FFA500, #FF6347);
+  transition: width 0.3s ease;
+}
+
+.use-lantern-btn-active {
+  background-color: #F44336;
+}
+
+.use-lantern-btn-active:hover {
+  background-color: #D32F2F;
+}
+
+
+/* Add these styles to your InventoryStyles.css file */
+
+/* Styles for item buttons container */
+.item-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+/* Styles for the inspect button */
+.inspect-item-btn {
+  background: #5a3e2e;
+  color: #f0e6d2;
+  border: 1px solid #85693f;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.inspect-item-btn:hover {
+  background: #774c2f;
+  border-color: #b39359;
+  box-shadow: 0 0 5px rgba(179, 147, 89, 0.5);
+}
+
+/* Add animation for coins glowing */
+.coins-glowing .item-icon {
+  animation: pulse-gold 2s infinite;
+}
+
+@keyframes pulse-gold {
+  0% {
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 215, 0, 1), 0 0 30px rgba(255, 215, 0, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+  }
+}
+
+.coins-hint {
+  color: #ffd700;
+  font-style: italic;
+  font-size: 0.8em;
+  margin-left: 5px;
+}
+
+/* Make item details allow for more space */
+.item-details {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+
+
+
+/* Highlight Ancient Wyrm Coins */
+.coin-name {
+  color: #ffd700; /* Gold color */
+  font-weight: bold;
+  text-shadow: 0 0 2px rgba(255, 215, 0, 0.5);
+}

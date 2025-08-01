@@ -1,0 +1,2832 @@
+/* TextStyles.css - Separate styling for game text elements */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=MedievalSharp&family=Uncial+Antiqua&family=Metamorphous&display=swap');
+
+
+
+
+/* Save game controls */
+.save-game-controls {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 20px;
+  border-top: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.save-game-btn, .load-game-btn, .delete-save-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.save-game-btn {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+}
+
+.save-game-btn:hover {
+  background: linear-gradient(135deg, #45a049, #4CAF50);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+.load-game-btn {
+  background: linear-gradient(135deg, #2196F3, #1976D2);
+  color: white;
+}
+
+.load-game-btn:hover {
+  background: linear-gradient(135deg, #1976D2, #2196F3);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+}
+
+.delete-save-btn {
+  background: linear-gradient(135deg, #f44336, #d32f2f);
+  color: white;
+}
+
+.delete-save-btn:hover {
+  background: linear-gradient(135deg, #d32f2f, #f44336);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+}
+
+.continue-game-btn {
+  background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+  color: white;
+  padding: 15px 30px;
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+.continue-game-btn:hover {
+  background: linear-gradient(135deg, #7B1FA2, #9C27B0);
+  transform: scale(1.05);
+}
+
+
+/*Intro SCreen continue button */
+
+.continue-btn {
+  background: linear-gradient(135deg, #29c424, #0b6b17);
+  color: white;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  margin-top: 15px;
+  margin-left: 305px;
+  
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: block;
+  width:200px;
+  max-width: 300px;
+  font-family: 'MedievalSharp', cursive;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
+}
+
+.continue-btn:hover {
+  background: linear-gradient(135deg, #7B1FA2, #9C27B0);
+  transform: translateY(-2px);
+
+  box-shadow: 0 20px 20px rgba(0, 0, 0, 0.4);
+}
+
+.continue-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(156, 39, 176, 0.3);
+}
+
+/* Add a subtle pulse animation to draw attention */
+@keyframes continue-pulse {
+  0% {
+    box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 25px rgba(156, 39, 176, 0.6);
+  }
+  100% {
+    box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
+  }
+}
+
+.continue-btn {
+  animation: continue-pulse 2s ease-in-out infinite;
+}
+
+.continue-btn:hover {
+  animation: none;
+}
+
+
+
+/* Base game text styling */
+.game-message {
+  font-family: 'Metamorphous', serif;
+  font-size: 1.4rem;
+  line-height: 1.5;
+  color: #E3E3E3;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.wizard-room-content {
+  display: flex;
+  flex-direction: column;  /* Stack items vertically */
+  align-items: center;     /* Center them horizontally */
+  gap: 15px;              /* Add some space between messages */
+}
+
+.wizard-room-content .special-message {
+  width: 100%;            /* Full width */
+  max-width: 800px;       /* But not too wide */
+}
+
+.wizard-room-content .game-message {
+  width: 100%;            /* Full width */
+  max-width: 800px;       /* But not too wide */
+}
+
+.special-message.wizard-decipher-message {
+  font-family: 'Cinzel', 'MedievalSharp', serif;
+  color: #410fd7;
+  font-size: 1.8rem;
+  text-align: center;
+  text-shadow: 
+    0 0 10px rgba(63, 17, 199, 0.832),
+    0 0 20px rgba(157, 124, 255, 0.3);
+  background: linear-gradient(135deg, rgba(45, 27, 105, 0.3), rgba(26, 14, 64, 0.3));
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid rgba(157, 124, 255, 0.5);
+  margin: 10px auto;
+  animation: magical-glow 2s ease-in-out infinite;
+}
+
+@keyframes magical-glow {
+  0%, 100% { 
+    box-shadow: 0 0 15px rgba(157, 124, 255, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 25px rgba(157, 124, 255, 0.6);
+  }
+}
+
+
+
+/* Room description styling */
+.room-description p {
+  font-family: 'Metamorphous', serif;
+  color: #AED6F1;
+  font-size: 1.4rem;
+  line-height: 1.6;
+  margin: 0;
+  font-style: italic;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+/* Perception text styling */
+.perception {
+  font-family: 'Metamorphous', serif;
+  color: #F9E79F;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+  font-style: italic;
+}
+
+/* Enhanced room connections buttons */
+/* Cave-shaped buttons */
+.connection-btn {
+  background: linear-gradient(135deg, #a87b57, #774513);
+  color: #d4c8b8;
+  padding: 15px 22px;
+  font-size: 22px;
+  font-weight: bold;
+  font-family: 'Metamorphous', serif;
+  cursor: pointer;
+  position: relative;
+  margin: 10px;
+  border: none;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.6);
+  
+  /* Cave shape using clip-path */
+  clip-path: polygon(
+  20% 0%, 
+  80% 0%, 
+  100% 15%, 
+  90% 25%,
+  100% 40%, 
+  95% 60%, 
+  100% 85%, 
+  80% 100%, 
+  20% 100%, 
+  0% 85%, 
+  5% 60%, 
+  0% 40%, 
+  10% 25%, 
+  0% 15%
+);
+  
+  /* Add depth with multiple shadows */
+  box-shadow: 
+    inset 0 10px 20px rgba(255, 255, 255, 0.1),
+    inset 0 -15px 30px rgba(0, 0, 0, 0.4),
+    0 5px 10px rgba(0, 0, 0, 0.5);
+  
+  /* Important for proper rendering */
+  transform-style: preserve-3d;
+  transition: all 0.3s;
+  min-width: 65px;
+  min-height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Inner cavern effect */
+.connection-btn::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  background: linear-gradient(125deg, #a49990, #201c1a);
+  z-index: -1;
+  clip-path: polygon(
+    15% 5%, 
+    85% 5%, 
+    95% 15%, 
+    90% 30%,
+    95% 50%, 
+    90% 70%, 
+    95% 85%, 
+    85% 95%, 
+    15% 95%, 
+    5% 85%, 
+    10% 70%, 
+    5% 50%, 
+    10% 30%, 
+    5% 15%
+  );
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Stone texture */
+.connection-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.15' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.2'/%3E%3C/svg%3E");
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Hover effect */
+.connection-btn:hover {
+  transform: translateY(-5px) scale(1.05);
+  background: linear-gradient(135deg, #b58224, #3a352c);
+  color: #fff;
+  box-shadow: 
+    inset 0 15px 30px rgba(255, 255, 255, 0.15),
+    inset 0 -15px 30px rgba(0, 0, 0, 0.4),
+    0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Active/pressed effect */
+.connection-btn:active {
+  transform: translateY(2px) scale(0.98);
+  background: linear-gradient(135deg, #3a352c, #2a2622);
+  box-shadow: 
+    inset 0 5px 15px rgba(0, 0, 0, 0.6),
+    0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Map Discovery Video Styling */
+.map-discovery-video-container {
+  position: relative;
+  text-align: center;
+  padding: 20px;
+  margin: 15px 0;
+  border-radius: 10px;
+  height: 650px;
+  overflow: hidden;
+  background-color: #2d1810; /* Dark brown fallback */
+}
+
+/* Video background */
+.map-discovery-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* Overlay content on top of video */
+.map-discovery-overlay {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.3); /* Slight dark overlay for text readability */
+  border-radius: 10px;
+}
+
+/* Keep all your existing text styles */
+.map-discovery-overlay .map-discovery-title {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 1.8rem;
+  color: #FFD700;
+  margin-bottom: 15px;
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.9),
+    0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.map-discovery-overlay .map-discovery-text {
+  font-family: 'Uncial Antiqua', cursive;
+  color: #6cf80f;
+  font-family: 'MedievalSharp', cursive;
+  font-size: 1.6rem;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.9),
+    0 0 8px rgba(108, 248, 15, 0.3);
+}
+
+/* Clue list styling with enhanced visibility */
+.map-discovery-overlay .map-clue-list {
+  text-align: left;
+  margin: 0 auto;
+  max-width: 90%;
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  border-left: 3px solid #D4AF37;
+  text-shadow: 
+    0 5px 8px rgba(0, 0, 0, 0.9),
+    0 0 5px rgba(0, 0, 0, 0.8);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Style scrollbar for overlay */
+.map-discovery-overlay::-webkit-scrollbar {
+  width: 12px;
+}
+
+.map-discovery-overlay::-webkit-scrollbar-track {
+  background: rgba(139, 69, 19, 0.3);
+  border-radius: 6px;
+  border: 1px solid #8B4513;
+}
+
+.map-discovery-overlay::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #D4AF37, #B8860B);
+  border-radius: 6px;
+  border: 1px solid #8B4513;
+}
+
+.map-discovery-overlay::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #FFD700, #D4AF37);
+}
+
+/* Firefox scrollbar */
+.map-discovery-overlay {
+  scrollbar-width: auto;
+  scrollbar-color: #D4AF37 rgba(139, 69, 19, 0.3);
+}
+
+/* Fade effect at bottom when scrollable */
+.map-discovery-overlay::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.8));
+  pointer-events: none;
+  border-radius: 0 0 10px 10px;
+}
+
+
+/* Gift Shop Display Styling */
+.gift-shop-discovery {
+  text-align: center;
+  padding: 20px;
+  margin: 15px 0;
+  background: url('../images/GiftShop.png'), linear-gradient(135deg, #4A3C28, #6B5637);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+  color: #2C1810;
+  border: 3px solid #8B4513;
+  min-height: 400px;
+  max-height: 600px;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Gift shop title styling */
+.gift-shop-title {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 2.2rem;
+  color: #8B0000;
+  margin-bottom: 5px;
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.5),
+    0 0 10px rgba(255, 215, 0, 0.3);
+  animation: shop-sign-swing 3s ease-in-out infinite;
+}
+
+@keyframes shop-sign-swing {
+  0%, 100% { transform: rotate(-1deg); }
+  50% { transform: rotate(1deg); }
+}
+
+.gift-shop-subtitle {
+  font-family: 'Uncial Antiqua', cursive;
+  font-size: 1.9rem;
+  color: #dcba97;
+  margin-bottom: 2px;
+  font-style: italic;
+}
+
+/* Shop content area */
+.gift-shop-content {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 5px;
+  margin: 0 auto;
+  max-width: 90%;
+  font-size: 25px;
+}
+
+/* Shop message area - for the existing game messages */
+.shop-message-area {
+  margin-top: 1px;
+  padding: 5px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(139, 69, 19, 0.3);
+}
+
+.shop-message-area .message {
+  margin-bottom: 5px;
+  color: #2C1810;
+  font-size: 2.1rem;
+  
+}
+
+/* Items preview grid */
+.gift-shop-items-preview {
+  margin-top: 20px;
+}
+
+
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.shop-item-preview {
+  background-color: rgba(139, 69, 19, 0.2);
+  border: 1px solid #8B4513;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.shop-item-preview:hover {
+  background-color: rgba(139, 69, 19, 0.4);
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.item-icon-large {
+  font-size: 2rem;
+  margin-bottom: 5px;
+}
+
+.item-name-preview {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 0.9rem;
+  color: #2C1810;
+  margin-bottom: 3px;
+  text-align: center;
+}
+
+.item-price {
+  font-family: 'Uncial Antiqua', cursive;
+  font-size: 0.85rem;
+  color: #8B0000;
+  font-weight: bold;
+}
+
+/* Scrollbar styling for gift shop */
+.gift-shop-discovery::-webkit-scrollbar {
+  width: 12px;
+}
+
+.gift-shop-discovery::-webkit-scrollbar-track {
+  background: rgba(139, 69, 19, 0.3);
+  border-radius: 6px;
+  border: 1px solid #8B4513;
+}
+
+.gift-shop-discovery::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #8B4513, #654321);
+  border-radius: 6px;
+  border: 1px solid #4A3C28;
+}
+
+.gift-shop-discovery::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #A0522D, #8B4513);
+}
+
+/* Special effects for when shop is active */
+.gift-shop-discovery.shop-active {
+  animation: shop-glow 2s ease-in-out infinite;
+}
+
+@keyframes shop-glow {
+  0%, 100% {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    box-shadow: 
+      0 5px 15px rgba(0, 0, 0, 0.6),
+      0 0 20px rgba(255, 215, 0, 0.4);
+  }
+}
+
+/* Coin sparkle effect */
+.shop-item-preview .item-icon-large:first-child {
+  animation: item-sparkle 3s ease-in-out infinite;
+  animation-delay: calc(var(--item-index) * 0.2s);
+}
+
+@keyframes item-sparkle {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.3) drop-shadow(0 0 5px gold); }
+}
+
+
+/* Wizard Room Display - Base styles */
+.wizard-room-display {
+  min-height: 800px;
+  padding: 2px;
+  margin: 1px 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  
+  
+  position: relative;
+  overflow: hidden;
+}
+
+/* Wizard Room State 1: Trapped Wizard */
+.wizard-room-trapped {
+  background: url('../images/wizardroom.png'), linear-gradient(135deg, #1a0033, #330066);
+  animation: trapped-pulse 3s ease-in-out infinite;
+}
+
+/* Wizard Room State 2: Rock Placed (wizard just freed) - DRAMATIC PURPLE EXPLOSION */
+.wizard-room-rock {
+  background: url('../images/wizardroomRock.png'), linear-gradient(135deg, #2a1b4a, #4a3a7a);
+  animation: rock-placed 2s ease-out, purple-explosion 3s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+
+/* Purple explosion overlay for state 2 */
+.wizard-room-rock::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, 
+    rgba(138, 43, 226, 0) 0%,
+    rgba(138, 43, 226, 0.6) 30%,
+    rgba(75, 0, 130, 0.8) 60%,
+    rgba(138, 43, 226, 0) 100%);
+  animation: explosion-wave 2s ease-out;
+  pointer-events: none;
+}
+
+/* Additional purple light rays for state 2 */
+
+/* Purple explosion overlay for state 2 */
+.wizard-room-rock::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, 
+    rgba(138, 43, 226, 0) 0%,
+    rgba(138, 43, 226, 0.6) 30%,
+    rgba(75, 0, 130, 0.8) 60%,
+    rgba(138, 43, 226, 0) 100%);
+  animation: explosion-wave 2s ease-out;
+  pointer-events: none;
+}
+
+/* Additional purple light rays for state 2 */
+.wizard-room-rock::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(138, 43, 226, 0.7) 10deg,
+    transparent 20deg,
+    transparent 40deg,
+    rgba(147, 112, 219, 0.7) 50deg,
+    transparent 60deg,
+    transparent 80deg,
+    rgba(138, 43, 226, 0.7) 90deg,
+    transparent 100deg,
+    transparent 120deg,
+    rgba(147, 112, 219, 0.7) 130deg,
+    transparent 140deg
+  );
+  animation: light-rays-spin 3s linear forwards;
+  pointer-events: none;
+  opacity: 0; /* Start invisible */
+}
+
+
+
+/* Wizard Room State 3: Freed with Wyrmglass (after leaving and returning) */
+.wizard-room-freed {
+  background: url('../images/wizardroomAfter.png'), linear-gradient(135deg, #2d1b69, #4B0082);
+  animation: freed-pulse 3s ease-in-out infinite;
+}
+
+/* Wizard Room State 4: Empty Pedestal */
+.wizard-room-empty {
+  background: url('../images/wizardroomempty.png'), linear-gradient(135deg, #1a1a2e, #16213e);
+  animation: empty-pulse 4s ease-in-out infinite;
+}
+
+
+
+
+
+/* Enhanced pulsing animations for all states */
+@keyframes trapped-pulse {
+  0%, 100% {
+    filter: brightness(0.9) saturate(0.8);
+    box-shadow: 
+      0 5px 15px rgba(0, 0, 0, 0.8),
+      inset 0 0 50px rgba(75, 0, 130, 0.3);
+  }
+  50% {
+    filter: brightness(1.1) saturate(1.2);
+    box-shadow: 
+      0 5px 15px rgba(0, 0, 0, 0.8),
+      0 0 40px rgba(75, 0, 130, 0.5),
+      inset 0 0 80px rgba(138, 43, 226, 0.4);
+  }
+}
+
+
+@keyframes freed-glow {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.2);
+    box-shadow: 
+      0 5px 15px rgba(0, 0, 0, 0.5),
+      0 0 30px rgba(255, 215, 0, 0.3);
+  }
+}
+
+@keyframes rock-placed {
+  0% {
+    filter: brightness(3) contrast(1.5);
+    box-shadow: 
+      0 0 100px rgba(138, 43, 226, 1),
+      0 0 200px rgba(147, 112, 219, 0.8),
+      inset 0 0 100px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    filter: brightness(2) contrast(1.2);
+  }
+  100% {
+    filter: brightness(1) contrast(1);
+    box-shadow: 
+      0 5px 15px rgba(0, 0, 0, 0.5),
+      0 0 30px rgba(138, 43, 226, 0.3);
+  }
+}
+
+@keyframes empty-room {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.05);
+  }
+}
+
+
+
+
+@keyframes purple-explosion {
+  0% {
+    filter: hue-rotate(0deg) brightness(1);
+  }
+  20% {
+    filter: hue-rotate(30deg) brightness(2.5) contrast(1.5);
+  }
+  40% {
+    filter: hue-rotate(-30deg) brightness(2) contrast(1.3);
+  }
+  60% {
+    filter: hue-rotate(15deg) brightness(1.5);
+  }
+  100% {
+    filter: hue-rotate(0deg) brightness(1);
+  }
+}
+
+@keyframes explosion-wave {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3);
+  }
+}
+
+@keyframes light-rays-spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(0);
+    opacity: 0;
+  }
+  20% {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1);
+    opacity: 1;
+  }
+  80% {
+    transform: translate(-50%, -50%) rotate(540deg) scale(1.2);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(720deg) scale(0);
+    opacity: 0;
+  }
+}
+
+
+/* Content area with semi-transparent background for readability */
+.wizard-room-content {
+   height: 100%;
+  min-height: 800px; /* Fill the container */
+  border-radius: 8px;
+  padding: 2px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(138, 43, 226, 0.5);
+}
+
+/* Ensure text is readable on wizard background */
+.wizard-room-display .game-message {
+  color: #bebee4;
+     height: 100%;
+  min-height: 800px; /* Fill the container */
+  text-shadow: 
+    0 0 5px rgba(0, 0, 0, 0.9),
+    0 0 10px rgba(138, 43, 226, 0.5);
+  font-size: 2.1rem;
+    display: flex;
+  align-items: top;
+  justify-content: center;
+}
+
+/* Magical particles effect */
+.wizard-room-display::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.1) 0%, transparent 2%),
+    radial-gradient(circle at 80% 70%, rgba(75, 0, 130, 0.1) 0%, transparent 2%),
+    radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 2%);
+  background-size: 100px 100px;
+  animation: particle-float 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes particle-float {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100px);
+  }
+}
+
+
+
+
+@keyframes freed-pulse {
+  0%, 100% {
+    filter: brightness(1);
+    box-shadow: 
+      0 5px 15px rgba(0, 0, 0, 0.5),
+      0 0 20px rgba(255, 215, 0, 0.2),
+      inset 0 0 40px rgba(255, 215, 0, 0.1);
+  }
+  50% {
+    filter: brightness(1.2);
+    box-shadow: 
+      0 5px 15px rgba(0, 0, 0, 0.5),
+      0 0 40px rgba(255, 215, 0, 0.4),
+      inset 0 0 60px rgba(255, 215, 0, 0.2);
+  }
+}
+
+@keyframes empty-pulse {
+  0%, 100% {
+    filter: brightness(1);
+    box-shadow: 
+      0 5px 15px rgba(0, 0, 0, 0.6),
+      inset 0 0 30px rgba(138, 43, 226, 0.1);
+  }
+  50% {
+    filter: brightness(1.1);
+    box-shadow: 
+      0 5px 15px rgba(0, 0, 0, 0.6),
+      0 0 20px rgba(138, 43, 226, 0.2),
+      inset 0 0 50px rgba(138, 43, 226, 0.2);
+  }
+}
+
+/* Text effect for purple explosion state */
+.wizard-room-rock .game-message {
+  animation: text-glow-purple 2s ease-out;
+}
+
+@keyframes text-glow-purple {
+  0%, 20% {
+    color: #FFFFFF;
+    text-shadow: 
+      0 0 30px rgba(138, 43, 226, 1),
+      0 0 60px rgba(147, 112, 219, 0.8),
+      0 0 90px rgba(138, 43, 226, 0.6);
+  }
+  100% {
+    color: #FFFFFF;
+    text-shadow: 
+      2px 2px 4px rgba(0, 0, 0, 1),
+      0 0 10px rgba(0, 0, 0, 0.8),
+      0 0 20px rgba(138, 43, 226, 0.5);
+  }
+}
+
+
+
+/* If you want the whole game message area to have a max height */
+.game-message-container.has-map {
+  max-height: calc(100vh - 300px); /* Adjust based on your layout */
+  overflow-y: auto;
+}
+
+/* Color-coded treasure clues - keep existing styles */
+.ruby-clue {
+  color: #751106;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  border-radius: 5px;
+  background-color: rgba(231, 76, 60, 0.1);
+  border-left: 3px solid #E74C3C;
+}
+
+.medallion-clue {
+  color: #F1C40F;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  border-radius: 5px;
+  background-color: rgba(241, 196, 15, 0.1);
+  border-left: 3px solid #F1C40F;
+}
+
+.statue-clue {
+  color: #0a582a;
+  font-weight: 200;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  border-radius: 5px;
+  background-color: rgba(39, 174, 96, 0.1);
+  border-left: 3px solid #27AE60;
+}
+
+.amulet-clue {
+  color: #084166;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  border-radius: 5px;
+  background-color: rgba(52, 152, 219, 0.1);
+  border-left: 3px solid #3498DB;
+}
+
+/* Shimmer animation keyframes */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/* Shimmer text wrapper */
+.shimmer-text {
+  display: inline-block;
+  position: relative;
+}
+
+/* Ruby shimmer */
+.ruby-clue.shimmer-active .shimmer-text {
+  background: linear-gradient(
+    105deg,
+    #751106 0%,
+    #751106 40%,
+    #FF6B6B 50%,
+    #FFD700 52%,
+    #FF6B6B 60%,
+    #751106 70%,
+    #751106 100%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3.5s linear;
+  animation-iteration-count: 1;
+}
+
+/* Medallion shimmer */
+.medallion-clue.shimmer-active .shimmer-text {
+  background: linear-gradient(
+    105deg,
+    #F1C40F 0%,
+    #F1C40F 40%,
+    #FFFFFF 50%,
+    #FFF8DC 52%,
+    #FFFFFF 60%,
+    #F1C40F 70%,
+    #F1C40F 100%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 5.5s linear;
+  animation-iteration-count: 1;
+}
+
+/* Jade statue shimmer */
+.statue-clue.shimmer-active .shimmer-text {
+  background: linear-gradient(
+    105deg,
+    #0a582a 0%,
+    #0a582a 40%,
+    #50C878 50%,
+    #90EE90 52%,
+    #50C878 60%,
+    #0a582a 70%,
+    #0a582a 100%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4.5s linear;
+  animation-iteration-count: 1;
+}
+
+/* Amulet shimmer */
+.amulet-clue.shimmer-active .shimmer-text {
+  background: linear-gradient(
+    105deg,
+    #084166 0%,
+    #084166 40%,
+    #87CEEB 50%,
+    #B0E0E6 52%,
+    #87CEEB 60%,
+    #084166 70%,
+    #084166 100%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 5.5s linear;
+  animation-iteration-count: 1;
+}
+
+/* Remove the animation when not active to prevent conflicts */
+.ruby-clue:not(.shimmer-active) .shimmer-text,
+.medallion-clue:not(.shimmer-active) .shimmer-text,
+.statue-clue:not(.shimmer-active) .shimmer-text,
+.amulet-clue:not(.shimmer-active) .shimmer-text {
+  background: none;
+  color: inherit;
+  -webkit-text-fill-color: inherit;
+}
+
+
+
+
+
+/* Enhanced move history styling */
+.move {
+  font-family: 'Cinzel', serif;
+  font-weight: bold;
+  background: linear-gradient(135deg, #34495e, #2c3e50);
+  border: 1px solid #607D8B;
+  color: #E3E3E3;
+  padding: 6px 10px;
+  margin: 4px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+   
+}
+
+.move:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  
+}
+
+.room-icon {
+  margin-left: 8px;
+  font-size: 1em;
+  cursor: help; 
+}
+
+/* Enhanced treasure items display */
+.treasure-item {
+  padding: 8px 12px;
+  margin: 8px 0;
+  border-radius: 6px;
+  font-family: 'Cinzel', serif;
+  transition: all 0.3s ease;
+}
+
+.treasure-item.collected {
+  background: linear-gradient(135deg, rgba(0, 128, 0, 0.1), rgba(0, 128, 0, 0.2));
+  border-left: 3px solid #2ECC71;
+}
+
+.treasure-item.missing {
+  background: linear-gradient(135deg, rgba(139, 69, 19, 0.1), rgba(139, 69, 19, 0.2));
+  border-left: 3px solid #D35400;
+}
+
+.treasure-icon {
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+
+.treasure-name {
+  font-weight: bold;
+}
+
+/* Color-coded treasure names */
+.treasure-ruby {
+  color: #E74C3C;
+}
+
+.treasure-medallion {
+  color: #F1C40F;
+}
+
+.treasure-statue {
+  color: #27AE60;
+}
+
+.treasure-amulet {
+  color: #3498DB;
+}
+
+/* Map found indicator */
+.map-found {
+  font-family: 'Uncial Antiqua', cursive;
+  color: #FFD700;
+  font-size: 1.3rem;
+  background-color: rgba(212, 175, 55, 0.1);
+  padding: 8px 12px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 10px;
+  border: 1px solid #D4AF37;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Game over messages */
+.game-message.won {
+  font-family: 'Uncial Antiqua', cursive;
+  font-size: 1.6rem;
+  color: #FFEB3B;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(255, 235, 59, 0.5);
+}
+ 
+
+
+
+/* Add this to your TextStyles.css file */
+
+/* Pulsing text animation */
+@keyframes text-pulse {
+    0% {
+      text-shadow: 0 0 4px rgba(127, 255, 212, 0.3);
+      color: #7EEEBE;
+    }
+    50% {
+      text-shadow: 0 0 12px rgba(127, 255, 212, 0.7);
+      color: #B2FFE5;
+    }
+    100% {
+      text-shadow: 0 0 4px rgba(127, 255, 212, 0.3);
+      color: #7EEEBE;
+    }
+  }
+  
+  /* Special class for luminescent fungi room text */
+  .luminescent-text {
+    animation: text-pulse 1s infinite ease-in-out;
+    font-style: italic;
+    color: #7EEEBE;
+  }
+  
+  /* Special class for fungi perception text */
+  .fungi-perception {
+    animation: text-pulse 1s infinite ease-in-out;
+    font-weight: normal;
+    color: #7EEEBE;
+  }
+
+
+  /* Add this to your TextStyles.css file */
+
+/* Glittering minerals effect */
+.minerals-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+  
+  .minerals-container p {
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7); 
+  }
+  
+  .minerals-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgb(51, 51, 161), rgb(73, 73, 226));
+    opacity: 0.7;
+    z-index: 1;
+  }
+  
+  .glitter {
+    position: absolute;
+    z-index: 1;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background-color: white;
+    opacity: 0;
+    animation: glitter-fade var(--glitter-duration, .5s) infinite;
+    animation-delay: var(--glitter-delay, 0s);
+  }
+  
+  @keyframes glitter-fade {
+    0%, 100% { 
+      opacity: 0;
+      transform: scale(1);
+    }
+    50% { 
+      opacity: var(--glitter-opacity, 0.3);
+      transform: scale(var(--glitter-scale, 1.5));
+    }
+  }
+  
+  /* For text glittering effect */
+  .minerals-text {
+    background: linear-gradient(to right, #CCCCCC, #EEEEEE, #DDDDDD, #FFFFFF, #CCCCCC);
+    background-size: 200% auto;
+    color: #000;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 5s linear infinite;
+    font-weight: bold;
+    text-shadow: none !important;
+  }
+  
+  @keyframes shine {
+    to {
+      background-position: 200% center;
+    }
+  }
+
+
+  /* Add to your TextStyles.css file */
+
+
+/* One-way passage button styling */
+.one-way-btn {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .one-way-btn::before {
+    content: '↳';
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    font-size: 14px;
+    opacity: 0.7;
+    animation: fade-out 0.3s ease-in forwards;
+    
+    animation-delay: 0.1s; /* Show for 0.6 seconds, then fade out */
+  }
+  
+  @keyframes fade-out {
+    from { opacity: 0.7; }
+    to { opacity: 0; }
+  }
+  
+  /* One-way passage pulse animation */
+  @keyframes one-way-pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(147, 112, 219, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(147, 112, 219, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(147, 112, 219, 0);
+    }
+  }
+  
+  .one-way-pulse {
+    animation: one-way-pulse 0.8s cubic-bezier(0.4, 0, 0.6, 1) 1;
+    background-color: #7B68EE !important;
+    color: white !important;
+  }
+  
+  /* One-way discovery message styling */
+  .one-way-message {
+    background: linear-gradient(135deg, #9370DB, #7B68EE);
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+    border-left: 4px solid #4B0082;
+    font-style: italic;
+    animation: fade-in 0.5s ease-out;
+  }
+
+
+  /* Journey display - no return indicators */
+.journey-arrow {
+  margin: 0 4px;
+  font-size: 1.2em;
+}
+
+/* Regular journey arrow */
+.journey-arrow-normal {
+  opacity: 0.8;
+}
+
+/* One-way or bat teleport arrow */
+.journey-arrow-no-return {
+  color: #9370DB; /* Purple for one-way */
+  font-weight: bold;
+}
+
+/* Bat teleport indicator */
+.journey-arrow-bat {
+  color: #FF6347; /* Tomato red for bat teleport */
+  font-weight: bold;
+}
+
+/* Tooltip for arrows */
+.arrow-tooltip {
+  position: relative;
+  cursor: help;
+}
+
+.arrow-tooltip:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -30px;
+  width: max-content;
+  max-width: 200px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 12px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Water Drip Effect Styles */
+
+/* Container for water room */
+.water-drip-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  padding-top: 10px; /* Extra padding for droplets */
+}
+
+/* Water drop animation */
+.water-drop {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50% 50% 50% 0;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(173, 216, 230, 0.5));
+  top: -10px;
+  opacity: 0;
+  transform: rotate(45deg);
+  animation: drip var(--drip-duration, 2s) linear infinite;
+  animation-delay: var(--drip-delay, 0s);
+  z-index: 2;
+}
+
+.water-drop::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50% 50% 50% 0;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(173, 216, 230, 0.3));
+  transform: scale(0.8);
+}
+
+@keyframes drip {
+  0% {
+    top: -10px;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+/* Ripple effect when the drop hits */
+.water-ripple {
+  position: absolute;
+  bottom: 0;
+  border-radius: 50%;
+  background: rgba(173, 216, 230, 0.3);
+  transform: scale(0);
+  opacity: 1;
+  animation: ripple 2s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+  animation-delay: var(--ripple-delay, 0s);
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* Special text styling for water room */
+.water-text {
+  color: #AED6F1;
+  position: relative;
+  z-index: 1;
+  font-style: italic;
+}
+
+/* Subtle blue overlay for water room */
+.water-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(173, 216, 230, 0.05), rgba(173, 216, 230, 0.1));
+  z-index: 0;
+}
+
+/* Stalactite water perception styling */
+.water-perception {
+  color: #AED6F1;
+  animation: water-pulse 4s infinite;
+}
+
+@keyframes water-pulse {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+* Game Board Water Effect Styles */
+
+/* Water room game board container */
+.game-board.water-room {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Water drops for game board */
+.gb-water-drop {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50% 50% 50% 0;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(173, 216, 230, 0.6));
+  top: -10px;
+  opacity: 0;
+  transform: rotate(45deg);
+  animation: gb-drip var(--drip-duration, 4s) linear infinite;
+  animation-delay: var(--drip-delay, 0s);
+  z-index: 3; /* High enough to be above content but not interfere with interaction */
+  pointer-events: none; /* Ensure drops don't interfere with clicks */
+}
+
+.gb-water-drop::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50% 50% 50% 0;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(173, 216, 230, 0.4));
+  transform: scale(0.8);
+}
+
+@keyframes gb-drip {
+  0% {
+    top: -10px;
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+/* Ripple effect when the drop hits */
+.gb-water-ripple {
+  position: absolute;
+  bottom: 5px;
+  border-radius: 50%;
+  background: rgba(173, 216, 230, 0.4);
+  transform: scale(0);
+  opacity: 1;
+  animation: gb-ripple 2.5s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+  animation-delay: var(--ripple-delay, 0s);
+  z-index: 2;
+  pointer-events: none; /* Ensure ripples don't interfere with clicks */
+}
+
+@keyframes gb-ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+/* Water overlay for game board */
+.water-room-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(173, 216, 230, 0.05), rgba(173, 216, 230, 0.1));
+  z-index: 1;
+  pointer-events: none; /* Ensure overlay doesn't interfere with clicks */
+}
+
+
+
+/* Night crawler warning message */
+.night-crawler-warning {
+  color: #ff9800;
+  font-weight: bold;
+  animation: warning-pulse 2s infinite;
+  padding: 8px 12px;
+  border-left: 4px solid #5f4011;
+  margin: 10px 0;
+  background-color: rgba(255, 152, 0, 0.1);
+}
+
+@keyframes warning-pulse {
+  0%, 100% {
+    text-shadow: 0 0 5px rgba(255, 152, 0, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 15px rgba(255, 152, 0, 0.8);
+  }
+}
+
+/* Night crawler protection effect */
+.night-crawler-protection {
+  position: relative;
+}
+
+.night-crawler-protection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0) 0%, rgba(173, 216, 230, 0.1) 100%);
+  border: 1px solid rgba(173, 216, 230, 0.3);
+  border-radius: inherit;
+  pointer-events: none;
+  animation: protection-shimmer 3s infinite;
+}
+
+@keyframes protection-shimmer {
+  0%, 100% {
+    opacity: 0.3;
+    box-shadow: 0 0 10px rgba(173, 216, 230, 0.3);
+  }
+  50% {
+    opacity: 0.6;
+    box-shadow: 0 0 20px rgba(173, 216, 230, 0.6);
+  }
+}
+
+
+
+
+/* Protection status display */
+.protection-status {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  margin-left: 10px;
+  background-color: rgba(173, 216, 230, 0.3);
+  color: #64b5f6;
+  animation: protection-active 2s infinite;
+}
+
+@keyframes protection-active {
+  0%, 100% {
+    background-color: rgba(173, 216, 230, 0.3);
+  }
+  50% {
+    background-color: rgba(173, 216, 230, 0.5);
+  }
+}
+/* Ladder trap death display */
+.ladder-trap-display {
+  min-height: 700px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #1a0f0a; /* Dark brown base */
+}
+
+.ladder-trap-display .game-message.lost.ladder_trap {
+  font-family: 'MedievalSharp', cursive;
+  background: url('../images/ladder_Exit_pit.png'),
+              linear-gradient(to bottom,
+                rgba(101, 67, 33, 0.9) 0%,
+                rgba(0, 0, 0, 1) 80%);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 700px;
+  font-size: 1.8rem;
+  color: #d4a574;
+  padding: 40px;
+  margin: 0;
+  text-align: center;
+  text-shadow:
+    0 0 10px rgba(139, 69, 19, 0.8),
+    0 0 20px rgba(101, 67, 33, 0.6),
+    2px 2px 4px rgba(0, 0, 0, 1);
+  animation: ladder-break-fall 20s ease-in forwards;
+}
+
+/* Ladder breaking and falling animation - FIXED */
+@keyframes ladder-break-fall {
+  0%, 10% {
+    transform: translateY(0) scale(1);
+    filter: brightness(1);
+    opacity: 1;
+  }
+  15% {
+    /* Ladder crack moment */
+    transform: translateY(5px) scale(1) rotate(0.5deg);
+    filter: brightness(1.1);
+    opacity: 1;
+  }
+  30% {
+    /* Beginning to fall */
+    transform: translateY(30px) scale(0.98) rotate(-1deg);
+    filter: brightness(0.9);
+    opacity: 1;
+  }
+  60% {
+    /* Accelerating fall */
+    transform: translateY(150px) scale(0.95) rotate(2deg);
+    filter: brightness(0.7);
+    opacity: 1;
+  }
+  80% {
+    /* Falling faster */
+    transform: translateY(500px) scale(0.9) rotate(-3deg);
+    filter: brightness(0.4);
+    opacity: 0.6;
+  }
+  100% {
+    /* Completely off screen and faded */
+    transform: translateY(1200px) scale(0.85) rotate(4deg);
+    filter: brightness(0.1);
+    opacity: 0;
+  }
+}
+
+/* Wood breaking particles - ENHANCED FOR VISIBILITY */
+/* Ladder trap death display */
+.ladder-trap-display {
+  min-height: 700px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #1a0f0a; /* Dark brown base */
+}
+
+.ladder-trap-display .game-message.lost.ladder_trap {
+  font-family: 'MedievalSharp', cursive;
+  background: url('../images/ladder_Exit_pit.png'),
+              linear-gradient(to bottom,
+                rgba(101, 67, 33, 0.9) 0%,
+                rgba(0, 0, 0, 1) 80%);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 700px;
+  font-size: 1.8rem;
+  color: #d4a574;
+  padding: 40px;
+  margin: 0;
+  text-align: center;
+  text-shadow:
+    0 0 10px rgba(139, 69, 19, 0.8),
+    0 0 20px rgba(101, 67, 33, 0.6),
+    2px 2px 4px rgba(0, 0, 0, 1);
+  animation: ladder-break-fall 20s ease-in forwards;
+}
+
+/* Ladder breaking and falling animation - FIXED */
+@keyframes ladder-break-fall {
+  0%, 10% {
+    transform: translateY(0) scale(1);
+    filter: brightness(1);
+    opacity: 1;
+  }
+  15% {
+    /* Ladder crack moment */
+    transform: translateY(5px) scale(1) rotate(0.5deg);
+    filter: brightness(1.1);
+    opacity: 1;
+  }
+  30% {
+    /* Beginning to fall */
+    transform: translateY(30px) scale(0.98) rotate(-1deg);
+    filter: brightness(0.9);
+    opacity: 1;
+  }
+  60% {
+    /* Accelerating fall */
+    transform: translateY(150px) scale(0.95) rotate(2deg);
+    filter: brightness(0.7);
+    opacity: 1;
+  }
+  80% {
+    /* Falling faster */
+    transform: translateY(500px) scale(0.9) rotate(-3deg);
+    filter: brightness(0.4);
+    opacity: 0.6;
+  }
+  100% {
+    /* Completely off screen and faded */
+    transform: translateY(1200px) scale(0.85) rotate(4deg);
+    filter: brightness(0.1);
+    opacity: 0;
+  }
+}
+
+/* Dark pit gradient overlay */
+.ladder-trap-display::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: linear-gradient(to top,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.8) 30%,
+    rgba(0, 0, 0, 0.4) 60%,
+    transparent 100%);
+  animation: darkness-rise 14s ease-out forwards;
+  pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes darkness-rise {
+  0%, 20% {
+    transform: translateY(100%);
+  }
+  50% {
+    transform: translateY(20%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Treasure display - contained like death scenes */
+.treasure-display {
+  min-height: 600px;
+  padding: 20px;
+  margin: 15px 0;
+  background-size: cover; /* Changed from 'contain' to 'cover' */
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden; /* This prevents content from spilling out */
+}
+
+/* Ruby treasure */
+.treasure-display.treasure-ruby {
+  background: url('../images/ruby.png'), 
+              linear-gradient(to bottom, rgba(139, 0, 0, 0.3), rgba(0, 0, 0, 0.8));
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Gold medallion */
+.treasure-display.treasure-medallion {
+  background: url('../images/gold_medallion.png'),
+              linear-gradient(to bottom, rgba(212, 175, 55, 0.3), rgba(0, 0, 0, 0.8));
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Jade figurine */
+.treasure-display.treasure-statue {
+  background: url('../images/jade_figureine.png'),
+              linear-gradient(to bottom, rgba(0, 100, 0, 0.3), rgba(0, 0, 0, 0.8));
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Crystal amulet */
+.treasure-display.treasure-amulet {
+  background: url('../images/amulet.png'),
+              linear-gradient(to bottom, rgba(0, 0, 139, 0.3), rgba(0, 0, 0, 0.8));
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Make text visible over image - positioned at bottom like death scenes */
+.treasure-display .game-message {
+
+  padding: 20px;
+
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  margin: 0;
+}
+
+
+
+
+/* Souvenir item styling */
+.souvenir-item {
+  background-color: rgba(255, 215, 0, 0.1);
+  border-left: 3px solid #FFD700;
+}
+
+.souvenir-item:hover {
+  background-color: rgba(255, 215, 0, 0.2);
+}
+
+.souvenir-hint {
+  color: #FFD700;
+  font-style: italic;
+  font-size: 0.85em;
+  margin-left: 5px;
+}
+
+/* Enhanced item icon for souvenirs */
+.souvenir-item .item-icon {
+  animation: souvenir-shine 3s infinite;
+}
+
+@keyframes souvenir-shine {
+  0%, 100% {
+    text-shadow: 0 0 2px rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+  }
+}
+
+/* For gold coins to better show count */
+.item-name[title*="Gold Coins"] {
+  position: relative;
+}
+
+.item-details .item-count {
+  display: inline-block;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.8em;
+  margin-left: 8px;
+  color: #FFD700;
+}
+
+
+
+
+.crystal-sleep-warning {
+  color: #64b5f6;
+  font-weight: bold;
+  animation: crystal-pulse 2s infinite;
+  padding: 8px 12px;
+  border-left: 4px solid #64b5f6;
+  margin: 10px 0;
+  background-color: rgba(100, 181, 246, 0.1);
+}
+
+@keyframes crystal-pulse {
+  0%, 100% {
+    text-shadow: 0 0 5px rgba(100, 181, 246, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 15px rgba(100, 181, 246, 0.8);
+  }
+}
+
+.game-message.crystal_sleep {
+  background-color: rgba(100, 181, 246, 0.3);
+  color: #e1f5fe;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  animation: crystal-death 0.5s ease-in-out;
+}
+
+@keyframes crystal-death {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-10px);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+/* Glowing anchor symbol effect */
+@keyframes anchor-glow {
+  0% {
+    text-shadow: 0 0 5px rgba(100, 181, 246, 0.5);
+    color: #64b5f6;
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(100, 181, 246, 0.8), 0 0 30px rgba(100, 181, 246, 0.6);
+    color: #90caf9;
+  }
+  100% {
+    text-shadow: 0 0 5px rgba(100, 181, 246, 0.5);
+    color: #64b5f6;
+  }
+}
+
+.glowing-anchor {
+  animation: anchor-glow 2s ease-in-out infinite;
+  font-weight: bold;
+}
+
+/* For the placed anchor state */
+.anchor-placed {
+  color: #4fc3f7;
+  text-shadow: 0 0 10px rgba(79, 195, 247, 0.6);
+  font-weight: bold;
+}
+
+
+
+
+/* Sulfur Room Container */
+.sulfur-room-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+/* Sulfur vapor effect */
+.sulfur-vapor {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(255, 235, 59, 0.3), transparent);
+  filter: blur(10px);
+  opacity: 0;
+  animation: sulfur-rise var(--vapor-duration, 6s) infinite ease-out;
+  animation-delay: var(--vapor-delay, 0s);
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes sulfur-rise {
+  0% {
+    bottom: -20px;
+    opacity: 0;
+    transform: scale(0.5) translateX(0);
+  }
+  20% {
+    opacity: 0.6;
+    transform: scale(1) translateX(calc(var(--vapor-drift, 10px)));
+  }
+  80% {
+    opacity: 0.3;
+    transform: scale(1.5) translateX(calc(var(--vapor-drift, 10px) * 2));
+  }
+  100% {
+    bottom: 80%;
+    opacity: 0;
+    transform: scale(2) translateX(calc(var(--vapor-drift, 10px) * 3));
+  }
+}
+
+/* Sulfur bubble pop effect */
+.sulfur-bubble {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff59d, #f9a825);
+  opacity: 0;
+  animation: bubble-pop var(--bubble-duration, 2s) infinite;
+  animation-delay: var(--bubble-delay, 0s);
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes bubble-pop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+/* Heat shimmer effect */
+.heat-shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(0deg, 
+    transparent 0%, 
+    rgba(255, 235, 59, 0.05) 20%, 
+    transparent 40%, 
+    rgba(255, 235, 59, 0.05) 60%, 
+    transparent 80%, 
+    rgba(255, 235, 59, 0.05) 100%);
+  animation: heat-wave 3s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes heat-wave {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 -100px;
+  }
+}
+
+/* Sulfur text styling */
+.sulfur-text {
+  color: #F9E79F;
+  position: relative;
+  z-index: 3;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Yellow tinted overlay */
+.sulfur-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, 
+    rgba(255, 235, 59, 0.02), 
+    rgba(249, 168, 37, 0.08));
+  z-index: 0;
+  pointer-events: none;
+}
+
+
+/* Stream Room Container */
+.stream-room-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+/* Flowing water effect */
+.stream-flow {
+  position: absolute;
+  bottom: 0;
+  left: -100%;
+  width: 200%;
+  height: 30%;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    rgba(64, 164, 223, 0.3) 20%,
+    rgba(144, 202, 249, 0.4) 40%,
+    rgba(64, 164, 223, 0.3) 60%,
+    transparent 80%
+  );
+  animation: rushing-water 2s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes rushing-water {
+  0% {
+    transform: translateX(0) skewX(-10deg);
+  }
+  100% {
+    transform: translateX(50%) skewX(-10deg);
+  }
+}
+
+/* Splash particles */
+.water-splash {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0;
+  animation: splash-jump var(--splash-duration, 1s) infinite;
+  animation-delay: var(--splash-delay, 0s);
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes splash-jump {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-20px) scale(1);
+  }
+  60% {
+    opacity: 0.5;
+    transform: translateY(-10px) scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(0) scale(0);
+  }
+}
+
+/* Speed lines */
+.speed-line {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  opacity: 0;
+  animation: speed-rush var(--line-duration, 1.5s) infinite linear;
+  animation-delay: var(--line-delay, 0s);
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes speed-rush {
+  0% {
+    left: -50%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+/* Stream text */
+.stream-text {
+  color: #AED6F1;
+  position: relative;
+  z-index: 3;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Crystal Room Container */
+.crystal-room-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+/* Pulsing crystal glow background */
+.crystal-pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at center, 
+    rgba(138, 43, 226, 0.1) 0%,
+    transparent 70%
+  );
+  animation: ominous-pulse 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes ominous-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.6;
+  }
+}
+
+/* Floating light particles */
+.crystal-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #e1bee7;
+  border-radius: 50%;
+  opacity: 0;
+  box-shadow: 0 0 6px rgba(138, 43, 226, 0.8);
+  animation: float-up var(--particle-duration, 8s) infinite linear;
+  animation-delay: var(--particle-delay, 0s);
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes float-up {
+  0% {
+    bottom: 0;
+    opacity: 0;
+    transform: translateX(0);
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    bottom: 100%;
+    opacity: 0;
+    transform: translateX(var(--particle-drift, 20px));
+  }
+}
+
+/* Gold vein sparkles (only visible with lantern) */
+.gold-sparkle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #FFD700;
+  border-radius: 50%;
+  opacity: 0;
+  animation: gold-twinkle var(--sparkle-duration, 3s) infinite;
+  animation-delay: var(--sparkle-delay, 0s);
+  pointer-events: none;
+  z-index: 3;
+}
+
+@keyframes gold-twinkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 4px #FFD700;
+  }
+}
+
+/* Crystal text */
+.crystal-text {
+  color: #e1bee7;
+  position: relative;
+  z-index: 4;
+  text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+}
+
+/* Enhanced glow for lantern mode */
+.crystal-room-container.lantern-active .crystal-text {
+  color: #f3e5f5;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 0 10px rgba(138, 43, 226, 0.5);
+}
+
+
+
+
+/* Petrified Tendrils Room */
+.tendrils-room-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+/* Pulsing tendril veins on walls */
+.tendril-vein {
+  position: absolute;
+  width: 3px;
+  background: linear-gradient(180deg, 
+    transparent, 
+    rgba(255, 140, 0, 0.6), 
+    rgba(255, 69, 0, 0.8), 
+    rgba(255, 140, 0, 0.6), 
+    transparent
+  );
+  filter: blur(2px);
+  animation: tendril-pulse 4s ease-in-out infinite;
+  animation-delay: var(--vein-delay, 0s);
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes tendril-pulse {
+  0%, 100% {
+    transform: scaleX(1);
+    opacity: 0.3;
+    filter: blur(2px);
+  }
+  50% {
+    transform: scaleX(1.5);
+    opacity: 0.8;
+    filter: blur(1px);
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
+  }
+}
+
+/* Shockwave pulses */
+.pulse-wave {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 140, 0, 0.4);
+  transform: translate(-50%, -50%);
+  animation: shockwave-expand 4s ease-out infinite;
+  animation-delay: var(--wave-delay, 0s);
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes shockwave-expand {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    width: 300px;
+    height: 300px;
+    opacity: 0;
+  }
+}
+
+/* Floating particles affected by pulse */
+.pulse-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: rgba(51, 11, 199, 0.6);
+  border-radius: 50%;
+  animation: particle-float 8s infinite;
+  animation-delay: var(--particle-delay, 0s);
+  pointer-events: none;
+  z-index: 3;
+}
+
+@keyframes particle-float {
+  0%, 50%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(var(--push-x, 10px), var(--push-y, -5px));
+  }
+  75% {
+    transform: translate(calc(var(--push-x, 10px) * -1), var(--push-y, -5px));
+  }
+}
+
+/* Ghost footprints */
+.ghost-footprint {
+  position: absolute;
+  width: 35px;
+  height: 25px;
+  bottom: 5%;
+  opacity: 0;
+  background: radial-gradient(ellipse at center, 
+    rgba(10, 10, 200, 0.3), 
+    transparent
+  );
+  transform: rotate(var(--foot-angle, 0deg));
+  animation: footprint-appear var(--foot-duration, 6s) infinite;
+  animation-delay: var(--foot-delay, 0s);
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes footprint-appear {
+  0%, 10% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.5;
+  }
+  25%, 100% {
+    opacity: 0;
+  }
+}
+/* Pulsing text effect - MORE VISIBLE */
+.tendrils-text {
+  color: #ffccbc;
+  position: relative;
+  z-index: 4;
+  animation: text-heartbeat 4s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+@keyframes text-heartbeat {
+  0%, 100% {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    transform: scale(1);
+    color: #ffccbc;
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 69, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.8);
+    transform: scale(1.02);
+    color: #ff8a65;
+  }
+}
+
+/* Warm overlay that pulses - MORE VISIBLE */
+.warmth-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at center, 
+    transparent 30%, 
+    rgba(255, 87, 34, 0.15) 70%,
+    rgba(255, 69, 0, 0.2) 100%
+  );
+  animation: warmth-pulse 2s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes warmth-pulse {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes warmth-pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Perception text pulsing */
+.perception.pulsing-perception {
+  animation: perception-throb 4s ease-in-out infinite;
+}
+
+@keyframes perception-throb {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+    color: #ffab91;
+  }
+}
+/* Shiny Trinket Trap Effect - TONED DOWN */
+.trinket-trap {
+  display: inline-block;
+  color: #FFD700;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+  animation: trinket-sparkle 2s ease-in-out infinite; /* Slower animation */
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.8);
+}
+
+/* Multi-layered sparkle effect - REDUCED ROTATION */
+@keyframes trinket-sparkle {
+  0% {
+    text-shadow: 
+      0 0 5px rgba(255, 215, 0, 0.8),
+      0 0 10px rgba(255, 215, 0, 0.6),
+      0 0 15px rgba(255, 215, 0, 0.4);
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    text-shadow: 
+      0 0 8px rgba(255, 215, 0, 1),
+      0 0 15px rgba(255, 215, 0, 0.8),
+      0 0 20px rgba(255, 215, 0, 0.6);
+    transform: scale(1.02) rotate(0.5deg); /* Was 2deg */
+  }
+  50% {
+    text-shadow: 
+      0 0 10px rgba(255, 255, 255, 0.9),
+      0 0 18px rgba(255, 215, 0, 0.8),
+      0 0 25px rgba(255, 215, 0, 0.6);
+    transform: scale(1.05) rotate(-0.5deg); /* Was -2deg and scale 1.1 */
+  }
+  75% {
+    text-shadow: 
+      0 0 8px rgba(255, 215, 0, 1),
+      0 0 15px rgba(255, 215, 0, 0.8),
+      0 0 20px rgba(255, 215, 0, 0.6);
+    transform: scale(1.02) rotate(0.25deg); /* Was 1deg */
+  }
+  100% {
+    text-shadow: 
+      0 0 5px rgba(255, 215, 0, 0.8),
+      0 0 10px rgba(255, 215, 0, 0.6),
+      0 0 15px rgba(255, 215, 0, 0.4);
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* Hovering effect - MUCH MORE SUBTLE */
+.trinket-trap:hover {
+  animation: trinket-hypnotize 0.8s ease-in-out infinite; /* Slower */
+  color: #FFEB3B;
+}
+
+@keyframes trinket-hypnotize {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+    filter: brightness(1.1); /* Was 1.2 */
+  }
+  50% {
+    transform: scale(1.05) translateY(-1px); /* Was scale 1.2 and -2px */
+    filter: brightness(1.3) drop-shadow(0 0 5px gold); /* Was 1.5 and 10px */
+  }
+}
+
+/* Floating sparkles - keep these but make them subtler */
+.trinket-trap::before,
+.trinket-trap::after {
+  content: '✦';
+  position: absolute;
+  font-size: 0.5em; /* Smaller */
+  color: #FFD700;
+  animation: float-sparkle 4s ease-in-out infinite; /* Slower */
+  opacity: 0.7; /* More transparent */
+}
+
+.trinket-trap::before {
+  top: -8px;
+  left: -8px;
+  animation-delay: 0s;
+}
+
+.trinket-trap::after {
+  bottom: -8px;
+  right: -8px;
+  animation-delay: 2s;
+}
+
+@keyframes float-sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: rotate(0deg) scale(0);
+  }
+  50% {
+    opacity: 0.7; /* Was 1 */
+    transform: rotate(90deg) scale(0.8); /* Was 180deg and scale 1 */
+  }
+}
+
+/* Visual effect for the room itself */
+.room-description .trinkets-room {
+  background: linear-gradient(135deg, 
+    rgba(214, 193, 73, 0.05) 0%, 
+    transparent 50%, 
+    rgba(200, 173, 20, 0.808) 100%);
+}
+
+/* Trinket trap death message */
+.game-message.trinket_trap {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 1.6rem;
+  color: #6b5b04;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(139, 69, 19, 0.8);
+  animation: trap-fall 1s ease-in;
+}
+
+@keyframes trap-fall {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(20px) scale(0.95);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+
+
+/* Underwater Treasure Effect */
+.underwater-treasure {
+  display: inline-block;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+  animation: underwater-glimmer 3s ease-in-out infinite;
+  text-decoration: none;
+}
+
+/* Different colors for different items */
+.underwater-treasure[data-item="fools_gold"] {
+  color: #FFD700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+}
+
+.underwater-treasure[data-item="utility_knife"] {
+  color: #C0C0C0;
+  text-shadow: 0 0 8px rgba(192, 192, 192, 0.6);
+}
+
+.underwater-treasure[data-item="tarnished_bracelet"] {
+  color: #B87333;
+  text-shadow: 0 0 8px rgba(184, 115, 51, 0.6);
+}
+
+/* Underwater shimmer effect */
+@keyframes underwater-glimmer {
+  0%, 100% {
+    opacity: 0.8;
+    transform: translateY(0);
+    filter: blur(0.5px);
+  }
+  25% {
+    opacity: 1;
+    transform: translateY(-1px);
+    filter: blur(0px);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translateY(0);
+    filter: blur(0.3px);
+  }
+  75% {
+    opacity: 1;
+    transform: translateY(1px);
+    filter: blur(0px);
+  }
+}
+
+/* Hover effect - items seem to float up */
+.underwater-treasure:hover {
+  animation: treasure-float 0.6s ease-in-out;
+  filter: brightness(1.3) drop-shadow(0 0 10px currentColor);
+}
+
+@keyframes treasure-float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-3px) scale(1.1);
+  }
+}
+
+/* Water distortion overlay */
+.underwater-treasure::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at center, 
+    transparent 30%, 
+    rgba(173, 216, 230, 0.2) 50%,
+    transparent 70%);
+  animation: water-distort 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes water-distort {
+  0%, 100% {
+    transform: scale(0.8) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(180deg);
+  }
+}
+
+/* Ripple effect on hover */
+.underwater-treasure::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: all 0.6s ease-out;
+}
+
+.underwater-treasure:hover::after {
+  width: 40px;
+  height: 40px;
+  opacity: 0;
+  animation: ripple-out 0.6s ease-out;
+}
+
+@keyframes ripple-out {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.6;
+  }
+  100% {
+    width: 40px;
+    height: 40px;
+    opacity: 0;
+  }
+}
