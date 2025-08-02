@@ -354,7 +354,7 @@ const saveGame = () => {
     
     // Show success message
     setMessage("Game saved successfully! You can safely close the game and continue later.");
-    
+    playSaveGameSound()
     return true;
   } catch (error) {
     console.error("Error saving game:", error);
@@ -379,6 +379,10 @@ const loadGame = () => {
       setMessage("This save file is from a different game version and cannot be loaded.");
       return false;
     }
+    playLoadGameSound()
+    console.log("Loading saved game")
+    
+      
     
     // IMPORTANT: Hide the intro screen first!
     setShowIntro(false);
@@ -4038,7 +4042,10 @@ playSodiumRockWaterExplosionSound,
 playWaterNixieShriekSound,
 playNixieWailingKillScream,
 playSandCreatureHissSound,
-playSandCreatureShriekSound
+playSandCreatureShriekSound,
+ playSaveGameSound,
+  playLoadGameSound,
+  playDeleteSavedGameSound
   } = useSounds();
 
   // ==================== GAME LOGIC HELPERS ====================
@@ -6111,7 +6118,10 @@ setRoomDescription(lanternActive && updatedEnhancedText ? updatedEnhancedText : 
       playShopKeeperPlushieSound,
       playShopKeeperLeavingSound,
       playSandCreatureHissSound,
-      playSandCreatureShriekSound
+      playSandCreatureShriekSound,
+       playSaveGameSound,
+  playLoadGameSound,
+  playDeleteSavedGameSound
   });
 
 
@@ -8201,7 +8211,8 @@ setShowLadderExtendScene,
   setShowWinMessage,
   showNixieDisplay,    
   setShowNixieDisplay,  
-  
+   playLoadGameSound,
+  playDeleteSavedGameSound
   };
 
   return (

@@ -55,7 +55,9 @@ const GameBoard = () => {
   showWinMessage,
   setShowWinMessage,
   specialRooms,
-  
+  playLoadGameSound,
+    playDeleteSavedGameSound
+
   } = useGame();
  console.log("showWinVideo", showWinVideo);
 
@@ -1034,6 +1036,7 @@ const getWizardRoomClass = () => {
             <button 
               className="load-game-btn"
               onClick={() => {
+                playLoadGameSound()
                 if (window.confirm("Are you sure you want to load your saved game? Current progress will be lost.")) {
                   loadGame();
                 }
@@ -1046,6 +1049,8 @@ const getWizardRoomClass = () => {
             <button 
               className="delete-save-btn"
               onClick={() => {
+                  playDeleteSavedGameSound()
+
                 if (window.confirm("Are you sure you want to delete your saved game? This cannot be undone.")) {
                   deleteSavedGame();
                 }

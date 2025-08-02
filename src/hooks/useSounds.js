@@ -90,6 +90,10 @@ import sandCreatureHissSoundFile from  '../sounds/sand_creature_hiss.ogg';
   
 import sandCreatureShriekSoundFile from  '../sounds/sand_creature_shriek.ogg';
 
+import saveGameSoundFile from  '../sounds/saveGameSound.mp3';
+import loadGameSoundFile from  '../sounds/LoadGameSound.mp3';
+import deleteSavedGameSoundFile from  '../sounds/deleteSavedGameSound.ogg';
+
 const useSounds = () => { 
   // Refs to hold looping sounds so we can stop them later
   const windLoopRef = useRef(null);
@@ -114,9 +118,6 @@ const activeLoopingSounds = useRef({
 });
 
 
-
-
-
 const playLadderTrapSound = () => {
   const audio = new Audio(ladderTrapSoundFile);
   audio.volume = 0.7;
@@ -124,6 +125,39 @@ const playLadderTrapSound = () => {
     console.error('Error playing ladder trap sound:', error);
   });
 };
+
+const playSaveGameSound = useCallback(() => {
+  console.log("Playing playSaveGameSound sound");
+  const sound = new Audio(saveGameSoundFile);
+  sound.play()
+    .then(() => console.log("playSaveGameSound sound played successfully"))
+    .catch(error => {
+      console.error('Error playing playSaveGameSound sound:', error);
+    });
+}, []);
+
+
+
+const playLoadGameSound = useCallback(() => {
+  console.log("Playing playLoadGameSound sound");
+  const sound = new Audio(loadGameSoundFile);
+  sound.play()
+    .then(() => console.log("playLoadGameSound sound played successfully"))
+    .catch(error => {
+      console.error('Error playing playLoadGameSound sound:', error);
+    });
+}, []);
+
+
+const playDeleteSavedGameSound = useCallback(() => {
+  console.log("Playing playDeleteSavedGameSound sound");
+  const sound = new Audio(deleteSavedGameSoundFile);
+  sound.play()
+    .then(() => console.log("playDeleteSavedGameSound sound played successfully"))
+    .catch(error => {
+      console.error('Error playing playDeleteSavedGameSound sound:', error);
+    });
+}, []);
 
 const playWyrmglassSound = useCallback(() => {
   console.log("Playing wyrmglass sound");
@@ -1499,7 +1533,11 @@ const enableAllSounds = useCallback(() => {
   playWaterNixieShriekSound,
   playNixieWailingKillScream,
   playSandCreatureHissSound,
-  playSandCreatureShriekSound
+  playSandCreatureShriekSound,
+  playSaveGameSound,
+  playLoadGameSound,
+  playDeleteSavedGameSound
+
   };
 };
 

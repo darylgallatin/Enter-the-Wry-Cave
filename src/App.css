@@ -1216,7 +1216,7 @@ button {
    .game-stats {
   background-image: 
    
-     url('/home/dg/React/guess/src/Gamestates_background.png'); 
+     url('./images/Gamestates_background.png');
   background-size: cover;
   background-position: center;
 }
@@ -1225,7 +1225,7 @@ button {
 .inventory {
   background-image: 
     linear-gradient(rgba(92, 67, 43, 0.3), rgba(30, 87, 156, 0.2)),
-     url('/home/dg/React/guess/src/inventory_panel_background.png');
+     url('./images/inventory_panel_background.png');
     
   background-size: cover;
   background-position: center;
@@ -1234,8 +1234,8 @@ button {
 
 .game-instructions {
   background-image: 
+     url('./images/Gamestates_background.png');
     
-     url('/home/dg/React/guess/src/Gamestates_background.png'); 
   background-size: cover;
   background-position: center;
 } 
