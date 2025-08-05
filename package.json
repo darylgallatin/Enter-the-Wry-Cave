@@ -1,6 +1,6 @@
 {
-  "name": "guess",
-  "version": "0.1.0",
+  "name": "enter-the-wry-cave",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",

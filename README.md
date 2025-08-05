@@ -1,3 +1,65 @@
+# Enter the Wry Cave: An Advanced Text/HTML Cave Adventure
+
+A darkly whimsical cave adventure full of sarcasm, monsters, and bad decisions.  
+Navigate 30+ twisted chambers, collect strange treasures, possibly save the village, avoid the evil smelly Druika and other dangers, and try not to die amusingly.
+
+[Play the Game](#) *(Deployment link coming soon)*
+
+---
+
+## Features
+- 30+ hand-crafted, darkly humorous room descriptions  
+- Inventory system and interactive objects  
+- AI-generated art, voices, and effects  
+- Original and sourced sound/music (licensed under CC0 / CC-BY / CC-BY-NC)  
+- Built with **React** using modern JavaScript hooks and state management  
+- Designed using **AI-assisted workflows**, with custom system design and integration  
+
+---
+
+### Development Notes
+This project evolved over **6 months of development**.  
+While **AI tools assisted with code generation**, I personally handled **system architecture, creative direction, prompt engineering, testing, asset integration**, and **sourced/licensed all third‑party sound and music**.  
+All **AI‑generated art, voice lines, and narrative MP3 scenes** were created specifically for this game.
+
+---
+
+## Tech Stack
+- **Frontend**: React (Hooks), JavaScript ES6+, HTML5, CSS3  
+- **Styling**: Custom stylesheets  
+- **Build Tools**: Create React App  
+- **Version Control**: Git & GitHub  
+- **AI Collaboration**: Prompt engineering for code generation, content creation, and workflow optimization  
+
+---
+
+## Licensing
+This project uses a **split license**:  
+- **Game Code**: [MIT](LICENSE)  
+- **AI-Generated Images & Narrative MP3s**: [CC‑BY‑NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)  
+- **AI-Generated Sound Effects & Voice Lines**: [CC‑BY 4.0](https://creativecommons.org/licenses/by/4.0/)  
+- **Third-Party Assets**: Licensed under CC0, CC‑BY 3.0, or CC‑BY 4.0 (see [CREDITS.md](CREDITS.md))  
+
+*Commercial use of CC‑BY‑NC assets requires permission from the author.*
+
+---
+
+## Credits
+See [CREDITS.md](CREDITS.md) for a full list of attributions for sound, music, and art.
+
+---
+
+## About the Developer
+**Daryl Gallatin** — Creative technologist and React developer blending modern web development with **AI‑assisted workflows** to build immersive interactive experiences.  
+This **6‑month personal project** demonstrates skills in **prompt engineering, system architecture, asset integration, and iterative design** using AI as a tool for rapid development.
+
+---
+
+# Development Info
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).  
+*(See the bottom of this README for the default CRA documentation.)*
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

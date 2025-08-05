@@ -78,6 +78,7 @@ export const getRandomCaveMessage = () => {
     "Your spouse called. They're redecorating your room into a yoga studio. 🧘‍♀️",
     "Your mother sent a message: 'Are you eating enough? The Druika looks well-fed.' 🍽️",
     "Your life insurance company wants to discuss your 'high-risk lifestyle choices.' 📋",
+    "I bet you used to work in tin-can telecom or IT didn't you? Did you try turning it off and back on?' 💻",
     
     // === WEATHER & ATMOSPHERIC HUMOR ===
     "Weather update: 100% chance of darkness with a strong possibility of teeth. 🌧️",

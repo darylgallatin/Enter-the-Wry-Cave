@@ -1,54 +1,59 @@
-Time distortion_northern87 by northern87 -- https://freesound.org/s/131100/ -- License: Creative Commons 0
-Annulet of absorption by CosmicD -- https://freesound.org/s/133008/ -- License: Attribution 4.0
-monster shriek.ogg by Darsycho -- https://freesound.org/s/442564/ -- License: Creative Commons 0
+# Credits for *Enter the Wry Cave : An advanced text/HTML cave adventure game*
 
-Beast Growl 3.wav  from Author: Author: 
-    pauliuw   https://opengameart.org/content/monster-or-beast-sounds
+This project combines **author-created AI assets** and **licensed third-party content**.
 
-bg_water_running.wav Author: HippoDevelopment  https://opengameart.org/content/running-water-background-noise
+---
 
-Opening and closing a big old door.wav(big-gate-close.ogg) by lazymonk -- https://freesound.org/s/214307/ -- License: Creative Commons 0
+## **Author-Created Assets**
 
-bird_flap.flac  
-Author: 
-Blender Foundation
-(Submitted by Lamoot)
-https://opengameart.org/content/flap-splat-poo-yo-frankie License: CC-BY 3.0
+### **Images & Cutscene MP3s**  
+- All **AI-generated images** (in-game art, key character designs, including the Druika, and cutscene visuals).  
+- **Narrative MP3s** created for cutscenes.  
+**Licensed under [CC‑BY‑NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) — Non‑Commercial.**  
+For commercial use, **explicit permission from [Your Full Name] is required**.
 
-cartoon-throw.wav
-Attribution Instructions: 
-Not being the only copyc4t around (nomen, omen!) please write it all lowercase and add either my real name (Paolo D'Emilio) or specify "from OpenGameArt", "from Freesound", or "from SoundCloud". Even better by linking any of those profiles directly: http://opengameart.org/users/copyc4t http://www.freesound.org/people/copyc4t/ https://soundcloud.com/copyc4t
-https://opengameart.org/content/cartoonish-sound-for-throwing-things  License: CC-BY 3.0
+### **Sound Effects & Voice Lines**  
+- All **AI-generated sound effects** created for this game.  
+- All **AI-generated voice lines** (characters, narration).  
+**Licensed under [CC‑BY 4.0](https://creativecommons.org/licenses/by/4.0/).**
 
+### **Narrative Content**  
+- Intro story, room descriptions, and UI writing.  
+**Licensed under [CC‑BY‑NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).**
 
-Both by http://opengameart.org/users/cynicmusic and from the http://pixelsphere.org/ game.
-Copyright/Attribution Notice: 
-Credit pixelsphere.org / The Cynic Project. Please link to cynicmusic's website and, as a courtesy not a requirement, notify him if you use the music.
-File(s): 
-music_jewels.ogg music_jewels.ogg 2.3 Mb [2211 download(s)]  License: CC-BY 3.0
+### **Game Code**  
+- All game logic and system architecture.  
+**Licensed under the [MIT License](LICENSE).**
 
-Cave theme.mp3   Author: Gigawowski  https://opengameart.org/content/cave-music-0  License: CC-BY 3.0
-cheesyloop1.ogg  Author: Tozan  https://opengameart.org/content/cheesy-loop-1 License: CC-BY 3.0
-Crunching Bones.ogg Author: spookymodem  https://opengameart.org/content/crunching-bones License: CC-BY 3.0
-Dear Diary.mp3  Author: PetterTheSturgeon https://opengameart.org/content/melodic-gentle-ambient-music License: CC-BY 3.0
-destiny_formation.ogg   Author: Bobjt  https://opengameart.org/content/destiny-formation  License: CC0 1.0 Universal   Public Domain
+---
 
-DL_ DEMON_GROWL_4.ogg
-DL MAKE YOU MY PET.wav
-DL SILENCE.wav  
-Author:  Tim Rockk  License(s): C0 Public Domain  https://opengameart.org/content/demon-voice
+## **Third-Party Sound & Music**  
 
-doodle.mp3 Author: StumpyStrust License(s): C0 Public Domain  https://opengameart.org/content/doodle-menu-like-song
+### From [Freesound.org](https://freesound.org):
+- **Time distortion_northern87** by northern87 — CC0  
+- **Annulet of absorption** by CosmicD — CC-BY 4.0  
+- **monster shriek.ogg** by Darsycho — CC0  
+- **Opening and closing a big old door.wav** by lazymonk — CC0  
+- **PulsingGlow.wav** by deerlord — CC0  
 
-several sounds  from https://opengameart.org/content/fantasy-sound-effects-library
-www.littlerobotsoundfactory.com  License(s): 
-CC-BY 3.0
-Dragon Growl, goblin, footsteps, jingle Achivement, jingle lose  some others too from this zip pack
+### From [OpenGameArt.org](https://opengameart.org):
+- **Beast Growl 3.wav** by pauliuw — CC0  
+- **bg_water_running.wav** by HippoDevelopment — CC0  
+- **bird_flap.flac** by Blender Foundation (submitted by Lamoot) — CC-BY 3.0  
+- **cartoon-throw.wav** by copyc4t — CC-BY 3.0  
+- **music_jewels.ogg** by cynicmusic (pixelsphere.org) — CC-BY 3.0  
+- **Cave theme.mp3** by Gigawowski — CC-BY 3.0  
+- **cheesyloop1.ogg** by Tozan — CC-BY 3.0  
+- **Crunching Bones.ogg** by spookymodem — CC-BY 3.0  
+- **Dear Diary.mp3** by PetterTheSturgeon — CC-BY 3.0  
+- **destiny_formation.ogg** by Bobjt — CC0  
+- **DL_ DEMON_GROWL_4.ogg**, **DL MAKE YOU MY PET.wav**, **DL SILENCE.wav** by Tim Rockk — CC0  
+- **doodle.mp3** by StumpyStrust — CC0  
+- **Various sounds** from [Fantasy Sound Effects Library](https://opengameart.org/content/fantasy-sound-effects-library) by Little Robot Sound Factory — CC-BY 3.0  
+- **Music: No Hope (You Died)** by CleytonKauffman — CC0  
+- **waterfall.ogg** by Tausdei — CC-BY 3.0  
+- **Goblin Cackle.wav** by spookymodem — CC-BY 3.0  
 
-Music: No Hope (You died).  Author:CleytonKauffman   License(s): CC0 https://opengameart.org/content/game-over-theme
+---
 
-PulsingGlow.wav by deerlord -- https://freesound.org/s/534846/ -- License: Creative Commons 0
-
-waterfall.ogg  Author: Tausdei  License(s): CC-BY 3.0  https://opengameart.org/content/waterfall
- 
-Goblin Cackle.wav Author: spookymodem  License(s): CC-BY 3.0  https://opengameart.org/content/goblin-cackle
+**Note:** Any unlisted effects are sourced from [OpenGameArt.org](https://opengameart.org) or [Freesound.org](https://freesound.org) under **CC0** or **CC‑BY 3.0** licenses.

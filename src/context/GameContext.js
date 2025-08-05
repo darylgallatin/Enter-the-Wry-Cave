@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-useless-escape, default-case */
-// Updated Game text.js to start music on "Enter Cave"
+// This is the  state management orchestrator
 
 // ==================== IMPORTS ====================
 
@@ -9746,8 +9746,8 @@ useEffect(() => {
     
     // NIGHT CRAWLER CHECKS - only for non-safe rooms
     if (!isSafeRoom && !nightCrawlerProtection) {
-      // Warning at 90 seconds (1.5 minutes)
-      if (timeInRoom > 40 && !nightCrawlerWarning) {
+      // Warning at 100
+      if (timeInRoom > 100 && !nightCrawlerWarning) {
         setNightCrawlerWarning(true);
         setMessage(prev => `${prev} \n\nYou hear a distant scratching sound. Something seems to be moving through the cave walls toward you.`);
       
@@ -9756,7 +9756,7 @@ useEffect(() => {
       }
       
       // Death at 120 seconds (2 minutes)
-      if (timeInRoom > 75) {
+      if (timeInRoom > 110) {
         // Kill the player
         playNightCrawlerSound(0.8);
         setGameStatus('lost');

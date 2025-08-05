@@ -137,6 +137,8 @@ const Instructions = () => {
           <li>Close to the bat? You'll hear flapping.</li>
           <li>Watch for subtle clues or you'll miss it!!!</li>
           <li>Near the exit? You'll feel fresh air.</li>
+           <li>The input field can be used for either 
+            selecting a room number  or an item number</li>
         </ul>
         
         {/* ========== OBJECTIVES AND WIN CONDITIONS SECTION ========== 

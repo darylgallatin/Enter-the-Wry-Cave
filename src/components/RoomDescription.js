@@ -1,7 +1,7 @@
 
 // ==================== ROOM DESCRIPTION COMPONENT ====================
 /**
- * RoomDescription.js - Advanced interactive room display and item management system
+ * RoomDescription.js - Advanced interactive room display and item management system -The content generation engine
  * 
  * This sophisticated component serves as the primary interface for room exploration,
  * handling dynamic content display, interactive element management, item collection

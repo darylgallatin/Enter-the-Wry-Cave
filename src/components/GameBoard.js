@@ -1,6 +1,6 @@
 // ==================== GAMEBOARD COMPONENT IMPORTS ====================
 /**
- * GameBoard.js - Primary game display and interaction component
+ * GameBoard.js - Primary game display and interaction component - The UI orchestration layer
  * 
  * This is the main visual component of the game, responsible for rendering
  * the game world, handling player interactions, managing visual effects,

@@ -16,7 +16,7 @@
  * 
  * Design Philosophy:
  * - **Humor Integration**: Establishes the game's comedic tone from the start 
- *     BUT YOU CAN STILL DIE IN A VARIETY OF HORRIBLE WAYS
+ *   **BUT YOU CAN STILL DIE IN A VARIETY OF HORRIBLE WAYS
  * - **Narrative Immersion**: Rich storytelling to engage players immediately
  * - **User Experience**: Clear, intuitive controls with appropriate feedback
  * - **Developer Support**: Built-in testing tools for efficient development
