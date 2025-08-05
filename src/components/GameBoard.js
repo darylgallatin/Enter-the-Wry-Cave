@@ -161,7 +161,8 @@ const GameBoard = () => {
   const [showLadderTrapDisplay, setShowLadderTrapDisplay] = useState(false);                             // Ladder trap death
   const [showMagicalCatastropheDisplay, setShowMagicalCatastropheDisplay] = useState(false);             // Magical catastrophe death
   const [showVortexTrapDisplay, setShowVortexTrapDisplay] = useState(false);                             // Vortex trap death
-  const [showNixieRageDeathDisplay, setShowNixieRageDeathDisplay] = useState(false);                     // Nixie rage death
+  const [showNixieRageDeathDisplay, setShowNixieRageDeathDisplay] = useState(false);    
+  const [showFungiDeathDisplay, setShowFungiDeathDisplay] = useState(false);                 // Nixie rage death
   
   // === TRAP & HAZARD STATE ===
   const [hiddenRoomTrapActive, setHiddenRoomTrapActive] = useState(false);        // Hidden room trap activation
@@ -1029,6 +1030,22 @@ useEffect(() => {
   // Update previous position for next check
   prevPositionRef.current = currentPosition;
 }, [currentPosition, roomConnections, history]);
+
+
+// ==================== FUNGI DEATH CONTROLLER useEFFECT====================
+useEffect(() => {
+  if (gameStatus === 'lost' && deathCause === 'fungi') {
+    setShowFungiDeathDisplay(true);
+  } else {
+    setShowFungiDeathDisplay(false);
+  }
+}, [gameStatus, deathCause]);
+
+
+
+
+
+
 
 // ==================== TREASURE MAP SHIMMER ANIMATION SYSTEM ====================
 /**
@@ -1969,6 +1986,21 @@ return (
         </div>
       ) : 
       
+
+      /* ===  FUNGI DEATH === 
+       * Dynamic styling based on if player was killed by the killer fingi in the fungi room 
+       */
+      showFungiDeathDisplay ? (
+  <div className="fungi-death-display">
+    <div className="tendril-growth"></div>
+    <p className={`game-message lost fungi`}>
+      {message}
+    </p>
+  </div>
+) :
+
+
+
       /* === DARKNESS DEATH === 
        * Dynamic styling based on whether torch or lantern failed
        */

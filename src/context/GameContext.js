@@ -319,206 +319,186 @@ export const GameProvider = ({ children }) => {
    * This is a sophisticated conflict resolution system that handles overlapping game features
    * Prevents gift shop from spawning in the same location as critical game elements
    */
-  const ensureGiftShopExists = () => {
-    console.log("=== ENSURING GIFT SHOP EXISTS ===");
-    console.log("Current room descriptions:", Object.keys(roomDescriptionMap).length);
-    
-    // ========== IDENTIFY EXISTING GIFT SHOP ==========
+const ensureGiftShopExists = () => {
+  console.log("=== ENSURING GIFT SHOP EXISTS ===");
+  console.log("Current room descriptions:", Object.keys(roomDescriptionMap).length);
+  
+ 
+   // ========== IDENTIFY EXISTING GIFT SHOP ==========
     // First try to identify if one already exists
-    let giftShopRoomId = identifyGiftShopRoom();
-    
+  let giftShopRoomId = identifyGiftShopRoom();
+  
     // ========== CRITICAL CONFLICT RESOLUTION ==========
     // CHECK: If gift shop is in the same room as exit, we have a problem
-    if (giftShopRoomId && giftShopRoomId === positions.exitPosition) {
-      console.log(`CONFLICT: Gift shop (${giftShopRoomId}) is in same room as exit!`);
-      
-      // ========== EXIT RELOCATION LOGIC ==========
+  if (giftShopRoomId && giftShopRoomId === positions.exitPosition) {
+    console.log(`CONFLICT: Gift shop (${giftShopRoomId}) is in same room as exit!`);
+    
+        // ========== EXIT RELOCATION LOGIC ==========
       // Move the exit to a different room to resolve conflict
-      const safeExitRooms = [];
-      for (let i = 1; i <= 30; i++) {
-        if (i !== positions.wumpusPosition &&
-            i !== positions.pitPosition1 &&
-            i !== positions.pitPosition2 &&
-            i !== positions.batPosition &&
-            i !== giftShopRoomId &&
-            !treasurePieces?.some(t => t.room === i)) {
-          safeExitRooms.push(i);
-        }
-      }
-      
-      if (safeExitRooms.length > 0) {
-        const newExitPosition = safeExitRooms[Math.floor(Math.random() * safeExitRooms.length)];
-        console.log(`Moving exit from ${positions.exitPosition} to ${newExitPosition}`);
-        
-        // ========== UPDATE GAME POSITIONS ==========
-        // Update positions state with new exit location
-        setPositions(prev => ({
-          ...prev,
-          exitPosition: newExitPosition
-        }));
-        
-        // ========== UPDATE ROOM DESCRIPTIONS ==========
-        // Update room description map for both old and new exit locations
-        setRoomDescriptionMap(prev => ({
-          ...prev,
-          [newExitPosition]: {
-            text: "You can see a faint light coming from above - this appears to be the exit! A rickety ladder leads up to the surface.",
-            mood: "hopeful",
-            special: "exit",
-            hasWater: false,
-            isExitRoom: true
-          },
-          // Remove exit properties from old room (keep gift shop)
-          [positions.exitPosition]: {
-            ...prev[positions.exitPosition],
-            special: null,
-            isExitRoom: false
-          }
-        }));
+    const safeExitRooms = [];
+    for (let i = 1; i <= 30; i++) {
+      if (i !== positions.wumpusPosition &&
+          i !== positions.pitPosition1 &&
+          i !== positions.pitPosition2 &&
+          i !== positions.batPosition &&
+          i !== giftShopRoomId &&
+          !treasurePieces?.some(t => t.room === i)) {
+        safeExitRooms.push(i);
       }
     }
     
-    // ========== GIFT SHOP CREATION LOGIC ==========
-    // If no gift shop found, force one into a safe room
-    if (!giftShopRoomId) {
-      console.log("No gift shop found - forcing one into the game");
+    if (safeExitRooms.length > 0) {
+      const newExitPosition = safeExitRooms[Math.floor(Math.random() * safeExitRooms.length)];
+      console.log(`Moving exit from ${positions.exitPosition} to ${newExitPosition}`);
       
-      // ========== OCCUPIED ROOM DETECTION ==========
-      // IMPORTANT: Check current room descriptions to avoid overwriting special rooms
-      const occupiedRooms = [];
+      // Update positions
+      setPositions(prev => ({
+        ...prev,
+        exitPosition: newExitPosition
+      }));
       
-      // Add hazard positions
-      occupiedRooms.push(
-        positions.wumpusPosition,
-        positions.pitPosition1,
-        positions.pitPosition2,
-        positions.batPosition,
-        positions.exitPosition
-      );
-      
-      // Add treasure map room
-      if (treasureMap) {
-        occupiedRooms.push(treasureMap);
-      }
-      
-      // Add treasure rooms
-      if (treasurePieces && treasurePieces.length > 0) {
-        treasurePieces.forEach(treasure => {
-          if (treasure.room) occupiedRooms.push(treasure.room);
-        });
-      }
-      
-      // ========== SPECIAL ROOM DETECTION ==========
-      // Add special creature rooms (water sprite, sand creature, etc.)
-      for (let i = 1; i <= 30; i++) {
-        const roomDesc = roomDescriptionMap[i];
-        if (roomDesc && roomDesc.text) {
-          // Check for special rooms that shouldn't be overwritten
-          if (roomDesc.text.includes('tranquil pool') ||
-              roomDesc.text.includes('soft sand') ||
-              roomDesc.text.includes('luminescent fungi') ||
-              roomDesc.isPitRoom ||
-              roomDesc.isExitRoom) {
-            occupiedRooms.push(i);
-          }
+      // Update room description for new exit
+      setRoomDescriptionMap(prev => ({
+        ...prev,
+        [newExitPosition]: {
+          text: "You can see a faint light coming from above - this appears to be the exit! A rickety ladder leads up to the surface.",
+          mood: "hopeful",
+          special: "exit",
+          hasWater: false,
+          isExitRoom: true
+        },
+        // Remove exit properties from old room (keep gift shop)
+        [positions.exitPosition]: {
+          ...prev[positions.exitPosition],
+          special: null,
+          isExitRoom: false
+        }
+      }));
+    }
+  }
+  
+  // If no gift shop found, force one into a safe room
+  if (!giftShopRoomId) {
+    console.log("No gift shop found - forcing one into the game");
+    
+    // IMPORTANT: Check current room descriptions to avoid overwriting special rooms
+    const occupiedRooms = [];
+    
+    // Add hazard positions
+    occupiedRooms.push(
+      positions.wumpusPosition,
+      positions.pitPosition1,
+      positions.pitPosition2,
+      positions.batPosition,
+      positions.exitPosition
+    );
+    
+    // Add treasure map room
+    if (treasureMap) {
+      occupiedRooms.push(treasureMap);
+    }
+    
+    // Add treasure rooms
+    if (treasurePieces && treasurePieces.length > 0) {
+      treasurePieces.forEach(treasure => {
+        if (treasure.room) occupiedRooms.push(treasure.room);
+      });
+    }
+    
+    // Add special creature rooms (water sprite, sand creature, etc.)
+    for (let i = 1; i <= 30; i++) {
+      const roomDesc = roomDescriptionMap[i];
+      if (roomDesc && roomDesc.text) {
+        // Check for special rooms that shouldn't be overwritten
+        if (roomDesc.text.includes('tranquil pool') ||
+            roomDesc.text.includes('soft sand') ||
+            roomDesc.text.includes('luminescent fungi') ||
+            roomDesc.isPitRoom ||
+            roomDesc.isExitRoom) {
+          occupiedRooms.push(i);
         }
       }
-      
-      console.log("Occupied rooms to avoid:", occupiedRooms);
-      
-      // ========== SAFE ROOM SELECTION ==========
-      // Find first available safe room
-      let foundRoom = false;
+    }
+    
+    console.log("Occupied rooms to avoid:", occupiedRooms);
+    
+    // Find first available safe room
+    let foundRoom = false;
+    for (let i = 1; i <= 30; i++) {
+      if (!occupiedRooms.includes(i)) {
+        giftShopRoomId = i;
+        console.log(`Placing gift shop in safe room ${i}`);
+        foundRoom = true;
+        break;
+      }
+    }
+    
+    // If no safe room found, find the first room that's not a critical hazard
+    if (!foundRoom) {
+      console.log("WARNING: No completely safe rooms, finding best option");
       for (let i = 1; i <= 30; i++) {
-        if (!occupiedRooms.includes(i)) {
+        // Avoid only the most critical rooms (pits and exit)
+        if (i !== positions.pitPosition1 && 
+            i !== positions.pitPosition2 && 
+            i !== positions.exitPosition) {
           giftShopRoomId = i;
-          console.log(`Placing gift shop in safe room ${i}`);
-          foundRoom = true;
+          console.log(`Placing gift shop in room ${i} (may conflict with other features)`);
           break;
         }
       }
-      
-      // ========== FALLBACK ROOM SELECTION ==========
-      // If no safe room found, find the first room that's not a critical hazard
-      if (!foundRoom) {
-        console.log("WARNING: No completely safe rooms, finding best option");
-        for (let i = 1; i <= 30; i++) {
-          // Avoid only the most critical rooms (pits and exit)
-          if (i !== positions.pitPosition1 && 
-              i !== positions.pitPosition2 && 
-              i !== positions.exitPosition) {
-            giftShopRoomId = i;
-            console.log(`Placing gift shop in room ${i} (may conflict with other features)`);
-            break;
-          }
-        }
-      }
-      
-      // ========== GIFT SHOP DESCRIPTION CREATION ==========
-      // Create comprehensive gift shop description with enhanced text
-      const giftShopDescription = {
-        text: "A surprising sight in these ancient caves - someone has set up a makeshift gift shop here. Tacky t-shirts proclaiming 'I Survived the Cave of Wumpus!' hang from stalactites, and various dubious 'authentic cave treasures' are displayed on natural rock shelves. The entrepreneurial goblin shopkeeper grins at you hopefully.",
-        mood: "quirky",
-        special: null,
-        hasWater: false,
-        isGiftShop: true,
-        enhancedText: "Your lantern reveals the full extent of this underground commercial enterprise. Canvas bags, ceramic mugs with cave paintings, and what appears to be a stuffed Wumpus plush toy are arranged with surprising care. Price tags dangle from items, all marked in 'gold coins only.' The goblin adjusts his own t-shirt that reads 'Ask Me About Our Specials!'"
-      };
-      
-      // ========== ROOM DESCRIPTION UPDATE ==========
-      // Force update the room description map with new gift shop
-      setRoomDescriptionMap(prev => ({
-        ...prev,
-        [giftShopRoomId]: giftShopDescription
-      }));
-      
-      // ========== STATE UPDATES ==========
-      // Update all the tracking variables
-      setGiftShopRoom(giftShopRoomId);
-      
-      // Update positions to include gift shop location
-      setPositions(prev => ({
-        ...prev,
-        giftShopPosition: giftShopRoomId
-      }));
     }
     
-    // ========== SPECIAL ROOMS REGISTRATION ==========
-    // Update special rooms tracking for gift shop
-    if (giftShopRoomId) {
-      setSpecialRooms(prev => ({
-        ...prev,
-        [giftShopRoomId]: {
-          ...prev[giftShopRoomId],
-          isGiftShop: true
-        }
-      }));
-    }
+    // Create gift shop description
+    const giftShopDescription = {
+      text: "A surprising sight in these ancient caves - someone has set up a makeshift gift shop here. Tacky t-shirts proclaiming 'I Survived the Cave of Wumpus!' hang from stalactites, and various dubious 'authentic cave treasures' are displayed on natural rock shelves. The entrepreneurial goblin shopkeeper grins at you hopefully.",
+      mood: "quirky",
+      special: null,
+      hasWater: false,
+      isGiftShop: true,
+      enhancedText: "Your lantern reveals the full extent of this underground commercial enterprise. Canvas bags, ceramic mugs with cave paintings, and what appears to be a stuffed Wumpus plush toy are arranged with surprising care. Price tags dangle from items, all marked in 'gold coins only.' The goblin adjusts his own t-shirt that reads 'Ask Me About Our Specials!'"
+    };
     
-    console.log(`=== GIFT SHOP CONFIRMED IN ROOM ${giftShopRoomId} ===`);
+    // Force update the room description
+    setRoomDescriptionMap(prev => ({
+      ...prev,
+      [giftShopRoomId]: giftShopDescription
+    }));
     
-    return giftShopRoomId;
-  };
-
-  // ==================== SPECIALIZED AUDIO FUNCTIONS ====================
+    // Update all the tracking variables
+    setGiftShopRoom(giftShopRoomId);
+    
+    // Update positions
+    setPositions(prev => ({
+      ...prev,
+      giftShopPosition: giftShopRoomId
+    }));
+  }
   
-  /**
-   * Plays Wumpus scream sound effect for dramatic death scenes
-   * Used when the Wumpus (Druika) kills the player for maximum impact
-   */
-  const playWumpusScreamSound = () => {
-    console.log("Playing wumpus scream sound");
-    try {
-      const sound = new Audio(require('../sounds/wumpus-scream.wav'));
-      sound.volume = 0.7; // Set to 70% volume for balance
-      sound.play().catch(error => {
-        console.error('Error playing wumpus scream sound:', error);
-      });
-    } catch (error) {
-      console.error('Error loading wumpus scream sound file:', error);
-    }
-  };
+  // Update special rooms
+  if (giftShopRoomId) {
+    setSpecialRooms(prev => ({
+      ...prev,
+      [giftShopRoomId]: {
+        ...prev[giftShopRoomId],
+        isGiftShop: true
+      }
+    }));
+  }
+  
+  console.log(`=== GIFT SHOP CONFIRMED IN ROOM ${giftShopRoomId} ===`);
+  
+  return giftShopRoomId;
+};
 
+// Add audio for wumpus scream
+const playWumpusScreamSound = () => {
+  console.log("Playing wumpus scream sound");
+  const sound = new Audio(require('../sounds/wumpus-scream.wav')); // Make sure this file exists
+  sound.volume = 0.7;
+  sound.play().catch(error => {
+    console.error('Error playing wumpus scream sound:', error);
+  });
+};
   // ==================== SAVE GAME SYSTEM ====================
   
   /**
@@ -615,6 +595,7 @@ export const GameProvider = ({ children }) => {
       return false;
     }
   };
+
 /**
    * Loads complete game state from localStorage and restores all game systems
    * Handles complex state deserialization including timer restoration and validation
@@ -738,25 +719,28 @@ export const GameProvider = ({ children }) => {
     }
   };
 
-  // ==================== SAVE GAME UTILITY FUNCTIONS ====================
+
+ // ==================== SAVE GAME UTILITY FUNCTIONS ====================
   
   /**
    * Checks if a saved game exists in localStorage
    * Simple utility function used to conditionally display "Load Game" option in UI
    * @returns {boolean} True if save file exists, false otherwise
    */
-  const hasSavedGame = () => {
-    return localStorage.getItem('wumpusCaveSave') !== null;
-  };
+const hasSavedGame = () => {
+  return localStorage.getItem('wumpusCaveSave') !== null;
+};
 
-  /**
+/**
    * Deletes the saved game from localStorage
    * Provides option to start fresh without old save data
    */
-  const deleteSavedGame = () => {
-    localStorage.removeItem('wumpusCaveSave');
-    setMessage("Saved game deleted.");
-  };
+const deleteSavedGame = () => {
+  localStorage.removeItem('wumpusCaveSave');
+  setMessage("Saved game deleted.");
+};
+
+
 
 // ==================== ENVIRONMENTAL TEMPERATURE SYSTEM ====================
   
@@ -767,207 +751,193 @@ export const GameProvider = ({ children }) => {
    * 
    * @param {number} position - Current room position to check for temperature effects
    */
-  const checkTemperatureEffects = (position) => {
-    // ========== BASIC VALIDATION ==========
+const checkTemperatureEffects = (position) => {
     if (gameStatus !== 'playing') {
-      return;
-    }
-    if (!position) return;
+    return;
+  }
+  if (!position) return;
+  
+  // Clear any existing timer first to prevent overlap
+  if (temperatureTimer) {
+    clearTimeout(temperatureTimer);
+    setTemperatureTimer(null);
+  }
+  
+  // Check if player is in a cold or hot room
+  const roomInfo = roomDescriptionMap[position]; 
+  const isColdRoom = roomInfo?.mood === 'cold';
+  const isHotRoom = roomInfo?.mood === 'warm';
+  
+  // Determine if cloak is equipped (check global state first, then inventory)
+  let cloakEquipped = window.GLOBAL_CLOAK_STATE !== undefined 
+    ? window.GLOBAL_CLOAK_STATE 
+    : inventory.some(item => 
+        (item.originalId || item.id) === 'invisibility_cloak' && item.equipped === true
+      );
+  
+  // Set global state for tracking across timers
+  window.TEMP_EFFECT_ROOM = position;
+  window.TEMP_EFFECT_START_TIME = Date.now();
+  
+  // HOT ROOM WITH CLOAK - BAD COMBINATION
+  if (isHotRoom && cloakEquipped) {
+    window.TEMP_EFFECT_TYPE = 'hot';
     
-    // ========== TIMER MANAGEMENT ==========
-    // Clear any existing timer first to prevent overlap
-    if (temperatureTimer) {
-      clearTimeout(temperatureTimer);
-      setTemperatureTimer(null);
-    }
+    // Show initial warning
+    setMessage(prev => {
+      const warningMsg = " The thick cloak is making you uncomfortably warm in this heated chamber.";
+      return prev.includes(warningMsg) ? prev : prev + warningMsg;
+    });
     
-    // ========== ROOM TEMPERATURE DETECTION ==========
-    // Check if player is in a cold or hot room based on room mood
-    const roomInfo = roomDescriptionMap[position]; 
-    const isColdRoom = roomInfo?.mood === 'cold';
-    const isHotRoom = roomInfo?.mood === 'warm';
-    
-    // ========== CLOAK EQUIPMENT STATUS ==========
-    // Determine if cloak is equipped (check global state first, then inventory)
-    let cloakEquipped = window.GLOBAL_CLOAK_STATE !== undefined 
-      ? window.GLOBAL_CLOAK_STATE 
-      : inventory.some(item => 
-          (item.originalId || item.id) === 'invisibility_cloak' && item.equipped === true
-        );
-    
-    // ========== GLOBAL STATE TRACKING ==========
-    // Set global state for tracking across timers
-    window.TEMP_EFFECT_ROOM = position;
-    window.TEMP_EFFECT_START_TIME = Date.now();
-    
-    // ========== HOT ROOM WITH CLOAK - DANGEROUS COMBINATION ==========
-    if (isHotRoom && cloakEquipped) {
-      window.TEMP_EFFECT_TYPE = 'hot';
-      
-      // ========== INITIAL WARNING ==========
-      // Show initial warning message
-      setMessage(prev => {
-        const warningMsg = " The thick cloak is making you uncomfortably warm in this heated chamber.";
-        return prev.includes(warningMsg) ? prev : prev + warningMsg;
-      });
-      
-      // ========== FIRST STAGE TIMER (4 seconds) ==========
-      const hotTimer = setTimeout(() => {
+    // First timer - 20 seconds
+    const hotTimer = setTimeout(() => {
+
         // Check if game is still playing
-        if (gameStatus !== 'playing') {
-          return;
-        }
+  if (gameStatus !== 'playing') {
+    return;
+  }
+      const effectRoom = window.TEMP_EFFECT_ROOM;
+      const effectType = window.TEMP_EFFECT_TYPE;
+      
+      // Only apply if player still in same room with same effect type
+      if (position === effectRoom && effectType === 'hot') {
+        // Check if cloak is still equipped
+        let stillEquipped = window.GLOBAL_CLOAK_STATE !== undefined 
+          ? window.GLOBAL_CLOAK_STATE 
+          : inventory.some(item => 
+              (item.originalId || item.id) === 'invisibility_cloak' && item.equipped === true
+            );
         
-        const effectRoom = window.TEMP_EFFECT_ROOM;
-        const effectType = window.TEMP_EFFECT_TYPE;
-        
-        // Only apply if player still in same room with same effect type
-        if (position === effectRoom && effectType === 'hot') {
-          // Check if cloak is still equipped
-          let stillEquipped = window.GLOBAL_CLOAK_STATE !== undefined 
-            ? window.GLOBAL_CLOAK_STATE 
-            : inventory.some(item => 
-                (item.originalId || item.id) === 'invisibility_cloak' && item.equipped === true
-              );
+        if (stillEquipped) {
+          // First level effect - increase torch
+          setTorchLevel(prev => Math.max(prev +2, 100));
+          setMessage("Your body temperature is rising dangerously. Remove the cloak or leave this heated chamber soon!");
           
-          if (stillEquipped) {
-            // ========== FIRST LEVEL EFFECT ==========
-            // First level effect - increase torch level as body heat rises
-            setTorchLevel(prev => Math.max(prev + 2, 100));
-            setMessage("Your body temperature is rising dangerously. Remove the cloak or leave this heated chamber soon!");
+          // Second timer - 15 seconds
+          const secondHotTimer = setTimeout(() => {
+            const effectRoom2 = window.TEMP_EFFECT_ROOM;
+            const effectType2 = window.TEMP_EFFECT_TYPE;
             
-            // ========== SECOND STAGE TIMER (8 seconds) ==========
-            const secondHotTimer = setTimeout(() => {
-              const effectRoom2 = window.TEMP_EFFECT_ROOM;
-              const effectType2 = window.TEMP_EFFECT_TYPE;
+            // Check if player still in same room with same effect
+            if (position === effectRoom2 && effectType2 === 'hot') {
+              // Check if cloak is still equipped
+              let stillEquippedAgain = window.GLOBAL_CLOAK_STATE !== undefined 
+                ? window.GLOBAL_CLOAK_STATE 
+                : inventory.some(item => 
+                    (item.originalId || item.id) === 'invisibility_cloak' && item.equipped === true
+                  );
               
-              // Check if player still in same room with same effect
-              if (position === effectRoom2 && effectType2 === 'hot') {
-                // Check if cloak is still equipped
-                let stillEquippedAgain = window.GLOBAL_CLOAK_STATE !== undefined 
-                  ? window.GLOBAL_CLOAK_STATE 
-                  : inventory.some(item => 
-                      (item.originalId || item.id) === 'invisibility_cloak' && item.equipped === true
-                    );
-                
-                if (stillEquippedAgain) {
-                  // ========== DEATH FROM HEAT ==========
-                  // Player dies from heat exhaustion
-                  setGameStatus('lost');
-                  setDeathCause('heat');
-                  setMessage("The heat from the cave walls are magnified by the cloak and it quickly overwhelms you. \nYou collapse from heat exhaustion. \nYour remains start to turn into carbonized form from the continuted heat. \nEventually turning you into ashes that eventually blow away. \nPoof! \nGame over!");
-                } else {
-                  // ========== SURVIVAL BY REMOVING CLOAK ==========
-                  // Player removed cloak in time
-                  setMessage("You've removed the cloak just in time. The heat is now bearable.");
-                }
+              if (stillEquippedAgain) {
+                // Player dies from heat
+                setGameStatus('lost');
+                setDeathCause('heat');
+                setMessage("The heat from the cave walls are magnified by the cloak and it quickly overwhelms you. \nYou collapse from heat exhaustion. \nYour remains start to turn into carbonized form from the continuted heat. \nEventually turning you into ashes that eventually blow away. \nPoof! \nGame over!");
+              } else {
+                // Player removed cloak in time
+                setMessage("You've removed the cloak just in time. The heat is now bearable.");
               }
-            }, 8000); // 8 seconds for second stage
-            
-            // Store the second timer
-            setTemperatureTimer(secondHotTimer);
-          } else {
-            // ========== EARLY CLOAK REMOVAL ==========
-            // Player removed cloak before first effect
-            setMessage("You've removed the cloak. The heat is now bearable.");
-          }
-        }
-      }, 4000); // 4 seconds for first stage
-      
-      // Store the first timer
-      setTemperatureTimer(hotTimer);
-    }
-    
-    // ========== COLD ROOM WITHOUT CLOAK - DANGEROUS COMBINATION ==========
-    else if (isColdRoom && !cloakEquipped) {
-      window.TEMP_EFFECT_TYPE = 'cold';
-      
-      // ========== INITIAL WARNING ==========
-      // Show initial cold warning
-      setMessage(prev => {
-        const coldMsg = " \nThe frigid air makes you shiver. A warm cloak would help here.";
-        return prev.includes(coldMsg) ? prev : prev + coldMsg;
-      });
-      
-      // ========== FIRST STAGE TIMER (14 seconds) ==========
-      const coldTimer = setTimeout(() => {
-        const effectRoom = window.TEMP_EFFECT_ROOM;
-        const effectType = window.TEMP_EFFECT_TYPE;
-        
-        // Only apply if player still in same room with same effect
-        if (position === effectRoom && effectType === 'cold') {
-          // Check if player has put on cloak
-          let nowEquipped = window.GLOBAL_CLOAK_STATE !== undefined 
-            ? window.GLOBAL_CLOAK_STATE 
-            : inventory.some(item => 
-                (item.originalId || item.id) === 'invisibility_cloak' && item.equipped === true
-              );
+            }
+          }, 8000); // 15 seconds
           
-          if (!nowEquipped) {
-            // ========== FIRST LEVEL EFFECT ==========
-            // First level effect - drain torch fuel from cold
-            setTorchLevel(prev => Math.max(prev - 5, 25));
-            setMessage("The extreme cold drains your warmth. Find protection soon! Oh Dear! Oh Dear!");
-            
-            // ========== SECOND STAGE TIMER (12 seconds) ==========
-            const secondColdTimer = setTimeout(() => {
-              const effectRoom2 = window.TEMP_EFFECT_ROOM;
-              const effectType2 = window.TEMP_EFFECT_TYPE;
-              
-              // Check if player still in same room with same effect
-              if (position === effectRoom2 && effectType2 === 'cold') {
-                // Check if player still doesn't have cloak
-                let stillNoCloak = window.GLOBAL_CLOAK_STATE !== undefined 
-                  ? !window.GLOBAL_CLOAK_STATE 
-                  : !inventory.some(item => 
-                      (item.originalId || item.id) === 'invisibility_cloak' && item.equipped === true
-                    );
-                
-                if (stillNoCloak) {
-                  // ========== DEATH FROM COLD ==========
-                  // Player dies from freezing
-                  setGameStatus('lost');
-                  setDeathCause('cold');
-                  setMessage("The freezing cold overwhelms you.\n You have frozen into a giant ice popsicle\n Over the next few centuries, the ice critters in this cave will enjoy the fresh frozen delightfully delicous delectable you have become for them. \nA gift from the cave gods\n\nGAME OVER!");
-                } else {
-                  // ========== SURVIVAL BY EQUIPPING CLOAK ==========
-                  // Player put on cloak in time
-                  setMessage("The cloak provides relief from the freezing cold.");
-                }
-              }
-            }, 12000); // 12 seconds for second stage
-            
-            // Store the second timer
-            setTemperatureTimer(secondColdTimer);
-          } else {
-            // ========== EARLY CLOAK EQUIPPING ==========
-            // Player put on cloak before first effect
-            setMessage("The cloak provides relief from the freezing cold.");
-          }
+          // Store the timer
+          setTemperatureTimer(secondHotTimer);
+        } else {
+          // Player removed cloak before first effect
+          setMessage("You've removed the cloak. The heat is now bearable.");
         }
-      }, 14000); // 14 seconds for first stage
-      
-      // Store the first timer
-      setTemperatureTimer(coldTimer);
-    }
+      }
+    }, 4000); // 20 seconds
     
-    // ========== COLD ROOM WITH CLOAK - PROTECTED ==========
-    else if (isColdRoom && cloakEquipped) {
-      window.TEMP_EFFECT_TYPE = null;
-      
-      // ========== PROTECTION MESSAGE ==========
-      // Show protection message for cold room with cloak
-      setMessage(prev => {
-        const protectionMsg = " The cloak keeps you warm in this frigid chamber.";
-        return prev.includes(protectionMsg) ? prev : prev + protectionMsg;
-      });
-    }
+    // Store the timer
+    setTemperatureTimer(hotTimer);
+  }
+  
+  // COLD ROOM WITHOUT CLOAK - BAD COMBINATION
+  else if (isColdRoom && !cloakEquipped) {
+    window.TEMP_EFFECT_TYPE = 'cold';
     
-    // ========== REGULAR ROOM OR HOT ROOM WITHOUT CLOAK - NO EFFECT ==========
-    else {
-      window.TEMP_EFFECT_TYPE = null;
-    }
-  };
+    // Show warning
+    setMessage(prev => {
+      const coldMsg = " \nThe frigid air makes you shiver. A warm cloak would help here.";
+      return prev.includes(coldMsg) ? prev : prev + coldMsg;
+    });
+    
+    // First level timer - 10 seconds
+    const coldTimer = setTimeout(() => {
+      const effectRoom = window.TEMP_EFFECT_ROOM;
+      const effectType = window.TEMP_EFFECT_TYPE;
+      
+      // Only apply if player still in same room with same effect
+      if (position === effectRoom && effectType === 'cold') {
+        // Check if player has put on cloak
+        let nowEquipped = window.GLOBAL_CLOAK_STATE !== undefined 
+          ? window.GLOBAL_CLOAK_STATE 
+          : inventory.some(item => 
+              (item.originalId || item.id) === 'invisibility_cloak' && item.equipped === true
+            );
+        
+        if (!nowEquipped) {
+          // First level effect - drain torch
+          setTorchLevel(prev => Math.max(prev - 5, 25));
+          setMessage("The extreme cold drains your warmth. Find protection soon! Oh Dear! Oh Dear!");
+          
+          // Second level timer - 10 seconds
+          const secondColdTimer = setTimeout(() => {
+            const effectRoom2 = window.TEMP_EFFECT_ROOM;
+            const effectType2 = window.TEMP_EFFECT_TYPE;
+            
+            // Check if player still in same room with same effect
+            if (position === effectRoom2 && effectType2 === 'cold') {
+              // Check if player still doesn't have cloak
+              let stillNoCloak = window.GLOBAL_CLOAK_STATE !== undefined 
+                ? !window.GLOBAL_CLOAK_STATE 
+                : !inventory.some(item => 
+                    (item.originalId || item.id) === 'invisibility_cloak' && item.equipped === true
+                  );
+              
+              if (stillNoCloak) {
+                // Player dies from cold
+                setGameStatus('lost');
+                setDeathCause('cold');
+                setMessage("The freezing cold overwhelms you.\n You have frozen into a giant ice popsicle\n Over the next few centuries, the ice critters in this cave will enjoy the fresh frozen delightfully delicous delectable you have become for them. \nA gift from the cave gods\n\nGAME OVER!");
+              } else {
+                // Player put on cloak in time
+                setMessage("The cloak provides relief from the freezing cold.");
+              }
+            }
+          }, 15000); // 15 seconds
+          
+          // Store the timer
+          setTemperatureTimer(secondColdTimer);
+        } else {
+          // Player put on cloak before first effect
+          setMessage("The cloak provides relief from the freezing cold.");
+        }
+      }
+    }, 5000); // 5 seconds
+    
+    // Store the timer
+    setTemperatureTimer(coldTimer);
+  }
+  
+  // COLD ROOM WITH CLOAK - PROTECTED
+  else if (isColdRoom && cloakEquipped) {
+    window.TEMP_EFFECT_TYPE = null;
+    
+    // Show protection message
+    setMessage(prev => {
+      const protectionMsg = " The cloak keeps you warm in this frigid chamber.";
+      return prev.includes(protectionMsg) ? prev : prev + protectionMsg;
+    });
+  }
+  
+  // REGULAR ROOM OR HOT ROOM WITHOUT CLOAK - NO EFFECT
+  else {
+    window.TEMP_EFFECT_TYPE = null;
+  }
+};
+
+
 
   // ==================== ENHANCED GOLD COIN COLLECTION SYSTEM ====================
   
@@ -978,72 +948,68 @@ export const GameProvider = ({ children }) => {
    * 
    * @param {string} itemId - The item ID being collected
    */
-  const addGoldCoinsWithLore = (itemId) => {
-    // ========== CHECK FOR EXISTING GOLD COINS ==========
-    // Check if player already has gold coins in inventory
-    const existingGoldCoins = inventory.find(item => 
-      (item.originalId || item.id) === 'gold_coins'
-    );
+
+
+const addGoldCoinsWithLore = (itemId) => {
+  // Check if player already has gold coins
+  const existingGoldCoins = inventory.find(item => 
+    (item.originalId || item.id) === 'gold_coins'
+  );
+  
+  if (existingGoldCoins) {
+    // Add 10 to existing gold coins count
+    setInventory(prev => prev.map(item => {
+      if ((item.originalId || item.id) === 'gold_coins') {
+        const currentValue = typeof item.value === 'number' ? item.value : 1;
+        const newValue = currentValue + 10;
+        return {
+          ...item,
+          value: newValue,
+          name: `${goldCoinDescription.name} (${newValue})`,
+          description: goldCoinDescription.description,
+          lore: goldCoinDescription.lore,
+          inspectionText: goldCoinDescription.inspectionText,
+          canInspect: true
+        };
+      }
+      return item;
+    }));
     
-    if (existingGoldCoins) {
-      // ========== ADD TO EXISTING COLLECTION ==========
-      // Add 10 to existing gold coins count
-      setInventory(prev => prev.map(item => {
-        if ((item.originalId || item.id) === 'gold_coins') {
-          const currentValue = typeof item.value === 'number' ? item.value : 1;
-          const newValue = currentValue + 10;
-          return {
-            ...item,
-            value: newValue,
-            name: `${goldCoinDescription.name} (${newValue})`,
-            description: goldCoinDescription.description,
-            lore: goldCoinDescription.lore,
-            inspectionText: goldCoinDescription.inspectionText,
-            canInspect: true
-          };
-        }
-        return item;
-      }));
-      
-      // ========== UPDATE ROOM STATE ==========
-      // Update room description to reflect item collection
-      updateRoomDescriptionAfterCollection(itemId);
-      
-      // ========== ENHANCED COLLECTION MESSAGE ==========
-      // Show enriched message for additional coins
-      setMessage(`You found a cache of ${goldCoinDescription.name}! As you add them to your existing collection, you notice their unusual weight and craftsmanship. ${goldCoinDescription.lore.split('.')[0]}.`);
-    } else {
-      // ========== CREATE NEW GOLD COIN ITEM ==========
-      // Create new item with 10 coins and rich descriptions
-      // Use itemTypes as a base if it exists
-      const baseItem = itemTypes[itemId] ? {...itemTypes[itemId]} : {
-        icon: '💰',
-        originalId: 'gold_coins'
-      };
-      
-      const goldCoinItem = {
-        ...baseItem,
-        id: 'gold_coins_' + Date.now(),
-        originalId: 'gold_coins',
-        name: `${goldCoinDescription.name} (10)`,
-        value: 10,
-        description: goldCoinDescription.description,
-        lore: goldCoinDescription.lore,
-        inspectionText: goldCoinDescription.inspectionText,
-        canInspect: true
-      };
-      
-      // ========== ADD TO INVENTORY ==========
-      setInventory(prev => [...prev, goldCoinItem]);
-      updateRoomDescriptionAfterCollection(itemId);
-      
-      // ========== FIRST DISCOVERY MESSAGE ==========
-      // Show enriched message for first discovery
-      setMessage(`You found a cache of ${goldCoinDescription.name}! ${goldCoinDescription.description.split('.')[0]}. The gold gleams with an otherworldly quality in your torchlight.`);
-    }
+    // Update room description
+    updateRoomDescriptionAfterCollection(itemId);
     
-    return; // Exit after handling gold coins
-  };
+    // Show enriched message
+    setMessage(`You found a cache of ${goldCoinDescription.name}! As you add them to your existing collection, you notice their unusual weight and craftsmanship. ${goldCoinDescription.lore.split('.')[0]}.`);
+  } else {
+    // Create new item with 10 coins and rich descriptions
+    // Use itemTypes as a base if it exists
+    const baseItem = itemTypes[itemId] ? {...itemTypes[itemId]} : {
+      icon: '💰',
+      originalId: 'gold_coins'
+    };
+    
+    const goldCoinItem = {
+      ...baseItem,
+      id: 'gold_coins_' + Date.now(),
+      originalId: 'gold_coins',
+      name: `${goldCoinDescription.name} (10)`,
+      value: 10,
+      description: goldCoinDescription.description,
+      lore: goldCoinDescription.lore,
+      inspectionText: goldCoinDescription.inspectionText,
+      canInspect: true
+    };
+    
+    setInventory(prev => [...prev, goldCoinItem]);
+    updateRoomDescriptionAfterCollection(itemId);
+    
+    // Show enriched message
+    setMessage(`You found a cache of ${goldCoinDescription.name}! ${goldCoinDescription.description.split('.')[0]}. The gold gleams with an otherworldly quality in your torchlight.`);
+  }
+  
+  return; // Exit after handling gold coins
+};
+
 
   // ==================== GOLD COIN INSPECTION SYSTEM ====================
   
@@ -1052,43 +1018,38 @@ export const GameProvider = ({ children }) => {
    * Provides immersive examination mechanics with chance for secret discovery
    * Dynamically adjusts descriptions based on coin quantity
    */
-  const inspectGoldCoins = () => {
-    // ========== FIND COINS IN INVENTORY ==========
-    const coins = inventory.find(item => 
-      (item.originalId || item.id) === 'gold_coins'
-    );
+const inspectGoldCoins = () => {
+  const coins = inventory.find(item => 
+    (item.originalId || item.id) === 'gold_coins'
+  );
+  
+  if (coins) {
+    const count = coins.value || 1;
+    const isPlural = count > 1;
     
-    if (coins) {
-      // ========== DYNAMIC DESCRIPTION GENERATION ==========
-      const count = coins.value || 1;
-      const isPlural = count > 1;
-      
-      // ========== MAIN INSPECTION MESSAGE ==========
-      // Show detailed inspection message
-      setMessage(`You examine the ancient ${isPlural ? 'coins' : 'coin'} carefully. ${coins.inspectionText || goldCoinDescription.inspectionText} ${count > 5 ? "With this many coins, you wonder if they might be valuable to a collector or historian back in the village." : ""}`);
-      
-      // ========== SECRET LORE DISCOVERY MECHANIC ==========
-      // 5% chance to discover hidden lore when inspecting
-      if (Math.random() < 0.05 && !coins.revealedSecretLore) {
-        setTimeout(() => {
-          setMessage(prev => prev + "\n\nAs you turn one coin in your hand, you notice something unusual - when held at just the right angle near your torch, hidden symbols appear between the runes, seemingly etched with heat-reactive ink. These coins may have been used to carry secret messages during ancient times.");
-          
-          // ========== MARK SECRET AS DISCOVERED ==========
-          // Mark that this secret has been discovered
-          setInventory(prev => prev.map(item => {
-            if ((item.originalId || item.id) === 'gold_coins') {
-              return {
-                ...item,
-                revealedSecretLore: true,
-                description: item.description + " When held at a certain angle near heat, hidden symbols appear between the runes."
-              };
-            }
-            return item;
-          }));
-        }, 2000); // 2-second delay for dramatic effect
-      }
+    // Show detailed inspection message
+    setMessage(`You examine the ancient ${isPlural ? 'coins' : 'coin'} carefully. ${coins.inspectionText || goldCoinDescription.inspectionText} ${count > 5 ? "With this many coins, you wonder if they might be valuable to a collector or historian back in the village." : ""}`);
+    
+    // 5% chance to discover hidden lore when inspecting
+    if (Math.random() < 0.05 && !coins.revealedSecretLore) {
+      setTimeout(() => {
+        setMessage(prev => prev + "\n\nAs you turn one coin in your hand, you notice something unusual - when held at just the right angle near your torch, hidden symbols appear between the runes, seemingly etched with heat-reactive ink. These coins may have been used to carry secret messages during ancient times.");
+        
+        // Mark that this secret has been discovered
+        setInventory(prev => prev.map(item => {
+          if ((item.originalId || item.id) === 'gold_coins') {
+            return {
+              ...item,
+              revealedSecretLore: true,
+              description: item.description + " When held at a certain angle near heat, hidden symbols appear between the runes."
+            };
+          }
+          return item;
+        }));
+      }, 2000);
     }
-  };
+  }
+};
 
 
 //This function is for adding items to inventory that were bought at the giftshop.or picked up autmattically in the cave
@@ -1192,6 +1153,9 @@ const addItemToInventory = (itemId) => {
 
 };
 
+
+
+
 // ==================== INVENTORY VALIDATION UTILITIES ====================
 
 /**
@@ -1209,6 +1173,7 @@ const addItemToInventory = (itemId) => {
 const hasItem = (itemId) => {
   return inventory.some(item => item.id === itemId);
 };
+
 
 // ==================== CENTRAL ITEM USAGE SYSTEM ====================
 
@@ -1412,6 +1377,8 @@ const handleUseItem = (itemId) => {
   }
 };
 
+
+
 // ==================== CRITICAL EQUIPMENT STATE MANAGEMENT ====================
 
 /**
@@ -1447,49 +1414,39 @@ const handleUseItem = (itemId) => {
  * - **Environmental Integration**: Triggers temperature recalculation automatically
  */
 const forceUpdateCloakState = (newEquippedState) => {
-  // ========== DEBUGGING AND LOGGING ==========
   console.log(`CRITICAL FIX: Force updating cloak equipped state to ${newEquippedState}`);
   
-  // ========== ATOMIC INVENTORY STATE UPDATE ==========
   // Update inventory directly, ensuring all components use the same state
   setInventory(prevInventory => {
-    // Log before update for debugging
+    // Log before update
     console.log("CRITICAL FIX: Previous inventory:", prevInventory);
     
-    // ========== INVENTORY TRANSFORMATION ==========
     // Create a new inventory array with the updated cloak
     const updatedInventory = prevInventory.map(item => {
-      // Check for cloak using both possible ID formats (handles item evolution)
       if ((item.originalId || item.id) === 'invisibility_cloak') {
         console.log(`CRITICAL FIX: Updating cloak item ${item.id} from ${item.equipped} to ${newEquippedState}`);
-        
-        // Return updated cloak item with new state and appropriate name
         return {
           ...item,
           equipped: newEquippedState,
-          // Dynamic name based on equipped status for UI clarity
           name: newEquippedState ? 'Tattered Winter Cloak (Worn)' : 'Tattered Winter Cloak'
         };
       }
-      return item; // Return other items unchanged
+      return item;
     });
     
-    // Log after update for verification
+    // Log after update
     console.log("CRITICAL FIX: Updated inventory:", updatedInventory);
     
     return updatedInventory;
   });
   
-  // ========== GLOBAL STATE SYNCHRONIZATION ==========
-  // Set global state for immediate access by other systems
+  // Set global state
   window.GLOBAL_CLOAK_STATE = newEquippedState;
   console.log(`CRITICAL FIX: Set global cloak state to ${newEquippedState}`);
   
-  // ========== DELAYED VERIFICATION AND TEMPERATURE CHECK ==========
   // Force a check of temperature effects with the new state
   setTimeout(() => {
-    // ========== STATE VERIFICATION ==========
-    // Log the inventory to verify update persisted
+    // Log the inventory to verify update
     console.log("CRITICAL FIX: Verifying cloak state after update:");
     
     const verifyCloak = inventory.find(item => 
@@ -1498,29 +1455,28 @@ const forceUpdateCloakState = (newEquippedState) => {
     
     console.log("CRITICAL FIX: Cloak after update:", verifyCloak);
     
-    // ========== TEMPERATURE SYSTEM INTEGRATION ==========
-    // Run temperature check with updated cloak state
+    // Run temperature check
     if (typeof checkTemperatureEffects === 'function') {
       checkTemperatureEffects(currentPosition);
     }
-  }, 100); // 100ms delay ensures React state update completion
+  }, 100);
   
-  // ========== INTER-COMPONENT COMMUNICATION ==========
   // Dispatch a custom event for other components to update
   const event = new CustomEvent('cloak_state_change', {
     detail: { equipped: newEquippedState }
   });
   window.dispatchEvent(event);
 
-  // ========== SECONDARY TEMPERATURE CHECK ==========
-  // Additional delayed temperature check for extra safety
   setTimeout(() => {
     if (typeof checkTemperatureEffects === 'function' && currentPosition) {
       console.log("Checking temperature effects after cloak state update");
       checkTemperatureEffects(currentPosition);
     }
   }, 100);
+
+
 };
+
 
 
 // ==================== MAP FRAGMENT USAGE ORCHESTRATOR ====================
@@ -1547,8 +1503,7 @@ const forceUpdateCloakState = (newEquippedState) => {
 const handleUseMapFragment = () => {
   console.log("MAP FRAGMENT USE DETECTED");
   
-  // ========== INVENTORY VALIDATION ==========
-  // Find the map fragment in inventory using flexible ID matching
+  // Find the map fragment in inventory
   const mapFragment = inventory.find(item => (item.originalId || item.id) === 'old_map');
   
   if (!mapFragment) {
@@ -1556,38 +1511,32 @@ const handleUseMapFragment = () => {
     return false;
   }
   
-  // ========== USAGE TRACKING SYSTEM ==========
   // Check how many times the fragment has been used
   console.log("Current map fragment uses:", mapFragmentUses);
   
-  // ========== PURPOSE EXTRACTION ==========
   // Get the purpose directly from the inventory item - NO FALLBACKS
   const finalPurpose = mapFragment.purpose;
   console.log("Map fragment purpose from inventory:", finalPurpose);
   playMapFragmentSound();
-  
   if (!finalPurpose) {
     console.error("Map fragment has no purpose! This shouldn't happen.");
     setMessage("The map fragment appears completely blank and unusable.");
     return false;
   }
   
-  // ========== DYNAMIC USAGE LIMITS ==========
-  // Set maximum uses based on purpose - different fragments have different durability
+  // Set maximum uses based on purpose
   let maxUses = 3; // Default for most purposes
   if (finalPurpose === 'danger_sense') {
-    maxUses = 1; // Danger sense gets 1 use only - too powerful for multiple uses
+    maxUses = 1; // Danger sense gets 1 use 
   }
   console.log(`Maximum uses for ${finalPurpose}: ${maxUses}`);
   
-  // ========== USAGE CALCULATION ==========
   // Continue with the existing function
   console.log(`Using ${mapFragmentUses + 1} of ${maxUses} uses`);
   
   // Check if this is the last use
   const isLastUse = mapFragmentUses >= maxUses - 1;
   
-  // ========== USAGE COUNTER MANAGEMENT ==========
   if (isLastUse) {
     console.log("Last use - map fragment will be removed");
     
@@ -1600,7 +1549,6 @@ const handleUseMapFragment = () => {
     console.log(`Incremented use counter to ${newUseCount}`);
   }
   
-  // ========== PURPOSE-BASED FUNCTION DISPATCH ==========
   // Run the appropriate function based on purpose
   switch (finalPurpose) {
     case 'danger_sense':
@@ -1645,13 +1593,11 @@ const handleUseMapFragment = () => {
       return false;
   }
   
-  // ========== DRAMATIC ITEM DESTRUCTION SEQUENCE ==========
   // If it was the last use, add the crumble message after a delay and remove the item
   if (isLastUse) {
     setTimeout(() => {
       setMessage(prev => prev + "\n\nThe map fragment crumbles to dust as you use it one last time...");
       
-      // ========== SAFE ITEM REMOVAL ==========
       // FIX: Remove the item using its actual ID (not 'old_map')
       setTimeout(() => {
         setInventory(prev => prev.filter(item => item.id !== mapFragment.id));
@@ -1663,6 +1609,13 @@ const handleUseMapFragment = () => {
   
   return false; // Keep the item
 };
+
+  
+  // Remove the map fragment after use
+ // setInventory(prev => prev.filter(i => i.id !== 'old_map'));
+//};
+
+
 
 // ==================== DYNAMIC UI ANIMATION SYSTEM ====================
 
@@ -1689,7 +1642,6 @@ const handleUseMapFragment = () => {
 const pulseButton = (roomNumber, color, type) => {
   console.log(`Attempting to pulse button for room ${roomNumber} with ${color} (${type})`);
   
-  // ========== DOM ELEMENT DISCOVERY ==========
   // Find all connection buttons
   const allButtons = document.querySelectorAll('.connection-btn');
   console.log(`Found ${allButtons.length} connection buttons`);
@@ -1706,17 +1658,14 @@ const pulseButton = (roomNumber, color, type) => {
   
   console.log(`Found button for room ${roomNumber}:`, roomButton);
   
-  // ========== UNIQUE ANIMATION ID GENERATION ==========
-  // Create a unique ID for this animation to prevent conflicts
+  // Create a unique ID for this animation
   const uniqueID = `pulse-${type}-${Date.now()}`;
   
-  // ========== DYNAMIC CSS INJECTION ==========
-  // Create a style element for this specific animation
+  // Create a style element
   const styleElement = document.createElement('style');
   styleElement.id = uniqueID;
   
-  // ========== CUSTOM KEYFRAME ANIMATION DEFINITION ==========
-  // Define the animation with unique naming to avoid conflicts
+  // Define the animation
   styleElement.textContent = `
     @keyframes pulse-${uniqueID} {
       0% { 
@@ -1743,14 +1692,12 @@ const pulseButton = (roomNumber, color, type) => {
     }
   `;
   
-  // ========== STYLE INJECTION AND APPLICATION ==========
   // Add the style to the document
   document.head.appendChild(styleElement);
   
   // Apply the class to the button
   roomButton.classList.add(`pulse-${uniqueID}`);
   
-  // ========== AUTOMATIC CLEANUP SYSTEM ==========
   // Clean up after animation finishes
   setTimeout(() => {
     roomButton.classList.remove(`pulse-${uniqueID}`);
@@ -1761,6 +1708,9 @@ const pulseButton = (roomNumber, color, type) => {
     console.log(`Finished pulsing room ${roomNumber}`);
   }, 5500); // 5 pulses at 1s each plus buffer
 };
+
+
+
 
 // ==================== SECRET DOOR DETECTION SYSTEM ====================
 
@@ -1786,7 +1736,6 @@ const handleMapFragmentSecretDoor = () => {
   console.log("SECRET DOOR FUNCTION RUNNING");
   console.log("Current position:", currentPosition);
   
-  // ========== HIDDEN DOOR DISCOVERY ==========
   // Find rooms with hidden doors
   const doorRooms = [];
   Object.keys(specialRooms).forEach(roomKey => {
@@ -1802,7 +1751,6 @@ const handleMapFragmentSecretDoor = () => {
   console.log("Rooms with hidden doors:", doorRooms);
   
   if (doorRooms.length > 0) {
-    // ========== PROXIMITY CHECK ==========
     // Check if player is already in a room with a hidden door
     const currentRoomHasDoor = doorRooms.some(door => door.roomNumber === currentPosition);
     
@@ -1815,7 +1763,6 @@ const handleMapFragmentSecretDoor = () => {
       return false; // Return false to KEEP the item in inventory
     }
     
-    // ========== PATHFINDING TO NEAREST DOOR ==========
     // Find closest door room
     let closestRoom = null;
     let nextStep = null;
@@ -1834,7 +1781,6 @@ const handleMapFragmentSecretDoor = () => {
     
     console.log("Closest door:", closestRoom, "Next step:", nextStep, "Distance:", shortestDistance);
     
-    // ========== DIRECTIONAL GUIDANCE ==========
     if (closestRoom && nextStep) {
       setMessage(`The map fragment reveals a hidden passage ${shortestDistance} rooms away. The marking points toward room ${nextStep}.`);
       
@@ -1844,7 +1790,6 @@ const handleMapFragmentSecretDoor = () => {
     }
   }
   
-  // ========== FALLBACK MESSAGE ==========
   setMessage("The map fragment reveals faint markings of a hidden passage, but you can't determine its location.");
   return false; // Return false to KEEP the item in inventory
 };
@@ -1866,7 +1811,6 @@ const handleMapFragmentSecretDoor = () => {
 const pulseRoomButton = (roomNumber, color) => {
   console.log(`Attempting to pulse button for room ${roomNumber}`);
   
-  // ========== BUTTON DISCOVERY ==========
   // Find all connection buttons
   const allButtons = document.querySelectorAll('.connection-btn');
   console.log(`Found ${allButtons.length} connection buttons`);
@@ -1883,7 +1827,6 @@ const pulseRoomButton = (roomNumber, color) => {
   
   console.log(`Found button for room ${roomNumber}`);
   
-  // ========== UNIQUE ANIMATION GENERATION ==========
   // Create unique ID for this animation
   const uniqueID = `door-pulse-${Date.now()}`;
   
@@ -1891,8 +1834,7 @@ const pulseRoomButton = (roomNumber, color) => {
   const styleElement = document.createElement('style');
   styleElement.id = uniqueID;
   
-  // ========== STREAMLINED ANIMATION DEFINITION ==========
-  // Define animation with faster timing for immediate feedback
+  // Define animation
   styleElement.textContent = `
     @keyframes door-pulse-${uniqueID} {
       0% { transform: scale(1); background: linear-gradient(135deg, #a87b57, #774513); }
@@ -1907,14 +1849,12 @@ const pulseRoomButton = (roomNumber, color) => {
     }
   `;
   
-  // ========== ANIMATION EXECUTION ==========
   // Add style to document
   document.head.appendChild(styleElement);
   
   // Apply class to button
   roomButton.classList.add(`door-pulse-${uniqueID}`);
   
-  // ========== CLEANUP MANAGEMENT ==========
   // Clean up after animation
   setTimeout(() => {
     roomButton.classList.remove(`door-pulse-${uniqueID}`);
@@ -1924,9 +1864,10 @@ const pulseRoomButton = (roomNumber, color) => {
   }, 4500); // 5 pulses at 0.8s plus buffer
 };
 
-// ==================== WUMPUS TRACKING SYSTEM ====================
 
-/**
+
+// ==================== WUMPUS/DRUIKA TRACKING SYSTEM ====================
+/**  I changed the name to smething called a druika to just to be different but it was later on in development
  * Map fragment purpose implementation: Druika (Wumpus) Tracker
  * Advanced creature tracking with pathfinding and directional guidance
  * 
@@ -1944,28 +1885,27 @@ const pulseRoomButton = (roomNumber, color) => {
  * @returns {boolean} True to consume the map fragment after use
  */
 const handleMapFragmentWumpusTracker = () => {
-  // ========== DISTANCE CALCULATION ==========
   // Get distance to wumpus
   const wumpusDistance = calculateDistanceToRoom(currentPosition, positions.wumpusPosition);
   
-  // ========== PATHFINDING TO THREAT ==========
   // Get direction hints
   const pathToWumpus = findShortestPath(currentPosition, positions.wumpusPosition, roomConnections);
   const nextRoomTowardWumpus = pathToWumpus ? pathToWumpus.nextRoom : null;
   
-  // ========== DIRECTIONAL GUIDANCE SYSTEM ==========
   if (nextRoomTowardWumpus) {
     setMessage(`The fragment pulses with an ominous red glow. The Ancient Druika is ${wumpusDistance} rooms away. The glow intensifies when pointed toward room ${nextRoomTowardWumpus}.`);
     
     // Highlight the button leading toward the wumpus with a red color
     highlightPathToRoom(nextRoomTowardWumpus, '#ff4d4d', 'wumpus');
   } else {
-    // ========== FALLBACK FOR PATHFINDING FAILURE ==========
-    setMessage(`The fragment pulses with an ominous red glow. The Ancient Druika is ${wumpusDistance} rooms away, but you can't determine its exact location.`);
+    setMessage(`The fragment pulses with an ominous red glow. The Ancient  Druika  is ${wumpusDistance} rooms away, but you can't determine its exact location.`);
   }
   
-  return true; // Consume the fragment after use
+  return true;
 };
+
+
+
 
 // ==================== RESOURCE LOCATION SYSTEM ====================
 
@@ -1988,7 +1928,6 @@ const handleMapFragmentWumpusTracker = () => {
  * @returns {boolean} True to consume the map fragment after use
  */
 const handleMapFragmentFlaskFinder = () => {
-  // ========== COMPREHENSIVE RESOURCE SCAN ==========
   // Find rooms with oil flasks
   const oilRooms = [];
   for (let i = 1; i <= 30; i++) {
@@ -1997,9 +1936,7 @@ const handleMapFragmentFlaskFinder = () => {
     }
   }
   
-  // ========== RESOURCE AVAILABILITY CHECK ==========
   if (oilRooms.length > 0) {
-    // ========== PROXIMITY OPTIMIZATION ==========
     // Find the closest oil flask
     let closestRoom = null;
     let shortestDistance = Infinity;
@@ -2012,28 +1949,26 @@ const handleMapFragmentFlaskFinder = () => {
       }
     });
     
-    // ========== PATHFINDING TO RESOURCE ==========
     if (closestRoom) {
       // Get path to closest flask
       const pathToOil = findShortestPath(currentPosition, closestRoom, roomConnections);
       const nextRoomTowardOil = pathToOil ? pathToOil.nextRoom : null;
       
-      // ========== DIRECTIONAL GUIDANCE ==========
       if (nextRoomTowardOil) {
         setMessage(`The fragment reveals faint markings. A source of torch oil lies ${shortestDistance} rooms away. The marking points toward room ${nextRoomTowardOil}.`);
         highlightPathToRoom(nextRoomTowardOil, '#ffcc00', 'oil');
       } else {
-        // ========== PATHFINDING FALLBACK ==========
         setMessage(`The fragment reveals faint markings. A source of torch oil lies in room ${closestRoom}, but you can't determine the path.`);
       }
     }
   } else {
-    // ========== RESOURCE SCARCITY MESSAGING ==========
     setMessage("The fragment reveals faint markings, but you can't make sense of them. Perhaps there is no more oil to be found.");
   }
   
-  return true; // Consume the fragment after use
+  return true;
 };
+
+
 
 
 // ==================== SPATIAL PATHFINDING UTILITY ====================
@@ -2059,6 +1994,7 @@ const calculateDistanceToRoom = (startRoom, targetRoom) => {
   const path = findShortestPath(startRoom, targetRoom, roomConnections);
   return path ? path.distance : "an unknown number of";
 };
+
 
 // ==================== WATER SPIRIT TRADING SYSTEM ====================
 
@@ -2089,7 +2025,6 @@ const calculateDistanceToRoom = (startRoom, targetRoom) => {
 const handleWaterSpiritTrade = () => {
   console.log("Trading with the water sprite");
   
-  // ========== PAYMENT VALIDATION ==========
   // 1. Check if player has gold coins
   const hasGoldCoins = inventory.some(item => 
     (item.originalId || item.id) === 'gold_coins'
@@ -2100,26 +2035,22 @@ const handleWaterSpiritTrade = () => {
     (item.originalId || item.id) === 'golden_compass'
   );
   
-  // ========== INSUFFICIENT FUNDS HANDLING ==========
   if (!hasGoldCoins && !hasGoldenCompass) {
     setMessage("You have nothing valuable to offer the water sprite.");
     return false;
   }
   
-  // ========== PREFERRED PAYMENT PROCESSING ==========
-  // If player has gold coins, use those first (preserve rare compass)
+  // If player has gold coins, use those first
   if (hasGoldCoins) {
-    // ========== GOLD COIN PAYMENT LOGIC ==========
     // Original gold coin logic - unchanged
     const goldCoinItem = inventory.find(item => 
       (item.originalId || item.id) === 'gold_coins'
     );
     
     if (goldCoinItem) {
-      // ========== DYNAMIC CURRENCY VALUE MANAGEMENT ==========
       // If the gold coin has a value property, decrease it
       if (goldCoinItem.value && goldCoinItem.value > 1) {
-        // Just decrease the value by 1 (stack management)
+        // Just decrease the value by 1
         setInventory(prev => prev.map(item => {
           if ((item.originalId || item.id) === 'gold_coins') {
             return {
@@ -2133,7 +2064,6 @@ const handleWaterSpiritTrade = () => {
         
         setMessage("You offer a single gold coin to the water sprite. She bows her head to you and gracefully accepts it, and the waters part to let you pass.");
       } else {
-        // ========== FINAL COIN PAYMENT ==========
         // If value is 1 or not defined, remove the entire item
         setInventory(prev => prev.filter(item => 
           (item.originalId || item.id) !== 'gold_coins'
@@ -2143,7 +2073,6 @@ const handleWaterSpiritTrade = () => {
       }
     }
   } 
-  // ========== ALTERNATIVE PAYMENT PROCESSING ==========
   // If no gold coins but has compass, use that instead
   else if (hasGoldenCompass) {
     // Remove the compass from inventory
@@ -2151,15 +2080,15 @@ const handleWaterSpiritTrade = () => {
       (item.originalId || item.id) !== 'golden_compass'
     ));
     playNixieAFairTradeSound()
-    setMessage("Without gold coins, you reluctantly offer your golden compass to the water sprite. Her eyes widen as she takes it, clearly pleased with the rare treasure. \"A fair trade to me,\" she says, and the waters part to let you pass.");
+    setMessage("Without gold coins, you reluctantly offer your golden compass to the water sprite. Her eyes widen as she takes it, clearly pleased with the rare treasure. \"A fair trade  to me,\" she says, and the waters part to let you pass.");
   }
   
-  // ========== TRANSACTION COMPLETION ==========
   // Mark that player has paid the toll for this visit
   setSpecialRooms(prev => ({
     ...prev,
     [currentPosition]: {
       ...prev[currentPosition],
+      
       tollPaid: true
     }
   }));
@@ -2203,7 +2132,6 @@ const handleWaterSpiritTrade = () => {
 const handleTrade = () => {
   console.log("Trading gold coins at the gift shop");
   
-  // ========== PAYMENT VALIDATION ==========
   // Check how many gold coins the player has
   const goldCoinsItem = inventory.find(item => 
     (item.originalId || item.id) === 'gold_coins'
@@ -2216,28 +2144,23 @@ const handleTrade = () => {
     return;
   }
   
-  // ========== CURRENCY CALCULATION ==========
   // Get the value (number of coins)
   const playerCoins = goldCoinsItem.value || 1;
   console.log(`Player has ${playerCoins} gold coins`);
   
-  // ========== NARRATIVE INTEGRATION ==========
   // Add special dialogue about the ancient coins
   const coinDialogue = getRandomCoinDialogue();
   
-  // ========== COMPREHENSIVE CATALOG FILTERING ==========
   // Determine which items they don't already have
   const allAvailableItems = [];
   
   // Check each potential item the shopkeeper could offer
   Object.entries(giftShopCatalog).forEach(([itemId, itemData]) => {
-    // ========== BUSINESS RULE FILTERING ==========
     // Skip non-purchasable items
     if (nonPurchasableItems.includes(itemId)) {
       return;
     }
     
-    // ========== INVENTORY DUPLICATE PREVENTION ==========
     // Check if player already has the item
     const playerHasItem = inventory.some(item => 
       (item.originalId || item.id) === itemId
@@ -2247,8 +2170,7 @@ const handleTrade = () => {
       const price = itemData.price || 1;
       const itemDetails = itemData.id ? itemData : itemTypes[itemId];
       
-      // ========== SPECIAL ITEM HANDLING ==========
-      // Fix for druika_repellent (legacy item ID mapping)
+      // Fix for druika_repellent
       if (!itemDetails && itemId === 'wumpus_repellent') {
         const druikaDetails = itemTypes['druika_repellent'];
         if (druikaDetails) {
@@ -2262,7 +2184,6 @@ const handleTrade = () => {
           });
         }
       } else if (itemDetails) {
-        // ========== STANDARD ITEM PROCESSING ==========
         allAvailableItems.push({
           id: itemId,
           price: price,
@@ -2275,7 +2196,6 @@ const handleTrade = () => {
     }
   });
   
-  // ========== EMPTY CATALOG HANDLING ==========
   // If nothing is available
   if (allAvailableItems.length === 0) {
     const affordableItems = Object.entries(giftShopCatalog).filter(([id, data]) => 
@@ -2293,18 +2213,15 @@ const handleTrade = () => {
     return;
   }
   
-  // ========== DYNAMIC CATALOG RANDOMIZATION ==========
-  // SHUFFLE AND PICK 9 RANDOM ITEMS (prevents predictable shopping)
+  // SHUFFLE AND PICK 3 RANDOM ITEMS
   const shuffled = [...allAvailableItems].sort(() => Math.random() - 0.5);
-  const availableItems = shuffled.slice(0, 9); // Take only first 9
+  const availableItems = shuffled.slice(0, 9); // Take only first 3
   
-  // ========== USER-FRIENDLY PRESENTATION ==========
-  // Sort by price (ascending - cheapest first)
+  // Sort by price
   availableItems.sort((a, b) => a.price - b.price);
   
   console.log(`Showing ${availableItems.length} random items from ${allAvailableItems.length} total available`);
   
-  // ========== INTERACTIVE SHOP UI GENERATION ==========
   // Build the interactive shop display
   let shopDisplay = `${coinDialogue}\n\n`;
   shopDisplay += `"Welcome to Throk's Cave Emporium!" the goblin croaks.\n`;
@@ -2312,7 +2229,6 @@ const handleTrade = () => {
   shopDisplay += `📜 TODAY'S ITEMS:\n`;
   shopDisplay += `─────────────────\n`;
   
-  // ========== CATALOG PRESENTATION ==========
   availableItems.forEach((item, index) => {
     const itemNumber = index + 1;
     const affordableSymbol = item.affordable ? '✓' : '✗';
@@ -2323,14 +2239,12 @@ const handleTrade = () => {
   shopDisplay += `Enter the item number you want to buy (1-${availableItems.length}):`;
   shopDisplay += `\n(Or enter 0 to leave the shop)`;
   
-  // ========== GLOBAL STATE MANAGEMENT ==========
   // Store available items globally for purchase processing
   window.currentShopItems = availableItems;
   window.currentCoinDialogue = coinDialogue;
   
   setMessage(shopDisplay);
   
-  // ========== UI MODE TRANSITION ==========
   // Enable shop input mode
   setShopMode(true);
   
@@ -2362,7 +2276,6 @@ const handleTrade = () => {
 const processShopPurchase = (input) => {
   const itemNumber = parseInt(input);
   
-  // ========== EXIT TRANSACTION HANDLING ==========
   // Check for exit
   if (itemNumber === 0) {
     setMessage("\"Maybe next time!\" the shopkeeper shrugs and scurries away into the shadows.");
@@ -2371,7 +2284,6 @@ const processShopPurchase = (input) => {
     return;
   }
   
-  // ========== COMPREHENSIVE INPUT VALIDATION ==========
   // Validate input
   if (!window.currentShopItems || isNaN(itemNumber) || 
       itemNumber < 1 || itemNumber > window.currentShopItems.length) {
@@ -2381,7 +2293,6 @@ const processShopPurchase = (input) => {
   
   const selectedItem = window.currentShopItems[itemNumber - 1];
   
-  // ========== REAL-TIME AFFORDABILITY CHECK ==========
   // Check affordability
   const goldCoinsItem = inventory.find(item => 
     (item.originalId || item.id) === 'gold_coins'
@@ -2393,12 +2304,10 @@ const processShopPurchase = (input) => {
     return;
   }
   
-  // ========== TRANSACTION PROCESSING ==========
   // Process the purchase
   const remainingCoins = playerCoins - selectedItem.price;
   console.log(`Purchasing ${selectedItem.name} for ${selectedItem.price} coins, ${remainingCoins} remaining`);
   
-  // ========== CURRENCY MANAGEMENT ==========
   if (remainingCoins > 0) {
     // Update the gold coins item with reduced value
     setInventory(prev => prev.map(item => {
@@ -2418,19 +2327,17 @@ const processShopPurchase = (input) => {
     ));
   }
   
-  // ========== INVENTORY MANAGEMENT ==========
   // Add the purchased item to inventory
-  const giftShopOnlyItems = ['wumpus_tshirt', 'souvenir_mug', 'canvas_bag', 'druika_plush'];
+const giftShopOnlyItems = ['wumpus_tshirt', 'souvenir_mug', 'canvas_bag', 'druika_plush'];
 
-  if (giftShopOnlyItems.includes(selectedItem.id)) {
-    // Use the special function for gift shop items
-    addGiftShopItemToInventory(selectedItem.id);
-  } else {
-    // Use regular function for cave items
-    addItemToInventory(selectedItem.id);
-  }
+if (giftShopOnlyItems.includes(selectedItem.id)) {
+  // Use the special function for gift shop items
+  addGiftShopItemToInventory(selectedItem.id);
+} else {
+  // Use regular function for cave items
+  addItemToInventory(selectedItem.id);
+}
   
-  // ========== WORLD STATE SYNCHRONIZATION ==========
   // If it's a cave item, remove it from the world
   if (!selectedItem.id.includes('tshirt') && 
       !selectedItem.id.includes('mug') && 
@@ -2440,7 +2347,7 @@ const processShopPurchase = (input) => {
     removeItemFromWorld(selectedItem.id);
   }
   
-  // ========== DYNAMIC PURCHASE MESSAGING SYSTEM ==========
+   // ========== DYNAMIC PURCHASE MESSAGING SYSTEM ==========
   /**
    * Generates personalized purchase messages with character-specific dialogue
    * Each item has unique shopkeeper commentary to enhance immersion
@@ -2465,6 +2372,7 @@ const processShopPurchase = (input) => {
         playShopKeeperCloakSound()
       return `"Some tattered old cloak I no longer need, its quite a sight to see," giving you a musty old tattered cloak. "Found it in one of the caverns. Looks like it has bite marks. I guess they didn't see that coming"`;
       case 'wumpus_tshirt':
+
         console.log("play playShopKeeperTShirtSound ")
         playShopKeeperTShirtSound()
         return `"This is my Most popular item we sell!" the shopkeeper beams, handing you a garish t-shirt with a cartoon Druika on it.`;
@@ -2474,7 +2382,8 @@ const processShopPurchase = (input) => {
       case 'canvas_bag':
         playShopKeeperCanvasBagSound()
         return `"Perfect for carrying all your cave treasures, if you can find them  and the cave doesnt swallow you up first. Haha!" the shopkeeper says, folding up a canvas bag with surprisingly detailed cave art printed on it.`;
-      case 'druika_plush':
+      
+        case 'druika_plush':
           playShopKeeperPlushieSound()
         return `"Kids just love these!," the shopkeeper grins evilly, handing you a surprisingly cute plush Druika. "They're so much  Much cuddlier than the real thing!"`;
       default:
@@ -2482,52 +2391,54 @@ const processShopPurchase = (input) => {
     }
   };
   
+
+
   // ========== AUDIO TIMING COORDINATION SYSTEM ==========
   /**
    * Manages precise timing coordination between audio effects and message display
    * Each item has custom timing to match voice acting duration
-   */
-  const getItemSoundDuration = (itemId) => {
-    switch(itemId) {
-      case 'druika_repellent': return 6500;      // 6.5 seconds
-      case 'lantern': return 10500;               // 10.5 seconds
-      case 'old_map': return 10500;               // 10.5 seconds
-      case 'torch_oil': return 9500;             // 9.5 seconds
-      case 'invisibility_cloak': return 16000;    // 16 seconds (longer message)
-      case 'wumpus_tshirt': return 5000;         // 5 seconds
-      case 'souvenir_mug': return 14000;          // 14 seconds
-      case 'canvas_bag': return 14000;            // 14 seconds (longer message)
-      case 'druika_plush': return 12500;          // 12.5 seconds
-      default: return 4000;                      // 4 seconds default
-    }
-  };
+   */ 
+const getItemSoundDuration = (itemId) => {
+  switch(itemId) {
+    case 'druika_repellent': return 6500;      // 4 seconds
+    case 'lantern': return 10500;               // 3.5 seconds
+    case 'old_map': return 10500;               // 5 seconds
+    case 'torch_oil': return 9500;             // 3 seconds
+    case 'invisibility_cloak': return 16000;    // 6 seconds (longer message)
+    case 'wumpus_tshirt': return 5000;         // 3.5 seconds
+    case 'souvenir_mug': return 14000;          // 4 seconds
+    case 'canvas_bag': return 14000;            // 5.5 seconds (longer message)
+    case 'druika_plush': return 12500;          // 3.5 seconds
+    default: return 4000;                      // 4 seconds default
+  }
+};
 
-  // ========== STAGED MESSAGE DELIVERY SYSTEM ==========
-  // Show the purchase message with coin dialogue
-  let purchaseMessage = `${window.currentCoinDialogue || ''}\n\n${generateMessage(selectedItem.id)}`;
-  setMessage(purchaseMessage);
 
-  // Get the custom delay for this specific item
-  const itemSoundDelay = getItemSoundDuration(selectedItem.id);
 
-  // ========== DRAMATIC CONCLUSION SEQUENCE ==========
-  // Wait for the item-specific sound to finish before adding leaving message
-  setTimeout(() => {
-    // Add the leaving message to the existing message
-    setMessage(prev => prev + "\n\n\"Thanks for carving out some time to shop here. May your treasures shine bright and be rock solid on a pedastal.\" the orc-goblin cackles, quickly stuffing the coins into a grimy pouch. Before you can say anything else, he scurries away into a crack in the wall and disappears.");
-    
-    // Play the leaving sound
-    playShopKeeperLeavingSound();
-    
-    // ========== UI CLEANUP ==========
-    // Close shop mode after giving time for leaving sound
-    setTimeout(() => {
-      setShopMode(false);
-    }, 13500); // Adjust based on leaving sound duration
-    
-  }, itemSoundDelay); // Use the variable delay based on the item
+// Show the purchase message with coin dialogue
+let purchaseMessage = `${window.currentCoinDialogue || ''}\n\n${generateMessage(selectedItem.id)}`;
+setMessage(purchaseMessage);
+
+// Get the custom delay for this specific item
+const itemSoundDelay = getItemSoundDuration(selectedItem.id);
+
+// Wait for the item-specific sound to finish before adding leaving message
+setTimeout(() => {
+  // Add the leaving message to the existing message
+  setMessage(prev => prev + "\n\n\"Thanks for carving out some time to shop here. May your treasures shine bright and be rock solid on a pedastal.\" the orc-goblin cackles, quickly stuffing the coins into a grimy pouch. Before you can say anything else, he scurries away into a crack in the wall and disappears.");
   
-  // ========== ENCOUNTER COOLDOWN MANAGEMENT ==========
+  // Play the leaving sound
+  playShopKeeperLeavingSound();
+  
+  // Close shop mode after giving time for leaving sound
+  setTimeout(() => {
+    setShopMode(false);
+  }, 13500); // Adjust based on leaving sound duration
+  
+}, itemSoundDelay); // Use the variable delay based on the item
+  
+
+// ========== ENCOUNTER COOLDOWN MANAGEMENT ==========
   // Set goblin cooldown (3-7 moves) to prevent immediate re-encounter
   const cooldownMoves = Math.floor(Math.random() * 5) + 3;
   setGoblinCooldown(cooldownMoves);
@@ -2564,13 +2475,12 @@ const processShopPurchase = (input) => {
 const removeItemFromWorld = (itemId) => {
   console.log(`Removing all instances of ${itemId} from the game world`);
   
-  // ========== SPECIAL ROOMS CLEANUP ==========
-  // 1. Find in special rooms and remove item references
+  // 1. Find in special rooms
   Object.entries(specialRooms).forEach(([roomId, roomData]) => {
     if (roomData?.hasItem && roomData?.itemId === itemId) {
       console.log(`Found ${itemId} in room ${roomId} - removing it`);
       
-      // Remove from special rooms data using immutable update pattern
+      // Remove from special rooms data
       setSpecialRooms(prev => ({
         ...prev,
         [roomId]: {
@@ -2582,23 +2492,20 @@ const removeItemFromWorld = (itemId) => {
     }
   });
   
-  // ========== COMPREHENSIVE ROOM DESCRIPTION CLEANUP ==========
+ // ========== COMPREHENSIVE ROOM DESCRIPTION CLEANUP ==========
   // 2. Clean up ALL room descriptions - more thorough approach
   setRoomDescriptionMap(prev => {
     const updatedMap = {...prev};
     
-    // ========== ITEM NAME RESOLUTION ==========
-    // Get item name for text matching (handles dynamic naming)
+    // Get item name for text matching
     const itemName = itemTypes[itemId]?.name?.toLowerCase() || itemId;
     
-    // ========== ROOM-BY-ROOM SCANNING ==========
     // Check all rooms for mentions of this item
     Object.keys(updatedMap).forEach(roomId => {
       const roomDesc = updatedMap[roomId];
       if (!roomDesc || !roomDesc.text) return;
       
-      // ========== ITEM PRESENCE DETECTION ==========
-      // Check if room has this item in description using multiple detection methods
+      // Check if room has this item in description
       if (roomDesc.interactiveItem === itemId || 
           roomDesc.text.includes(itemName) ||
           roomDesc.text.includes(`data-item='${itemId}'`) ||
@@ -2606,36 +2513,30 @@ const removeItemFromWorld = (itemId) => {
         
         console.log(`Cleaning item ${itemId} from room ${roomId} description`);
         
-        // ========== TEXT CLEANUP PROCESSING ==========
         // Clean up the description
         let cleanedText = roomDesc.text;
         
-        // ========== HTML ELEMENT REMOVAL ==========
-        // Remove interactive span tags using precise regex matching
+        // Remove interactive span tags
         cleanedText = cleanedText.replace(new RegExp(`<span[^>]*data-item=['"]${itemId}['"][^>]*>.*?</span>`, 'g'), '');
         
-        // ========== ADVANCED PATTERN MATCHING ==========
-        // Clean up surrounding text about the item - MORE SPECIFIC PATTERNS
-        const patterns = [
-          // Only match sentences that contain THIS specific item
-          new RegExp(`[^.]*<span[^>]*data-item=['"]${itemId}['"][^>]*>[^<]*</span>[^.]*\\.`, 'g'),
-          // Also match any sentence that mentions this item by name (but only if it contains this item)
-          new RegExp(`[^.]*\\b${itemName}\\b[^.]*<span[^>]*data-item=['"]${itemId}['"][^>]*>[^<]*</span>[^.]*\\.`, 'gi')
-        ];
+     // Clean up surrounding text about the item - MORE SPECIFIC PATTERNS
+      const patterns = [
+  // Only match sentences that contain THIS specific item
+  new RegExp(`[^.]*<span[^>]*data-item=['"]${itemId}['"][^>]*>[^<]*</span>[^.]*\\.`, 'g'),
+  // Also match any sentence that mentions this item by name (but only if it contains this item)
+  new RegExp(`[^.]*\\b${itemName}\\b[^.]*<span[^>]*data-item=['"]${itemId}['"][^>]*>[^<]*</span>[^.]*\\.`, 'gi')
+];
         
-        // Apply all cleanup patterns
         patterns.forEach(pattern => {
           cleanedText = cleanedText.replace(pattern, '.');
         });
         
-        // ========== FALLBACK TEXT SYSTEM ==========
-        // Use textAfterCollection if it exists (pre-defined clean text)
+        // Use textAfterCollection if it exists
         if (roomDesc.textAfterCollection) {
           cleanedText = roomDesc.textAfterCollection;
         }
         
-        // ========== ROOM STATE UPDATE ==========
-        // Update the room description with cleaned content
+        // Update the room description
         updatedMap[roomId] = {
           ...roomDesc,
           text: cleanedText,
@@ -2681,8 +2582,7 @@ const removeItemFromWorld = (itemId) => {
 const highlightPathToRoom = (roomNumber, color, type) => {
   console.log(`Attempting to highlight button for room ${roomNumber} with ${color} (${type})`);
   
-  // ========== BUTTON DISCOVERY SYSTEM ==========
-  // Find the button using safe DOM querying
+  // Find the button
   const allButtons = document.querySelectorAll('.connection-btn');
   const roomButton = Array.from(allButtons).find(btn => 
     btn.textContent.trim() === roomNumber.toString()
@@ -2701,7 +2601,7 @@ const highlightPathToRoom = (roomNumber, color, type) => {
   const styleElement = document.createElement('style');
   styleElement.id = uniqueID;
   
-  // ========== ADVANCED CSS ANIMATION DEFINITION ==========
+   // ========== ADVANCED CSS ANIMATION DEFINITION ==========
   // Define new animation that modifies the existing button styles with realistic lighting
   styleElement.textContent = `
     @keyframes pulse-${uniqueID} {
@@ -2735,14 +2635,12 @@ const highlightPathToRoom = (roomNumber, color, type) => {
     }
   `;
   
-  // ========== STYLE INJECTION AND EXECUTION ==========
   // Add the style to the document
   document.head.appendChild(styleElement);
   
   // Apply the class to the button
   roomButton.classList.add(uniqueID);
   
-  // ========== AUTOMATIC CLEANUP SYSTEM ==========
   // Clean up after animation finishes
   setTimeout(() => {
     roomButton.classList.remove(uniqueID);
@@ -2753,6 +2651,8 @@ const highlightPathToRoom = (roomNumber, color, type) => {
     console.log(`Finished highlighting room ${roomNumber}`);
   }, 5500); // 5 pulses at 1s each plus buffer
 };
+
+
 
 // ==================== TREASURE HUNTING ENHANCEMENT SYSTEM ====================
 
@@ -2781,28 +2681,24 @@ const highlightPathToRoom = (roomNumber, color, type) => {
  * @returns {boolean} True to consume the map fragment after use
  */
 const handleMapFragmentTreasureEnhancer = () => {
-  // ========== PREREQUISITE VALIDATION ==========
   // Only works if the player has the main map
   if (!hasMap) {
     setMessage("The fragment contains symbols that seem to relate to treasures, but without the main map, you can't interpret them.");
     return;
   }
   
-  // ========== TREASURE AVAILABILITY ASSESSMENT ==========
   // Choose a random treasure that hasn't been collected yet
   const unCollectedTreasures = treasurePieces.filter(
     treasure => !collectedTreasures.includes(treasure.id)
   );
   
   if (unCollectedTreasures.length > 0) {
-    // ========== PROXIMITY CALCULATION ==========
     // Calculate distances to each uncollected treasure
     const treasureDistances = unCollectedTreasures.map(treasure => ({
       ...treasure,
       distance: calculateDistanceToRoom(currentPosition, treasure.room)
     }));
     
-    // ========== INTELLIGENT DISTANCE SORTING ==========
     // Sort by distance to get the nearest treasure
     treasureDistances.sort((a, b) => {
       // If the distances are numbers, sort numerically
@@ -2813,32 +2709,29 @@ const handleMapFragmentTreasureEnhancer = () => {
       return String(a.distance).localeCompare(String(b.distance));
     });
     
-    // ========== NEAREST TREASURE IDENTIFICATION ==========
     // Get the nearest treasure
     const nearestTreasure = treasureDistances[0];
     
-    // ========== PATHFINDING TO TREASURE ==========
     // Find the path to the treasure
     const pathToTreasure = findShortestPath(currentPosition, nearestTreasure.room, roomConnections);
     const nextRoomTowardTreasure = pathToTreasure ? pathToTreasure.nextRoom : null;
     
-    // ========== GUIDANCE SYSTEM ==========
     if (nextRoomTowardTreasure) {
       setMessage(`The fragment reveals mystical symbols linked to the treasure. It seems a ${nearestTreasure.name} lies ${nearestTreasure.distance} rooms away. The symbols point toward room ${nextRoomTowardTreasure}.`);
       
       // Highlight the button leading toward the treasure
       highlightPathToRoom(nextRoomTowardTreasure, '#ffdd00', 'treasure');
     } else {
-      // ========== FALLBACK FOR PATHFINDING FAILURE ==========
       setMessage(`The fragment reveals that a ${nearestTreasure.name} is in room ${nearestTreasure.room}, but you can't determine the path.`);
     }
   } else {
-    // ========== COMPLETION FEEDBACK ==========
     setMessage("The fragment shows treasure locations that you've already discovered.");
   }
   
-  return true; // Consume the fragment after use
+  return true;
 };
+
+
 
 // ==================== DESTRUCTIVE MAP FRAGMENT SYSTEM ====================
 
@@ -2865,7 +2758,6 @@ const handleMapFragmentDisintegrate = () => {
   
   return true; // Item was used (and removed)
 };
-
 // ==================== LETHAL GAME MECHANICS SYSTEM ====================
 
 /**
@@ -2893,16 +2785,20 @@ const handleMapFragmentCursed = () => {
   // Optional: Play a death sound or special curse sound
   // Example: playCurseSound();
   
-  // ========== IMMEDIATE LETHAL CONSEQUENCES ==========
   // Kill the player
-  setGameStatus('lost');
-  setDeathCause('curse');
-  
-  // You could also play your usual death sound here
-  // playLoseSound();
+ //setTimeout(() => {
+    setGameStatus('lost');
+    setDeathCause('curse');
+    
+    // You could also play your usual death sound here
+    // playLoseSound();
+  //}, 2000); // Short delay for dramatic effect
   
   return true; // Item was used
 };
+
+
+
 
 // ==================== ADVANCED RECONNAISSANCE SYSTEM ====================
 
@@ -2932,7 +2828,6 @@ const handleMapFragmentCursed = () => {
  * @returns {boolean} True to consume the map fragment after use
  */
 const handleMapFragmentRoomRevealer = () => {
-  // ========== ADJACENT ROOM DISCOVERY ==========
   // Get all adjacent rooms
   const adjacentRooms = roomConnections[currentPosition] || [];
   
@@ -2941,19 +2836,16 @@ const handleMapFragmentRoomRevealer = () => {
     return true;
   }
   
-  // ========== COMPREHENSIVE ROOM ANALYSIS ==========
   // Create messages about what's in those rooms
   const roomInfos = adjacentRooms.map(room => {
     let info = `Room ${room}: `;
     let color = "#ffffff"; // Default color
     
-    // ========== SPECIAL LOCATION DETECTION ==========
     // Check for special rooms (rooms above 30)
     if (room > 30) {
       info += "A secret chamber lies beyond!";
       color = "#ff00ff"; // Magenta for special rooms
     }
-    // ========== IMMEDIATE THREAT ASSESSMENT ==========
     // Check for hazards
     else if (room === positions.wumpusPosition) {
       info += "Death awaits! The Druika lurks within!";
@@ -2967,36 +2859,30 @@ const handleMapFragmentRoomRevealer = () => {
       info += "Giant bats are nesting here!";
       color = "#9966ff"; // Purple for bat
     }
-    // ========== OBJECTIVE IDENTIFICATION ==========
     else if (room === positions.exitPosition) {
       info += "The exit is here!";
       color = "#00ff00"; // Green for exit
     }
-    // ========== TREASURE DETECTION ==========
     // Check for treasures
     else if (treasurePieces.some(t => t.room === room && !collectedTreasures.includes(t.id))) {
       info += "A valuable treasure is hidden here!";
       color = "#ffdd00"; // Gold for treasure
     }
-    // ========== RESOURCE IDENTIFICATION ==========
     // Check for torch oil
     else if (roomDescriptionMap[room]?.interactiveItem === 'torch_oil') {
       info += "A source of torch oil can be found here.";
       color = "#ffcc00"; // Yellow for oil
     }
-    // ========== CRITICAL ITEM DETECTION ==========
     // Check for map
     else if (room === treasureMap && !hasMap) {
       info += "An ancient map is waiting to be discovered!";
       color = "#00ffff"; // Cyan for map
     }
-    // ========== GENERAL ITEM DETECTION ==========
     // Check for items from specialRooms
     else if (specialRooms[room]?.hasItem) {
       info += "An item of interest lies within.";
       color = "#ff9900"; // Orange for items
     }
-    // ========== MYSTICAL LOCATION DETECTION ==========
     // Check if there's a teleport point
     else if (specialRooms[room]?.hasTeleport) {
       info += "Strange energies swirl within this chamber...";
@@ -3007,21 +2893,18 @@ const handleMapFragmentRoomRevealer = () => {
       info += "A secret passage may be hidden here...";
       color = "#ff00ff"; // Magenta for special rooms
     }
-    // ========== SAFETY CONFIRMATION ==========
     // Otherwise safe
     else {
       info += "Appears safe to enter.";
       color = "#ffffff"; // White for safe rooms
     }
     
-    // ========== VISUAL FEEDBACK COORDINATION ==========
     // Highlight the room button with the appropriate color
     highlightPathToRoom(room, color, `room-${room}`);
     
     return info;
   });
   
-  // ========== INTELLIGENCE REPORT GENERATION ==========
   // Create the full message
   let message = "The map fragment glows with arcane energy. In a vision, you see glimpses of connected rooms:";
   
@@ -3033,7 +2916,7 @@ const handleMapFragmentRoomRevealer = () => {
   // Display the message
   setMessage(message);
   
-  return true; // Consume the fragment after use
+  return true;
 };
 
 // ==================== DYNAMIC TREASURE GENERATION SYSTEM ====================
@@ -3069,36 +2952,29 @@ const handleMapFragmentRoomRevealer = () => {
  * @returns {boolean} True to consume the map fragment after use
  */
 const handleMapFragmentGoldFinder = () => {
-  // ========== COMPREHENSIVE SAFETY VALIDATION ==========
   // Find rooms without hazards or special items
   const safeRooms = [];
   for (let i = 1; i <= 30; i++) {
     if (
-      // ========== DANGER EXCLUSION ==========
-      i !== positions.wumpusPosition &&      // Exclude Wumpus location
-      i !== positions.pitPosition1 &&        // Exclude pit locations
+      i !== positions.wumpusPosition &&
+      i !== positions.pitPosition1 &&
       i !== positions.pitPosition2 &&
-      i !== positions.batPosition &&         // Exclude bat colony location
-      i !== currentPosition &&               // Don't place in current room
-      i !== positions.exitPosition &&        // Don't place at exit
-      
-      // ========== RESOURCE CONFLICT PREVENTION ==========
-      !specialRooms[i]?.hasItem &&          // Avoid rooms with existing items
+      i !== positions.batPosition &&
+      i !== currentPosition &&
+      i !== positions.exitPosition &&
+      !specialRooms[i]?.hasItem &&
       !treasurePieces.some(t => t.room === i) // Don't place gold in treasure rooms
     ) {
       safeRooms.push(i);
     }
   }
   
-  // ========== PLACEMENT AVAILABILITY CHECK ==========
   if (safeRooms.length > 0) {
-    // ========== RANDOM PLACEMENT SELECTION ==========
     // Choose a random room for gold
     const goldRoom = safeRooms[Math.floor(Math.random() * safeRooms.length)];
     
     console.log(`Placing gold coins in room ${goldRoom}`);
     
-    // ========== SPECIAL ROOMS STATE UPDATE ==========
     // Place gold in this room
     setSpecialRooms(prev => ({
       ...prev,
@@ -3109,40 +2985,36 @@ const handleMapFragmentGoldFinder = () => {
       }
     }));
     
-    // ========== DYNAMIC ROOM DESCRIPTION MODIFICATION ==========
     // Update the room description to mention gold
     setRoomDescriptionMap(prev => ({
       ...prev,
       [goldRoom]: {
         ...prev[goldRoom],
-        // ========== SECURE HTML INJECTION ==========
         text: prev[goldRoom].text + " You spot a pile of <span class='interactive-item' data-item='gold_coins'>gold coins</span> gleaming in the corner.",
-        textAfterCollection: prev[goldRoom].text  // Store clean text for post-collection state
+        textAfterCollection: prev[goldRoom].text
       }
     }));
     
-    // ========== PATHFINDING TO GENERATED TREASURE ==========
     // Find path to gold
     const pathToGold = findShortestPath(currentPosition, goldRoom, roomConnections);
     const nextRoomTowardGold = pathToGold ? pathToGold.nextRoom : null;
     
-    // ========== NAVIGATION GUIDANCE SYSTEM ==========
     if (nextRoomTowardGold) {
       setMessage(`The fragment reveals hidden markings that seem to indicate treasure. Ancient gold coins lie ${pathToGold.distance} rooms away. The markings point toward room ${nextRoomTowardGold}.`);
       
-      // Highlight the path to gold with distinctive color
+      // Highlight the path to gold
       highlightPathToRoom(nextRoomTowardGold, '#ffd700', 'gold');
     } else {
-      // ========== PATHFINDING FALLBACK ==========
       setMessage(`The fragment reveals that ancient gold coins are hidden in room ${goldRoom}, but you can't determine the path.`);
     }
   } else {
-    // ========== SCARCITY HANDLING ==========
     setMessage("The fragment glows with a golden light, but you can't decipher its meaning. Perhaps there are no safe places for treasure in these caves.");
   }
   
-  return true; // Consume the fragment after use
+  return true;
 };
+
+
 
 // ==================== SECURE TRAP EXECUTION SYSTEM ====================
 
@@ -3171,19 +3043,14 @@ const handleMapFragmentGoldFinder = () => {
  */
 const handleTrapTrigger = (trapType, deathMessage) => {
   console.log(`Trap triggered: ${trapType}`);
-  
-  // ========== IMMEDIATE GAME TERMINATION ==========
   setGameStatus('lost');
   setDeathCause(trapType);
   setMessage(deathMessage);
-  
-  // ========== AUDIT LOGGING ==========
-  // Additional logging could be added here for analytics:
-  // - Player position when trap triggered
-  // - Game duration before death
-  // - Items possessed at time of death
-  // - Previous room visits leading to trap
 };
+
+
+
+
 
 // ==================== ADVANCED SECRET ITEM COLLECTION SYSTEM ====================
 
@@ -3219,21 +3086,18 @@ const handleTrapTrigger = (trapType, deathMessage) => {
  * @returns {boolean} True if item was collected, false if nothing found
  */
 const collectSecretRoomItem = (roomNumber) => {
-  // ========== DEBUG INFORMATION ==========
-  // Debug logging for development and troubleshooting
+  // Debug logging
   console.log("Available itemTypes:", Object.keys(itemTypes));
   console.log("Special room content:", specialRooms[roomNumber]?.specialContent);
   
-  // ========== ROOM VALIDATION AND ANTI-DUPLICATION ==========
   // Check if this is a special room with content
   if (
     specialRooms[roomNumber]?.isSpecialRoom && 
     specialRooms[roomNumber]?.specialContent &&
-    !specialRooms[roomNumber]?.itemCollected  // CRITICAL: Prevents re-collection
+    !specialRooms[roomNumber]?.itemCollected
   ) {
     const content = specialRooms[roomNumber].specialContent;
     
-    // ========== CONTENT VALIDATION ==========
     // Add safety check to make sure content exists
     if (!content) {
       console.error("Special room has no content defined");
@@ -3241,18 +3105,13 @@ const collectSecretRoomItem = (roomNumber) => {
       return true;
     }
     
-    // ========== COLLECTIBLE ITEM PROCESSING ==========
     // For items that should be added to inventory - DIRECT APPROACH WITHOUT CHECKING ITEMTYPES
     if (content.id === 'spellbook' || content.id === 'golden_compass' || content.id === 'wumpus_repellent') {
-      
-      // ========== UNIQUE ITEM GENERATION ==========
       // Create the item with a unique ID by adding a timestamp
       const uniqueId = `${content.id}_${Date.now()}`;
       const specialItem = {
-        id: uniqueId,                    // Make the ID unique to prevent conflicts
-        originalId: content.id,          // Store the original ID for reference
-        
-        // ========== DYNAMIC ITEM PROPERTIES ==========
+        id: uniqueId, // Make the ID unique
+        originalId: content.id, // Store the original ID for reference
         name: content.id === 'spellbook' ? 'Ancient Spellbooke' :
               content.id === 'golden_compass' ? 'Golden Compass' : 
               'Wumpus Repellent',
@@ -3262,44 +3121,41 @@ const collectSecretRoomItem = (roomNumber) => {
         canUse: true
       };
       
-      // ========== INVENTORY ADDITION ==========
-      // Add to inventory directly using immutable update
+      // Add to inventory directly
       setInventory(prev => [...prev, specialItem]);
   
-      // ========== COLLECTION STATE TRACKING ==========
-      // Mark as collected to prevent duplication
-      setSpecialRooms(prev => ({
-        ...prev,
-        [roomNumber]: {
-          ...prev[roomNumber],
-          itemCollected: true
-        }
-      }));
-      
-      // ========== DISCOVERY FEEDBACK ==========
-      // Show message with audio feedback
-      playAutoPickupSound()
-      setMessage(`You found and picked up a ${specialItem.name}! ${specialItem.description}`);
-      
-      return true;
+  // Mark as collected
+  setSpecialRooms(prev => ({
+    ...prev,
+    [roomNumber]: {
+      ...prev[roomNumber],
+      itemCollected: true
     }
+  }));
+  
+  // Show message
+ playAutoPickupSound()
+ 
+  setMessage(`You found and picked up a ${specialItem.name}! ${specialItem.description}`);
+  
+  return true;
+}
     
-    // ========== INFORMATIONAL CONTENT HANDLING ==========
     // For informational content (wizard's notes, etc.)
     else if (content.name && content.description) {
       // Just show a message, don't add to inventory
       setMessage(`You examine ${content.name}. ${content.description}`);
       return true;
     } else {
-      // ========== MALFORMED CONTENT FALLBACK ==========
       // Fallback for malformed content
       setMessage("You examine the mysterious objects in the chamber, but can't quite make sense of them.");
       return true;
     }
   }
   
-  return false; // No special item found
+  return false;
 };
+
 
 // ==================== WORLD INITIALIZATION ORCHESTRATOR ====================
 
@@ -3334,14 +3190,12 @@ const collectSecretRoomItem = (roomNumber) => {
  * @param {number[]} availableRooms - Array of room IDs available for item placement
  */
 const placeItemsInWorld = (availableRooms) => {
-  // ========== CONSTRAINT VALIDATION ==========
   // Ensure we have enough rooms
   if (availableRooms.length < 4) { // Changed from 3 to 4 to make room for gold
     console.error("Not enough safe rooms for items!");
     return;
   }
   
-  // ========== CONTENT CONFLICT PREVENTION ==========
   // Filter out any rooms that have the backpack description
   const filteredRooms = availableRooms.filter(roomId => 
     !hasBackpackDescription(roomId, roomDescriptionMap)
@@ -3349,7 +3203,6 @@ const placeItemsInWorld = (availableRooms) => {
   
   console.log(`Found ${filteredRooms.length} rooms for item placement after filtering out backpack room`);
   
-  // ========== POST-FILTER VALIDATION ==========
   // If we don't have enough rooms after filtering, log an error
   if (filteredRooms.length < 4) {
     console.error("Not enough safe rooms for items after filtering backpack room!");
@@ -3357,32 +3210,27 @@ const placeItemsInWorld = (availableRooms) => {
     return;
   }
   
-  // ========== RANDOMIZATION FOR REPLAYABILITY ==========
   // Shuffle rooms for randomness
   const shuffledRooms = [...filteredRooms].sort(() => Math.random() - 0.5);
   
-  // ========== SYSTEMATIC ITEM PLACEMENT ==========
   // Place the key, orb, map fragment, and gold coins in different rooms
-  placeItem('rusty_key', shuffledRooms[0]);        // Essential for locked doors
-  placeItem('crystal_orb', shuffledRooms[1]);      // Magical enhancement item
-  placeItem('old_map', shuffledRooms[2]);          // Navigation and special abilities
-  placeItem('gold_coins', shuffledRooms[3]);       // Economic resource
+  placeItem('rusty_key', shuffledRooms[0]);
+   placeItem('crystal_orb', shuffledRooms[1]);
+  placeItem('old_map', shuffledRooms[2]);
+  placeItem('gold_coins', shuffledRooms[3]);
   
-  // ========== PLACEMENT AUDIT LOGGING ==========
   console.log('=== ITEM LOCATIONS ===');
   console.log(`Rusty Key placed in room ${shuffledRooms[0]}`);
   console.log(`Crystal Orb placed in room ${shuffledRooms[1]}`);
   console.log(`Map Fragment placed in room ${shuffledRooms[2]}`);
   console.log(`Gold Coins placed in room ${shuffledRooms[3]}`);
 
-  // ========== ADVANCED ITEM PLACEMENT ==========
   // Now place the Reality Stabilizer in a room far from the shifting room
   // (Use remaining available rooms after the first 4 are used)
   const remainingRooms = shuffledRooms.slice(4);
   if (remainingRooms.length > 0) {
     placeRealityStabilizer(remainingRooms);
   } else {
-    // ========== CONSTRAINT VIOLATION HANDLING ==========
     console.warn("No rooms left for Reality Anchor, using an already used room");
     placeRealityStabilizer(shuffledRooms); // Use all rooms if necessary
   }
@@ -3425,47 +3273,35 @@ const placeItemsInWorld = (availableRooms) => {
  * @returns {Object|null} Path object with distance and nextRoom, or null if unreachable
  */
 const findShortestPath = (startRoom, targetRoom, roomConnections) => {
-  // ========== TRIVIAL CASE OPTIMIZATION ==========
   // If rooms are the same, no path needed
   if (startRoom === targetRoom) {
     return { distance: 0, nextRoom: null };
   }
   
-  // ========== ALGORITHM INITIALIZATION ==========
   // Keep track of visited rooms to avoid cycles
   const visited = new Set();
   
   // Queue for BFS with [room, distance, path]
-  // Each element contains: [currentRoom, distanceFromStart, pathTaken]
   const queue = [[startRoom, 0, []]];
   
-  // ========== BREADTH-FIRST SEARCH MAIN LOOP ==========
   while (queue.length > 0) {
-    // ========== QUEUE PROCESSING ==========
-    // Dequeue next room to explore (FIFO guarantees shortest path first)
     const [currentRoom, distance, path] = queue.shift();
     
-    // ========== CYCLE PREVENTION ==========
-    // Mark as visited to prevent revisiting
+    // Mark as visited
     visited.add(currentRoom);
     
-    // ========== ADJACENCY EXPLORATION ==========
     // Get connections for current room
     const connections = roomConnections[currentRoom] || [];
     
-    // ========== CONNECTION ITERATION ==========
     // Check each connection
     for (const connectedRoom of connections) {
-      // ========== VISITED NODE SKIP ==========
-      // Skip if already visited (cycle prevention)
+      // Skip if already visited
       if (visited.has(connectedRoom)) continue;
       
-      // ========== PATH RECONSTRUCTION ==========
-      // Create new path including this connection
+      // Create new path
       const newPath = [...path, connectedRoom];
       
-      // ========== TARGET DETECTION ==========
-      // If this is the target, we found the shortest path
+      // If this is the target, we found the path
       if (connectedRoom === targetRoom) {
         return {
           distance: distance + 1,
@@ -3473,16 +3309,16 @@ const findShortestPath = (startRoom, targetRoom, roomConnections) => {
         };
       }
       
-      // ========== QUEUE EXPANSION ==========
       // Add to queue to explore later
       queue.push([connectedRoom, distance + 1, newPath]);
     }
   }
   
-  // ========== UNREACHABLE TARGET HANDLING ==========
-  // No path found (disconnected graph)
+  // No path found
   return null;
 };
+
+
 
 // ==================== INTELLIGENT ITEM PLACEMENT SYSTEM ====================
 
@@ -3515,11 +3351,9 @@ const findShortestPath = (startRoom, targetRoom, roomConnections) => {
  * - **Content Preservation**: Maintains original text for post-collection state
  */
 const placeCaveSalt = () => {
-  // ========== TARGET ROOM IDENTIFICATION ==========
   // Find a suitable room for the cave salt - specifically the one with "glittering minerals" text
   let caveSaltRoomId = null;
   
-  // ========== PRECISE SEMANTIC MATCHING ==========
   // First look for the exact room description we want
   Object.entries(roomDescriptionMap).forEach(([roomId, roomDesc]) => {
     if (roomDesc.text && 
@@ -3534,10 +3368,11 @@ const placeCaveSalt = () => {
     }
   });
   
-  // ========== FALLBACK SEMANTIC SEARCH ==========
+
+  //dont remember why commented out. probably wasnt working
+
   // If perfect match not found, look for a room with minerals or crystals
-  // (This section is commented out in the original, showing defensive programming)
-  /* if (!caveSaltRoomId) {
+ /* if (!caveSaltRoomId) {
     Object.entries(roomDescriptionMap).forEach(([roomId, roomDesc]) => {
       if (roomDesc.text && 
           (roomDesc.text.includes("minerals") || roomDesc.text.includes("crystals")) && 
@@ -3551,21 +3386,16 @@ const placeCaveSalt = () => {
         console.log(`Found backup mineral room for cave salt: ${caveSaltRoomId}`);
       }
     });
-  } */
+  }  */
   
-  // ========== ITEM PLACEMENT EXECUTION ==========
   if (caveSaltRoomId) {
     console.log(`Cave salt crystals will be placed in room ${caveSaltRoomId}`);
     
-    // ========== DESCRIPTION STATE CAPTURE ==========
     // Get the current room description
     const originalText = roomDescriptionMap[caveSaltRoomId]?.text || "";
     
-    // ========== DUPLICATION PREVENTION ==========
     // Check if it already has the interactive item text
     if (!originalText.includes("salt-like crystals")) {
-      
-      // ========== SPECIAL ROOMS STATE UPDATE ==========
       // Add the cave salt to this room
       setSpecialRooms(prev => ({
         ...prev,
@@ -3577,23 +3407,19 @@ const placeCaveSalt = () => {
         }
       }));
       
-      // ========== INTELLIGENT TEXT INTEGRATION ==========
       // Update room description to mention the salt - adapt to existing description
       let updatedText = originalText;
       if (originalText.includes("glittering minerals")) {
-        // ========== CONTEXT-AWARE INSERTION ==========
         // Insert into existing phrase about minerals
         updatedText = originalText.replace(
           "glittering minerals wink at you like the eyes of a thousand tiny critics.", 
           "glittering minerals wink at you like the eyes of a thousand tiny critics. Among them, you spot unusual <span class='interactive-item' data-item='cave_salt'>salt-like crystals</span> with a subtle blue glow"
         );
       } else {
-        // ========== FALLBACK INSERTION ==========
         // Add to the end of description
         updatedText = `${originalText} You notice unusual <span class='interactive-item' data-item='cave_salt'>salt-like crystals</span> with a subtle blue glow among the minerals.`;
       }
       
-      // ========== ROOM DESCRIPTION UPDATE ==========
       setRoomDescriptionMap(prev => ({
         ...prev,
         [caveSaltRoomId]: {
@@ -3606,11 +3432,9 @@ const placeCaveSalt = () => {
       }));
     }
     
-    // ========== DUPLICATION CLEANUP SYSTEM ==========
     // Clear any duplicate cave salt from other rooms
     for (let i = 1; i <= 30; i++) {
       if (i !== caveSaltRoomId && specialRooms[i]?.itemId === 'cave_salt') {
-        // ========== SPECIAL ROOMS CLEANUP ==========
         // Remove cave salt from this room
         setSpecialRooms(prev => ({
           ...prev,
@@ -3622,7 +3446,6 @@ const placeCaveSalt = () => {
           }
         }));
         
-        // ========== DESCRIPTION CLEANUP ==========
         // Clean up the room description if needed
         if (roomDescriptionMap[i]?.interactiveItem === 'cave_salt') {
           setRoomDescriptionMap(prev => ({
@@ -3638,10 +3461,11 @@ const placeCaveSalt = () => {
       }
     }
   } else {
-    // ========== ERROR HANDLING ==========
     console.error("No suitable room found for cave salt!");
   }
 };
+
+
 
 // ==================== DYNAMIC COMMERCE DISCOVERY SYSTEM ====================
 
@@ -3679,52 +3503,42 @@ const identifyGiftShopRoom = () => {
   console.log("=== IDENTIFYING GIFT SHOP ROOM ===");
   let shopRoom = null;
   
-  // ========== SYSTEMATIC ROOM SCANNING ==========
   // Look for the gift shop room in the room descriptions
   for (let roomId = 1; roomId <= 30; roomId++) {
     const roomDesc = roomDescriptionMap[roomId];
-    
-    // ========== CONTENT VALIDATION ==========
-    if (roomDesc && roomDesc.text) {
+    if (roomDesc && roomDesc.text && 
+        (roomDesc.text.includes('gift shop') || 
+         roomDesc.text.includes('t-shirts') || 
+         roomDesc.text.toLowerCase().includes('souvenir'))) {
       
-      // ========== MULTI-PATTERN DETECTION ==========
-      if (roomDesc.text.includes('gift shop') || 
-          roomDesc.text.includes('t-shirts') || 
-          roomDesc.text.toLowerCase().includes('souvenir')) {
-        
-        shopRoom = roomId;
-        console.log(`Gift shop found in room ${shopRoom}`);
-        break; // IMPORTANT: Stop after finding the first one
-      }
+      shopRoom = roomId;
+      console.log(`Gift shop found in room ${shopRoom}`);
+      break; // IMPORTANT: Stop after finding the first one
     }
   }
   
-  // ========== STATE SYNCHRONIZATION ==========
   // Only update if we found a shop
   if (shopRoom) {
-    // ========== PRIMARY STATE UPDATE ==========
     setGiftShopRoom(shopRoom);
-    
-    // ========== CROSS-SYSTEM SYNCHRONIZATION ==========
     // Also update positions to keep them in sync
     setPositions(prev => ({
       ...prev,
       giftShopPosition: shopRoom
     }));
-    
     console.log(`Gift shop room set to ${shopRoom}`);
   } else {
-    // ========== DISCOVERY FAILURE LOGGING ==========
     console.log("No gift shop found by identifyGiftShopRoom");
   }
   
   return shopRoom;
 };
 
+
 // ==================== MASTER WORLD INITIALIZATION ORCHESTRATOR ====================
 
 /**
  * Comprehensive special room initialization system with multi-creature placement
+ * CAlled during game initialization
  * Orchestrates the creation of a complex, interconnected game world with multiple systems
  * 
  * **World Generation Excellence:**
@@ -3753,10 +3567,9 @@ const identifyGiftShopRoom = () => {
  * - **Cross-System Dependencies**: Manages complex inter-system relationships
  */
 const initializeSpecialRooms = () => {
-  // ========== PROCEDURAL HINT GENERATION SYSTEM ==========
   const doorFeatures = [
     'the rock formations',
-    'ancient carvings', 
+    'ancient carvings',
     'moss-covered stones',
     'stalactites',
     'the cave wall',
@@ -3764,57 +3577,47 @@ const initializeSpecialRooms = () => {
     'faded pictographs'
   ];
   
-  // ========== RANDOM FEATURE SELECTION ==========
-  // Select a random door feature for procedural hint system
+  // Select a random door feature
   const doorFeature = doorFeatures[Math.floor(Math.random() * doorFeatures.length)];
   
-  // ========== COMPREHENSIVE SAFETY VALIDATION ==========
   // Get all safe rooms (not containing hazards)
   const safeRooms = [];
   for (let i = 1; i <= 30; i++) {
     if (
-      // ========== DANGER EXCLUSION ==========
-      i !== positions.wumpusPosition &&     // Exclude Wumpus lair
-      i !== positions.pitPosition1 &&       // Exclude pit locations
+      i !== positions.wumpusPosition &&
+      i !== positions.pitPosition1 &&
       i !== positions.pitPosition2 &&
-      i !== positions.batPosition &&        // Exclude bat colony
-      i !== positions.exitPosition &&       // Exclude exit room
-      i !== treasureMap                     // Exclude treasure map room
+      i !== positions.batPosition &&
+      i !== positions.exitPosition &&
+      i !== treasureMap
     ) {
       safeRooms.push(i);
     }
   }
   
-  // ========== CONSTRAINT SATISFACTION VALIDATION ==========
   // Only continue if we have enough safe rooms
   if (safeRooms.length >= 2) {
-    // ========== RANDOMIZATION FOR REPLAYABILITY ==========
-    // Shuffle safe rooms for random placement
+    // Shuffle safe rooms
     safeRooms.sort(() => Math.random() - 0.5);
     
-    // ========== SPECIAL LOCATION ALLOCATION ==========
     // Pick rooms for special features
-    const hiddenDoorRoom = safeRooms[0];      // Room containing hidden door
-    const teleportEntrance1 = safeRooms[1];   // Primary teleport entrance
-    const teleportEntrance2 = safeRooms.length > 2 ? safeRooms[2] : null; // Secondary entrance
+    const hiddenDoorRoom = safeRooms[0];
+    const teleportEntrance1 = safeRooms[1];
+    const teleportEntrance2 = safeRooms.length > 2 ? safeRooms[2] : null;
     
-    // ========== SPECIAL ROOM ID DEFINITION ==========
-    // Define special room IDs (outside normal 1-30 range)
-    const secretRoom = 31;   // Hidden room requiring key
+    // Define special room IDs
+    const secretRoom = 31; // Hidden room requiring key
     const teleportRoom = 32; // Room only accessible via orb
     
-    // ========== INTELLIGENT FEATURE DETECTION ==========
     // Room feature characteristics (for hints)
     const doorRoomFeature = determineRoomFeature(roomDescriptionMap[hiddenDoorRoom]);
     const orbRoomFeature1 = determineRoomFeature(roomDescriptionMap[teleportEntrance1]);
     const orbRoomFeature2 = teleportEntrance2 ? determineRoomFeature(roomDescriptionMap[teleportEntrance2]) : null;
     
-    // ========== DYNAMIC CONTENT GENERATION ==========
     // Generate content for special rooms first
     const secretRoomContent = selectSecretRoomContent();
     const teleportRoomContent = selectTeleportRoomContent();
     
-    // ========== SPECIAL ROOMS INITIALIZATION ==========
     // Initialize special rooms object
     const specialRoomsInit = {
       [hiddenDoorRoom]: {
@@ -3828,127 +3631,119 @@ const initializeSpecialRooms = () => {
         orbFeature: orbRoomFeature1
       }
     };
+;
+// Debug log the specialRooms object
 
-    // ========== DEBUG INFORMATION ==========
-    console.log(`SETTING HIDDEN DOOR IN ROOM: ${hiddenDoorRoom}`);
-    console.log('Setting up sand creature room...');
-
-    // ==================== INTELLIGENT CREATURE PLACEMENT SYSTEM ====================
-
-    // ========== SAND CREATURE SEMANTIC PLACEMENT ==========
-    // Find the room with soft sand using intelligent text analysis
-    let sandRoomId = null;
+console.log(`SETING HIDDEN DOOR IN ROOM: ${hiddenDoorRoom}`);
+console.log('Setting up sand creature room...');
+ // Find the room with soft sand
+ let sandRoomId = null;
     
-    Object.entries(roomDescriptionMap).forEach(([roomId, roomDesc]) => {
-      if (roomDesc.text && 
-          roomDesc.text.includes("soft sand") && 
-          roomDesc.mood === "tempting" &&
-          roomId !== positions.pitPosition1 && 
-          roomId !== positions.pitPosition2) {
-        sandRoomId = parseInt(roomId);
-        console.log(`Found sand room at ${sandRoomId}`);
-      }
-    });
-    
-    // ========== SAND CREATURE ROOM ENHANCEMENT ==========
-    if (sandRoomId) {
-      // ========== DYNAMIC DESCRIPTION ENHANCEMENT ==========
-      // Get the current room description
-      const currentDescription = roomDescriptionMap[sandRoomId]?.text || "";
-      const enhancedDescription = currentDescription + " As you look closer, you notice a subtle circular disturbance in the center of the sand.";
-      
-      // ========== ROOM STATE CONFIGURATION ==========
-      // Create an updated room description object
-      const updatedRoomDesc = {
-        ...roomDescriptionMap[sandRoomId],
-        text: enhancedDescription,
-        hasSandCreature: true,
-        // Add special type for consistent perception handling
-        special: "sand_creature",
-        // No custom perception needed - will use the special type system
-      };
-      
-      // ========== ROOM DESCRIPTION UPDATE ==========
-      // Set the room description
-      setRoomDescriptionMap(prev => ({
-        ...prev,
-        [sandRoomId]: updatedRoomDesc
-      }));
+ Object.entries(roomDescriptionMap).forEach(([roomId, roomDesc]) => {
+   if (roomDesc.text && 
+       roomDesc.text.includes("soft sand") && 
+       roomDesc.mood === "tempting" &&
+       roomId !== positions.pitPosition1 && 
+       roomId !== positions.pitPosition2) {
+     sandRoomId = parseInt(roomId);
+     console.log(`Found sand room at ${sandRoomId}`);
+   }
+ });
+ 
+ if (sandRoomId) {
+  // Get the current room description
+  const currentDescription = roomDescriptionMap[sandRoomId]?.text || "";
+  const enhancedDescription = currentDescription + " As you look closer, you notice a subtle circular disturbance in the center of the sand.";
+  
+  // Create an updated room description object
+  const updatedRoomDesc = {
+    ...roomDescriptionMap[sandRoomId],
+    text: enhancedDescription,
+    hasSandCreature: true,
+    // Add special type for consistent perception handling
+    special: "sand_creature",
+    // No custom perception needed - will use the special type system
+  };
+  
+  // Set the room description
+  setRoomDescriptionMap(prev => ({
+    ...prev,
+    [sandRoomId]: updatedRoomDesc
+  }));
+  
 
-      // ========== SPECIAL ROOMS INTEGRATION ==========
-      // Add to specialRoomsInit
-      specialRoomsInit[sandRoomId] = {
-        ...specialRoomsInit[sandRoomId], // Keep any existing properties
-        hasSandCreature: true,
-        sandCreatureActive: true
-      };
-      
-      console.log(`Sand creature set up in room ${sandRoomId}`);
-    } else {
-      console.log("Sand room not found, can't set up sand creature");
-    }
+  
 
-    // ========== WATER NIXIE SEMANTIC PLACEMENT ==========
-    // Find a water room for the nixie using multi-criteria analysis
-    let nixieRoomId = null;
-    Object.entries(roomDescriptionMap).forEach(([roomId, roomDesc]) => {
-      const roomNum = parseInt(roomId);
-      if (roomDesc.text && 
-          roomDesc.text.includes("tranquil pool") && 
-          roomDesc.hasWater &&
-          roomNum !== positions.pitPosition1 && 
-          roomNum !== positions.pitPosition2 &&
-          roomNum !== positions.batPosition &&
-          roomNum !== positions.wumpusPosition) {
-        nixieRoomId = roomNum;
-        console.log(`Found nixie room at ${nixieRoomId}`);
-      }
-    });
+  // Add to specialRoomsInit
+  specialRoomsInit[sandRoomId] = {
+    ...specialRoomsInit[sandRoomId], // Keep any existing properties
+    hasSandCreature: true,
+    sandCreatureActive: true
+  };
+  
+   
+   console.log(`Sand creature set up in room ${sandRoomId}`);
+ } else {
+   console.log("Sand room not found, can't set up sand creature");
+ }
 
-    // ========== FUNGI CREATURE SEMANTIC PLACEMENT ==========
-    // Find a fungi room using environmental theme matching
-    let fungiRoomId = null;
-    Object.entries(roomDescriptionMap).forEach(([roomId, roomDesc]) => {
-      const roomNum = parseInt(roomId);
-      if (roomDesc.text && 
-          roomDesc.text.includes("Luminescent fungi") && 
-          roomDesc.mood === "otherworldly" &&
-          roomNum !== positions.pitPosition1 && 
-          roomNum !== positions.pitPosition2 &&
-          roomNum !== positions.batPosition &&
-          roomNum !== positions.wumpusPosition) {
-        fungiRoomId = roomNum;
-        console.log(`Found fungi room at ${fungiRoomId}`);
-      }
-    });
+// Find a water room for the nixie
+let nixieRoomId = null;
+Object.entries(roomDescriptionMap).forEach(([roomId, roomDesc]) => {
+  const roomNum = parseInt(roomId);
+  if (roomDesc.text && 
+      roomDesc.text.includes("tranquil pool") && 
+      roomDesc.hasWater &&
+      roomNum !== positions.pitPosition1 && 
+      roomNum !== positions.pitPosition2 &&
+      roomNum !== positions.batPosition &&
+      roomNum !== positions.wumpusPosition) {
+    nixieRoomId = roomNum;
+    console.log(`Found nixie room at ${nixieRoomId}`);
+  }
+});
 
-    // ========== NIXIE ROOM CONFIGURATION ==========
-    // Set up nixie room if found
-    if (nixieRoomId) {
-      // Add to specialRoomsInit
-      specialRoomsInit[nixieRoomId] = {
-        ...specialRoomsInit[nixieRoomId],
-        hasWaterSpirit: true,
-        waterSpiritActive: true,
-        nixieHasAppeared: false  // Track initial appearance state
-      };
-      console.log(`Water nixie set up in room ${nixieRoomId}`);
-    }
+// Find a fungi room
+let fungiRoomId = null;
+Object.entries(roomDescriptionMap).forEach(([roomId, roomDesc]) => {
+  const roomNum = parseInt(roomId);
+  if (roomDesc.text && 
+      roomDesc.text.includes("Luminescent fungi") && 
+      roomDesc.mood === "otherworldly" &&
+      roomNum !== positions.pitPosition1 && 
+      roomNum !== positions.pitPosition2 &&
+      roomNum !== positions.batPosition &&
+      roomNum !== positions.wumpusPosition) {
+    fungiRoomId = roomNum;
+    console.log(`Found fungi room at ${fungiRoomId}`);
+  }
+});
 
-    // ========== FUNGI ROOM CONFIGURATION ==========
-    // Set up fungi room if found
-    if (fungiRoomId) {
-      // Add to specialRoomsInit
-      specialRoomsInit[fungiRoomId] = {
-        ...specialRoomsInit[fungiRoomId],
-        hasFungiCreature: true,
-        fungiCreatureActive: true,
-        fungiEntryTime: null // Will track when player enters
-      };
-      console.log(`Fungi creature set up in room ${fungiRoomId}`);
-    }
+// Set up nixie room if found
+if (nixieRoomId) {
+  // Add to specialRoomsInit
+  specialRoomsInit[nixieRoomId] = {
+    ...specialRoomsInit[nixieRoomId],
+    hasWaterSpirit: true,
+    waterSpiritActive: true,
+    nixieHasAppeared: false  // <-- Add this new state
+  };
+  console.log(`Water nixie set up in room ${nixieRoomId}`);
+}
 
-    // ========== SECONDARY TELEPORT ENTRANCE ==========
+// Set up fungi room if found
+if (fungiRoomId) {
+  // Add to specialRoomsInit
+  specialRoomsInit[fungiRoomId] = {
+    ...specialRoomsInit[fungiRoomId],
+    hasFungiCreature: true,
+    fungiCreatureActive: true,
+    fungiEntryTime: null // Will track when player enters
+  };
+  console.log(`Fungi creature set up in room ${fungiRoomId}`);
+}
+
+
     // Add second teleport room if available
     if (teleportEntrance2) {
       specialRoomsInit[teleportEntrance2] = {
@@ -3958,7 +3753,6 @@ const initializeSpecialRooms = () => {
       };
     }
     
-    // ========== SPECIAL ROOM DEFINITIONS ==========
     // Add the special rooms themselves
     specialRoomsInit[secretRoom] = {
       isSpecialRoom: true,
@@ -3972,11 +3766,9 @@ const initializeSpecialRooms = () => {
       specialContent: teleportRoomContent
     };
     
-    // ========== STATE SYNCHRONIZATION ==========
     // Set the special rooms state
     setSpecialRooms(specialRoomsInit);
     
-    // ========== ROOM DESCRIPTION ENHANCEMENT ==========
     // Update room descriptions with hints
     updateRoomDescriptionsWithHints(
       hiddenDoorRoom, 
@@ -3987,11 +3779,9 @@ const initializeSpecialRooms = () => {
       orbRoomFeature2
     );
     
-    // ========== WORLD SYSTEM COORDINATION ==========
-    identifyGiftShopRoom();
-    placeCaveSalt();
+  identifyGiftShopRoom();
+  placeCaveSalt();
 
-    // ========== ITEM PLACEMENT COORDINATION ==========
     // Place items in the world
     placeItemsInWorld(safeRooms.filter(room => 
       room !== hiddenDoorRoom && 
@@ -3999,7 +3789,6 @@ const initializeSpecialRooms = () => {
       room !== teleportEntrance2
     ));
     
-    // ========== COMPREHENSIVE LOGGING ==========
     console.log('=== SPECIAL ROOM SETUP ===');
     console.log(`Hidden door in room ${hiddenDoorRoom} (Feature: ${doorRoomFeature})`);
     console.log(`Orb can be used in room ${teleportEntrance1} (Feature: ${orbRoomFeature1})`);
@@ -4009,45 +3798,47 @@ const initializeSpecialRooms = () => {
     console.log(`Secret room ${secretRoom} contains: ${secretRoomContent.name}`);
     console.log(`Teleport room ${teleportRoom} contains: ${teleportRoomContent.name}`);
 
-    // ========== DYNAMIC INTERACTIVE CONTENT GENERATION ==========
-    let interactiveText = "";
-    switch(secretRoomContent.id) {
-      case 'druika_repellent':
-        interactiveText = " A <span class='interactive-item' data-item='druika_repellent'>bubbling vial of strange green liquid</span> is carefully placed on a shelf. The label reads 'Reek of the Ancients'";
-        break;
-      case 'wizard_journal':
-        interactiveText = " A <span class='interactive-item' data-item='wizard_journal'>leather-bound journal</span> filled with bizarre diagrams and notes sits on a dusty table.";
-        break;
-      case 'loose_rocks':
-        interactiveText = " A <span class='interactive-item' data-item='loose_rocks'>big handsized rock</span> rests on a stone pedestal.";
-        break;
-      case 'single_gold_coin':
-        interactiveText = " A beautifully crafted ancient <span class='interactive-item' data-item='single_gold_coin'>coin</span> sits on a velvet cushion.";
-        break;
-      default:
-        // Generic default - do nothing
-        break;
-    }
 
-    // ========== ASYNCHRONOUS ROOM DESCRIPTION UPDATE ==========
-    // Update room 31's description to include the interactive item
-    setTimeout(() => {
-      setRoomDescriptionMap(prev => {
-        const baseText = "A hidden chamber untouched for centuries. The air is thick with dust and mystery. Ancient artifacts, a sarcophagus(?), and strange symbols cover the walls.";
-        return {
-          ...prev,
-          31: {
-            ...prev[31],
-            text: baseText + interactiveText,
-            hasInteractiveItem: true,
-            interactiveItem: secretRoomContent.id,
-            textAfterCollection: baseText + " Empty pedestals and shelves show where ancient treasures once rested."
-          }
-        };
-      });
-    }, 100); // Small delay to ensure room descriptions are initialized
+    let interactiveText = "";
+switch(secretRoomContent.id) {
+  case 'druika_repellent':
+    interactiveText = " A <span class='interactive-item' data-item='druika_repellent'>bubbling vial of strange green liquid</span> is carefully placed on a shelf. The label reads 'Reek of the Ancients'";
+    break;
+  case 'wizard_journal':
+    interactiveText = " A <span class='interactive-item' data-item='wizard_journal'>leather-bound journal</span> filled with bizarre diagrams and notes sits on a dusty table.";
+    break;
+  case 'loose_rocks':
+    interactiveText = " A <span class='interactive-item' data-item='loose_rocks'>big handsized rock</span> rests on a stone pedestal.";
+    break;
+  case 'single_gold_coin':
+    interactiveText = " A beautifully crafted ancient <span class='interactive-item' data-item='single_gold_coin'>coin</span> sits on a velvet cushion.";
+    break;
+
+  default:
+    // Generic default - do nothing
+    break;
+  }
+
+// Update room 31's description to include the interactive item
+setTimeout(() => {
+  setRoomDescriptionMap(prev => {
+    const baseText = "A hidden chamber untouched for centuries. The air is thick with dust and mystery. Ancient artifacts, a sarcophagus(?), and strange symbols cover the walls.";
+    return {
+      ...prev,
+      31: {
+        ...prev[31],
+        text: baseText + interactiveText,
+        hasInteractiveItem: true,
+        interactiveItem: secretRoomContent.id,
+        textAfterCollection: baseText + " Empty pedestals and shelves show where ancient treasures once rested."
+      }
+    };
+  });
+}, 100); // Small delay to ensure room descriptions are initialized
   }
 };
+
+
 
 // ==================== ADVANCED SEMANTIC FEATURE DETECTION SYSTEM ====================
 
@@ -4084,17 +3875,13 @@ const initializeSpecialRooms = () => {
  * @returns {string} Contextually appropriate feature description for hints
  */
 const determineRoomFeature = (roomDesc) => {
-  // ========== INPUT VALIDATION ==========
   if (!roomDesc || !roomDesc.text) {
     return "mysterious markings that seem to glow faintly";
   }
   
-  // ========== TEXT PREPROCESSING ==========
   const text = roomDesc.text.toLowerCase();
   
-  // ========== HIERARCHICAL FEATURE DETECTION ==========
-  
-  // ========== CRYSTAL/GLOWING FEATURES ==========
+  // Crystal/glowing features
   if (text.includes("crystal") || text.includes("glow")) {
     const crystalOptions = [
       "glowing crystals that pulse with an inner light",
@@ -4105,7 +3892,7 @@ const determineRoomFeature = (roomDesc) => {
     return crystalOptions[Math.floor(Math.random() * crystalOptions.length)];
   } 
   
-  // ========== WATER FEATURES ==========
+  // Water features
   else if (text.includes("water") || text.includes("pool") || text.includes("stream") || text.includes("drip")) {
     const waterOptions = [
       "flowing water that seems to defy gravity",
@@ -4116,7 +3903,7 @@ const determineRoomFeature = (roomDesc) => {
     return waterOptions[Math.floor(Math.random() * waterOptions.length)];
   } 
   
-  // ========== FUNGUS/MUSHROOM FEATURES ==========
+  // Fungus/mushroom features
   else if (text.includes("mushroom") || text.includes("fungi")) {
     const fungiOptions = [
       "glowing fungi along the far side. Hope they aren't dangerous",
@@ -4127,7 +3914,7 @@ const determineRoomFeature = (roomDesc) => {
     return fungiOptions[Math.floor(Math.random() * fungiOptions.length)];
   } 
   
-  // ========== DRAFTS/AIR MOVEMENT ==========
+  // Drafts/air movement
   else if (text.includes("draft") || text.includes("breeze")) {
     const airOptions = [
       "a gentle draft that carries whispers you can't quite understand",
@@ -4138,7 +3925,7 @@ const determineRoomFeature = (roomDesc) => {
     return airOptions[Math.floor(Math.random() * airOptions.length)];
   } 
   
-  // ========== ANCIENT MARKINGS/DRAWINGS ==========
+  // Ancient markings/drawings
   else if (text.includes("ancient") || text.includes("drawing") || text.includes("marking") || text.includes("pictograph")) {
     const markingOptions = [
       "ancient markings that seem to shift when you don't look directly at them",
@@ -4149,7 +3936,7 @@ const determineRoomFeature = (roomDesc) => {
     return markingOptions[Math.floor(Math.random() * markingOptions.length)];
   } 
   
-  // ========== HUMOROUS LOCATIONS ==========
+  // Humorous locations
   else if (text.includes("bathroom") || text.includes("shop")) {
     const humorOptions = [
       "what appears to be a 'Employees Must Wash Hands' sign but for wumpuses",
@@ -4160,7 +3947,7 @@ const determineRoomFeature = (roomDesc) => {
     return humorOptions[Math.floor(Math.random() * humorOptions.length)];
   } 
   
-  // ========== BONE/REMAINS FEATURES ==========
+  // Bone/remains features
   else if (text.includes("bone") || text.includes("remain") || text.includes("skeleton")) {
     const boneOptions = [
       "a pile of bones arranged in an unnervingly deliberate pattern",
@@ -4171,7 +3958,7 @@ const determineRoomFeature = (roomDesc) => {
     return boneOptions[Math.floor(Math.random() * boneOptions.length)];
   }
   
-  // ========== COLD/ICE FEATURES ==========
+  // Cold/ice features
   else if (text.includes("ice") || text.includes("frozen") || text.includes("cold")) {
     const iceOptions = [
       "ice formations that seem impossibly warm to the touch",
@@ -4182,7 +3969,7 @@ const determineRoomFeature = (roomDesc) => {
     return iceOptions[Math.floor(Math.random() * iceOptions.length)];
   }
   
-  // ========== STRANGE FORMATIONS ==========
+  // Strange formations
   else if (text.includes("formation") || text.includes("rock") || text.includes("stone")) {
     const formationOptions = [
       "rock formations that seem to have been arranged by intelligent hands",
@@ -4193,7 +3980,7 @@ const determineRoomFeature = (roomDesc) => {
     return formationOptions[Math.floor(Math.random() * formationOptions.length)];
   }
   
-  // ========== NESTS/CREATURE HOMES ==========
+  // Nests/creature homes
   else if (text.includes("nest") || text.includes("druika")) {
     const nestOptions = [
       "remnants of a nest with strange, glowing eggs still warm to the touch",
@@ -4204,7 +3991,7 @@ const determineRoomFeature = (roomDesc) => {
     return nestOptions[Math.floor(Math.random() * nestOptions.length)];
   }
   
-  // ========== SOUND FEATURES ==========
+  // Sound features
   else if (text.includes("echo") || text.includes("sound") || text.includes("whisper")) {
     const soundOptions = [
       "a spot where your voice returns with extra words you didn't say",
@@ -4215,7 +4002,7 @@ const determineRoomFeature = (roomDesc) => {
     return soundOptions[Math.floor(Math.random() * soundOptions.length)];
   }
   
-  // ========== UNUSUAL LIGHT FEATURES ==========
+  // Unusual light features
   else if (text.includes("light") || text.includes("shadow") || text.includes("dark")) {
     const lightOptions = [
       "shadows that move independently of anything casting them",
@@ -4226,7 +4013,6 @@ const determineRoomFeature = (roomDesc) => {
     return lightOptions[Math.floor(Math.random() * lightOptions.length)];
   }
   
-  // ========== FALLBACK GENERIC OPTIONS ==========
   // Default options if no specific features found
   else {
     const defaults = [
@@ -4244,6 +4030,8 @@ const determineRoomFeature = (roomDesc) => {
     return defaults[Math.floor(Math.random() * defaults.length)];
   }
 };
+
+
 // ==================== PROCEDURAL SECRET ROOM CONTENT GENERATOR ====================
 
 /**
@@ -4277,37 +4065,28 @@ const determineRoomFeature = (roomDesc) => {
  * @returns {Object} Randomly selected content object with complete item data
  */
 const selectSecretRoomContent = () => {
-  // ========== DEBUG INFORMATION ==========
   console.log("Available itemTypes:", Object.keys(itemTypes));
   
-  // ========== CONTENT CATALOG DEFINITION ==========
   const possibleContents = [
-    // ========== UTILITY ITEM: LOOSE ROCKS ==========
     {
       id: 'loose_rocks',
       name: 'Loose Cave Rock',
-      description: 'A handsized dull, grayish-white loose rock. It might be useful even though it feels soft.',
-      interactiveText: "A <span class='interactive-item' data-item='loose_rocks'>big handsized rock</span> rests on a stone pedestal."
+      description: 'A handsized  dull, grayish-white loose rock. It might be useful even though it feels soft.',
+      interactiveText: "A  <span class='interactive-item' data-item='loose_rocks'>big handsized rock</span> rests on a stone pedestal."
     },
-    
-    // ========== ECONOMIC RESOURCE: ANCIENT COIN ==========
     {
       id: 'single_gold_coin',
       name: 'Ancient Wyrm Coin',
       description: "A single ancient gold coin, worn but still valuable.",
-      interactiveText: "A beautifully crafted ancient <span class='interactive-item' data-item='single_gold_coin'>coin</span> sits on a velvet cushion like it was worshiped by its inhabitants. But since they aren't around, maybe you should take it"
+      interactiveText: "A beautifully crafted ancient <span class='interactive-item' data-item='single_gold_coin'>coin</span> sits on a velvet cushio like it was worhiped by its inhabitants.  But since they arent around, maybe you  should take it"
     },
-    
-    // ========== COMBAT UTILITY: CREATURE REPELLENT ==========
     {
       id: 'druika_repellent',
       name: 'Ancient Vial',
       description: "A bubbling vial of strange green liquid is carefully placed on a shelf. The label reads 'Reek of the Ancients'",
       interactiveText: "A <span class='interactive-item' data-item='druika_repellent'>bubbling vial of strange green liquid</span> is carefully placed on a shelf. The label reads 'Reek of the Ancients'",
-      canUse: true  // Explicitly usable item
+      canUse: true
     },
-    
-    // ========== NARRATIVE CONTENT: WIZARD LORE ==========
     {
       id: 'wizard_journal',
       name: "Wizard's Journal",
@@ -4316,7 +4095,6 @@ const selectSecretRoomContent = () => {
     }
   ];
   
-  // ========== RANDOM SELECTION ==========
   return possibleContents[Math.floor(Math.random() * possibleContents.length)];
 };
 
@@ -4352,30 +4130,22 @@ const selectSecretRoomContent = () => {
  * @returns {Object} Randomly selected teleport room content with thematic consistency
  */
 const selectTeleportRoomContent = () => {
-  // ========== MYSTICAL CONTENT CATALOG ==========
   const possibleContents = [
-    // ========== COSMIC MAGIC THEME ==========
     {
       id: 'observatory',
       name: "Ancient Observatory",
       description: "Strange devices track the movements of celestial bodies. Star charts on the walls seem to indicate the locations of powerful artifacts."
     },
-    
-    // ========== DOMESTIC MAGIC THEME ==========
     {
       id: 'wizard_notes',
       name: "Wizard's Study",
-      description: "A cluttered desk contains scrolls with humorous notes like 'Remember to feed my pet basilisks on Thursday' and 'Must find solution to adventurer infestation problem.'"
+      description: "A cluttered desk contains scrolls with humorous notes like 'Remember to feed  my pet basilisks on Thursday' and 'Must find solution to adventurer infestation problem.'"
     },
-    
-    // ========== TECHNICAL MAGIC THEME ==========
     {
       id: 'teleportation_anchors',
       name: "Teleportation Anchors",
       description: "Glowing crystals are arranged in a circle. They seem to be tuned to different locations throughout the cave system."
     },
-    
-    // ========== COMEDIC MAGIC THEME ==========
     {
       id: 'half_eaten_sandwich',
       name: "Wizard's Snack",
@@ -4383,9 +4153,11 @@ const selectTeleportRoomContent = () => {
     }
   ];
   
-  // ========== RANDOM SELECTION ==========
   return possibleContents[Math.floor(Math.random() * possibleContents.length)];
 };
+
+
+
 
 // ==================== ROOM TYPE IDENTIFICATION UTILITY ====================
 
@@ -4453,7 +4225,7 @@ const updateRoomDescriptionsWithHints = (
   orbFeature1,
   orbFeature2
 ) => {
-  // ========== STATE INITIALIZATION ==========
+ // ========== STATE INITIALIZATION ==========
   const updatedDescriptions = {...roomDescriptionMap};
   
   // ========== HIDDEN DOOR ENHANCEMENT SYSTEM ==========
@@ -4465,24 +4237,28 @@ const updateRoomDescriptionsWithHints = (
   const originalText = updatedDescriptions[doorRoom].text || '';
   const hintText = ` You notice what appears to be a keyhole hidden among ${doorFeature}.`;
   
+
   // ========== CONTENT CONFLICT PREVENTION ==========
   // Add hidden door hint with conflict prevention
-  if (!isPoolRoom(originalText) && !originalText.includes('keyhole hidden among')) {
-    // Only add hint if not pool room and hint doesn't already exist
-    updatedDescriptions[doorRoom] = {
-      ...updatedDescriptions[doorRoom],
-      text: `${originalText}${hintText}`,
-      hasHiddenDoor: true,
-      doorHint: hintText
-    };
-  }
+if (!isPoolRoom(originalText) && !originalText.includes('keyhole hidden among')) {
+  // Only add hint if not pool room
+  updatedDescriptions[doorRoom] = {
+    ...updatedDescriptions[doorRoom],
+    text: `${originalText}${hintText}`,
+    hasHiddenDoor: true,
+    doorHint: hintText
+  };
+}
+
+
+
+
 
   // ========== DUPLICATION PREVENTION SYSTEM ==========
   // Check if hint already exists to avoid duplication
   if (!originalText.includes('keyhole hidden among')) {
     updatedDescriptions[doorRoom] = {
       ...updatedDescriptions[doorRoom],
-      // ========== CONTENT PRESERVATION ==========
       // Store original text if this is a treasure room
       ...(isTreasureRoom ? {originalText: originalText} : {}),
       text: `${originalText}${hintText}`,
@@ -4494,7 +4270,6 @@ const updateRoomDescriptionsWithHints = (
     console.log("Updated door room description:", updatedDescriptions[doorRoom].text);
   }
 
-  // ========== ECHO ROOM SPECIAL HANDLING ==========
   // Check if any room has the "perfect echo" description
   Object.keys(updatedDescriptions).forEach(roomId => {
     const roomDesc = updatedDescriptions[roomId];
@@ -4509,9 +4284,6 @@ const updateRoomDescriptionsWithHints = (
     }
   });
 
-  // ========== TELEPORTATION HINT ENHANCEMENT SYSTEM ==========
-  
-  // ========== PRIMARY TELEPORT ENTRANCE ==========
   // Add teleport hint for first room
   if (updatedDescriptions[orbRoom1]) {
     const teleportHint1 = ` There's a strange circular pattern around ${orbFeature1}.`;
@@ -4523,7 +4295,6 @@ const updateRoomDescriptionsWithHints = (
     };
   }
   
-  // ========== SECONDARY TELEPORT ENTRANCE ==========
   // Add teleport hint for second room if it exists
   if (orbRoom2 && updatedDescriptions[orbRoom2]) {
     const teleportHint2 = ` You notice unusual energy emanating from ${orbFeature2}.`;
@@ -4535,30 +4306,26 @@ const updateRoomDescriptionsWithHints = (
     };
   }
   
-  // ========== SPECIAL ROOM CONTENT INTEGRATION ==========
-  
-  // ========== SECRET ROOM ENHANCEMENT ==========
   // Get secret room content
   const secretRoomContent = specialRooms[31]?.specialContent;
-  const secretContentDesc = secretRoomContent?.interactiveText || secretRoomContent?.description ||
-    "Ancient artifacts and strange symbols cover the walls.";
+ const secretContentDesc = secretRoomContent?.interactiveText || secretRoomContent?.description ||
+  "Ancient artifacts and strange symbols cover the walls.";
   
   // Add rich description for secret room (Room 31)
-  updatedDescriptions[31] = {
-    text: "A hidden chamber untouched for centuries. The air is thick with dust and mystery. Ancient artifacts, a sarcophagus(?), and strange symbols cover the walls. " + secretContentDesc,
-    special: "hidden_chamber",
-    mood: "magical",
-    hasWater: false,
-    hasInteractiveItem: secretRoomContent?.id ? true : false,
-    interactiveItem: secretRoomContent?.id || null
-  };
+updatedDescriptions[31] = {
+  text: "A hidden chamber untouched for centuries. The air is thick with dust and mystery. Ancient artifacts, a sarcophagus(?), and strange symbols cover the walls. " + secretContentDesc,
+  special: "hidden_chamber",
+  mood: "magical",
+  hasWater: false,
+  hasInteractiveItem: secretRoomContent?.id ? true : false,
+  interactiveItem: secretRoomContent?.id || null
+};
   
-  // ========== DEBUG INFORMATION ==========
-  console.log("Secret room content:", secretRoomContent);
-  console.log("Has interactiveText?", secretRoomContent?.interactiveText);
-  console.log("Using description:", secretContentDesc);
 
-  // ========== TELEPORT ROOM ENHANCEMENT ==========
+console.log("Secret room content:", secretRoomContent);
+console.log("Has interactiveText?", secretRoomContent?.interactiveText);
+console.log("Using description:", secretContentDesc);
+
   // Get teleport room content
   const teleportRoomContent = specialRooms[32]?.specialContent;
   const teleportContentDesc = teleportRoomContent?.description || 
@@ -4566,15 +4333,16 @@ const updateRoomDescriptionsWithHints = (
   
   // Add rich description for teleport room (Room 32)
   updatedDescriptions[32] = {
-    text: "An otherworldly cavern with walls that shimmer with an unnatural light. Stars and distant galaxies seem to move within the stone itself. In the center of the room, a perfectly round hole about the size of a fist has been carved into a raised pedestal. Above it, glowing letters spell out: 'Sometimes the simplest solution is just a stone's throw away.' " + teleportContentDesc,
+     text: "An otherworldly cavern with walls that shimmer with an unnatural light. Stars and distant galaxies seem to move within the stone itself. In the center of the room, a perfectly round hole about the size of a fist has been carved into a raised pedestal. Above it, glowing letters spell out: 'Sometimes the simplest solution is just a stone's throw away.' " + teleportContentDesc,
+     
     mood: "mysterious",
     hasWater: false
   };
-  
   // ========== STATE SYNCHRONIZATION ==========
   // Update room descriptions atomically
   setRoomDescriptionMap(updatedDescriptions);
 };
+
 
 // ==================== INTELLIGENT ITEM PLACEMENT SYSTEM ====================
 
@@ -4607,25 +4375,20 @@ const updateRoomDescriptionsWithHints = (
  * @param {number} roomId - Target room ID for item placement
  */
 const placeItem = (itemId, roomId) => {
-  // ========== CONFLICT PREVENTION ==========
   // First, check if the room already has an item
   if (specialRooms[roomId]?.hasItem) {
     return; // Don't place more than one item per room
   }
   
-  // ========== SPECIAL ITEM PROCESSING ==========
   // If this is the map fragment, assign a purpose first
   if (itemId === 'old_map') {
-    // ========== PURPOSE GENERATION SYSTEM ==========
-    // Generate a random purpose (currently configured for cursed difficulty)
-    // const purposes = ['danger_sense', 'secret_door', 'druika_tracker', 'flask_finder', 
-    //                   'treasure_enhancer', 'disintegrate', 'cursed', 'room_revealer', 'gold_finder'];
-    const purposes = ['cursed', 'cursed', 'cursed']; // Weighted for balance
+    // Generate a random purpose
+    //const purposes = ['danger_sense', 'secret_door', 'druika_tracker', 'flask_finder', 'treasure_enhancer', 'disintegrate', 'cursed', 'room_revealer','gold_finder'];
+    const purposes = ['cursed', 'cursed', 'cursed'];
     const randomPurpose = purposes[Math.floor(Math.random() * purposes.length)];
     
     console.log(`Assigning purpose to map fragment in room ${roomId}: ${randomPurpose}`);
     
-    // ========== SPECIAL ITEM STATE UPDATE ==========
     // Add the item to the room WITH the purpose
     setSpecialRooms(prev => ({
       ...prev,
@@ -4633,11 +4396,10 @@ const placeItem = (itemId, roomId) => {
         ...prev[roomId],
         hasItem: true,
         itemId: itemId,
-        mapPurpose: randomPurpose // Store purpose in the room for later retrieval
+        mapPurpose: randomPurpose // Store purpose in the room
       }
     }));
   } else {
-    // ========== STANDARD ITEM PROCESSING ==========
     // Add normal item to the room
     setSpecialRooms(prev => ({
       ...prev,
@@ -4652,7 +4414,7 @@ const placeItem = (itemId, roomId) => {
   console.log(`Placed ${itemId} in room ${roomId}`);
 };
 
-// ==================== PROCEDURAL POSITION GENERATION SYSTEM ====================
+  // ==================== PROCEDURAL POSITION GENERATION SYSTEM ====================
 
 /**
  * Cryptographically sound random position generation for game entities
@@ -4682,14 +4444,15 @@ const placeItem = (itemId, roomId) => {
  * 
  * @returns {Object} Game positions object with all entity locations
  */
-const generateGamePositions = () => {
-  // ========== UNIQUE POSITION GENERATION ==========
+  const generateGamePositions = () => {
   const positions = new Set();
   
   // Generate unique positions for each game element (5 positions)
   while(positions.size < 5) {
     positions.add(Math.floor(Math.random() * 30) + 1);
   }
+  
+  
   
   // ========== POSITION ALLOCATION ==========
   const positionsArray = [...positions];
@@ -4702,7 +4465,6 @@ const generateGamePositions = () => {
     exitPosition: positionsArray[4],      // Victory condition location
   };
   
-  // ========== COMPREHENSIVE DEBUG LOGGING ==========
   // Debug output of all entity positions
   console.log('=== NEW GAME ENTITY POSITIONS ===');
   console.log('Wumpus:', gamePositions.wumpusPosition);
@@ -4713,14 +4475,14 @@ const generateGamePositions = () => {
   console.log('Gift Shop:', gamePositions.giftShopPosition);
   console.log('================================');
   
-  // ========== REDUNDANT LOGGING FOR CRITICAL VERIFICATION ==========
-  console.log('Wumpus:', gamePositions.wumpusPosition);
+console.log('Wumpus:', gamePositions.wumpusPosition);
   console.log('Pit 1:', gamePositions.pitPosition1);
   console.log('Pit 2:', gamePositions.pitPosition2);
   console.log('Bat:', gamePositions.batPosition);
   console.log('Exit:', gamePositions.exitPosition);
   console.log('Gift Shop:', gamePositions.giftShopPosition);
   console.log('================================');
+
 
   return gamePositions;
 };
@@ -4752,42 +4514,37 @@ const generateGamePositions = () => {
  * @param {Object} roomDescriptions - Complete room description mapping
  * @param {Object} gamePositions - Entity position assignments for validation
  */
-const debugAllRoomDescriptions = (roomDescriptions, gamePositions) => {
-  console.log("=== DEBUGGING ALL ROOM DESCRIPTIONS ===");
-  
-  // ========== PARAMETER VALIDATION ==========
-  // Safety check for gamePositions
-  if (!gamePositions) {
-    console.error("ERROR: gamePositions is undefined in debugAllRoomDescriptions");
-    console.log("Room descriptions object:", roomDescriptions);
-    return;
-  }
-  
-  console.log("Game positions:", gamePositions);
-  
-  // ========== COMPREHENSIVE ROOM ANALYSIS ==========
-  for (let i = 1; i <= 30; i++) {
-    const room = roomDescriptions[i];
-    const text = room?.text || 'NO TEXT';
-    const isPit1 = i === gamePositions.pitPosition1;
-    const isPit2 = i === gamePositions.pitPosition2;
+  const debugAllRoomDescriptions = (roomDescriptions, gamePositions) => {
+    console.log("=== DEBUGGING ALL ROOM DESCRIPTIONS ===");
     
-    // ========== CONTENT VALIDATION ==========
-    const hasPitWords = text.toLowerCase().includes('pit') || 
-                       text.toLowerCase().includes('chasm') || 
-                       text.toLowerCase().includes('abyss');
-    
-    // ========== VISUAL FEEDBACK SYSTEM ==========
-    // Log pit rooms in red, regular rooms in normal color
-    if (isPit1 || isPit2) {
-      console.log(`%cRoom ${i} (PIT! ${isPit1 ? '1' : '2'}): ${text.substring(0, 50)}...`, 
-                  'color: red; font-weight: bold');
-      console.log(`  Has pit words: ${hasPitWords}`);
+    // Safety check for gamePositions
+    if (!gamePositions) {
+      console.error("ERROR: gamePositions is undefined in debugAllRoomDescriptions");
+      console.log("Room descriptions object:", roomDescriptions);
+      return;
     }
-  }
-  
-  console.log("=== END DEBUG ===");
-};
+    
+    console.log("Game positions:", gamePositions);
+    
+    for (let i = 1; i <= 30; i++) {
+      const room = roomDescriptions[i];
+      const text = room?.text || 'NO TEXT';
+      const isPit1 = i === gamePositions.pitPosition1;
+      const isPit2 = i === gamePositions.pitPosition2;
+      const hasPitWords = text.toLowerCase().includes('pit') || 
+                         text.toLowerCase().includes('chasm') || 
+                         text.toLowerCase().includes('abyss');
+      
+      // Log pit rooms in red, regular rooms in normal color
+      if (isPit1 || isPit2) {
+        console.log(`%cRoom ${i} (PIT! ${isPit1 ? '1' : '2'}): ${text.substring(0, 50)}...`, 
+                    'color: red; font-weight: bold');
+        console.log(`  Has pit words: ${hasPitWords}`);
+      }
+    }
+    
+    console.log("=== END DEBUG ===");
+  };
 
 // ==================== MASTER ROOM CREATION ORCHESTRATOR ====================
 
@@ -4825,7 +4582,7 @@ const debugAllRoomDescriptions = (roomDescriptions, gamePositions) => {
 const createRoomDescriptions = (gamePositions) => {
   const newRoomDescriptions = {};
   
-  // ========== COMPREHENSIVE INPUT VALIDATION ==========
+ // ========== COMPREHENSIVE INPUT VALIDATION ==========
   // Add safety check at the start
   console.log("createRoomDescriptions called with positions:", gamePositions);
   
@@ -4848,28 +4605,24 @@ const createRoomDescriptions = (gamePositions) => {
     }
   }
   
-  // ========== CONTENT POOL GENERATION ==========
   // Get all available room descriptions
   const allDescriptions = getAllRoomDescriptions();
   console.log(`Total descriptions available: ${allDescriptions.length}`);
   
+  
   // Shuffle the array of descriptions to randomize which ones are used
   const shuffledDescriptions = [...allDescriptions].sort(() => Math.random() - 0.5);
   
-  // ========== CONTENT EXPANSION SYSTEM ==========
   // Make sure we have enough descriptions (repeat if necessary)
   const expandedDescriptions = [];
   while (expandedDescriptions.length < 30) {
     expandedDescriptions.push(...shuffledDescriptions);
   }
   
-  // ========== ROOM ASSIGNMENT LOOP ==========
   // For each room (1-30), assign a description
   for (let i = 1; i <= 30; i++) {
-    // ========== HAZARD ROOM SPECIAL PROCESSING ==========
     // Check if this room is a pit room using the passed positions
     if (gamePositions && i === gamePositions.pitPosition1) {
-      // ========== PIT ROOM 1 ASSIGNMENT ==========
       // Assign first pit description
       console.log(`%c🕳️ PIT ROOM 1 ASSIGNED TO ROOM ${i}`, 'color: #ff0000; font-weight: bold; font-size: 14px');
       newRoomDescriptions[i] = {
@@ -4880,7 +4633,6 @@ const createRoomDescriptions = (gamePositions) => {
         isPitRoom: true
       };
       
-      // ========== IMMEDIATE STATE SYNCHRONIZATION ==========
       // SAVE PIT ROOM 1 TO STATE IMMEDIATELY
       setRoomDescriptionMap(prev => ({
         ...prev,
@@ -4888,7 +4640,6 @@ const createRoomDescriptions = (gamePositions) => {
       }));
     }
     else if (gamePositions && i === gamePositions.pitPosition2) {
-      // ========== PIT ROOM 2 ASSIGNMENT ==========
       // Assign second pit description
       console.log(`%c🕳️ PIT ROOM 2 ASSIGNED TO ROOM ${i}`, 'color: #ff0000; font-weight: bold; font-size: 14px');
       newRoomDescriptions[i] = {
@@ -4899,7 +4650,6 @@ const createRoomDescriptions = (gamePositions) => {
         isPitRoom: true
       };
       
-      // ========== IMMEDIATE STATE SYNCHRONIZATION ==========
       // SAVE PIT ROOM 2 TO STATE IMMEDIATELY
       setRoomDescriptionMap(prev => ({
         ...prev,
@@ -4907,13 +4657,11 @@ const createRoomDescriptions = (gamePositions) => {
       }));
     }
     else {
-      // ========== STANDARD ROOM ASSIGNMENT ==========
       // Assign random description for non-special rooms (exit will be handled after the loop)
       newRoomDescriptions[i] = expandedDescriptions[i-1];
     }
     
-    // ========== COMPREHENSIVE CONTENT LOGGING ==========
-    // Professional development logging with visual indicators
+    // Your existing logging code stays the same...
     const description = newRoomDescriptions[i]?.text || '';
     
     if (description.includes('gift shop') || description.includes('t-shirts')) {
@@ -4923,16 +4671,16 @@ const createRoomDescriptions = (gamePositions) => {
       console.log(`%c🎒 Backpack FOUND IN ROOM ${i}`, 'color: #ff6600; font-weight: bold; font-size: 14px');
     }
     if (description.includes('echo')) {
-      console.log(`%c🔊 ECHO FOUND IN ROOM ${i}`, 'color: #ff6600; font-weight: bold; font-size: 14px');
+      console.log(`%c🔊 ECHO om FOUND IN ROOM ${i}`, 'color: #ff6600; font-weight: bold; font-size: 14px');
     }
     if (description.includes('petrified')) {
-      console.log(`%c🪨 PULSATING FOUND IN ROOM ${i}`, 'color: #ff6600; font-weight: bold; font-size: 14px');
+      console.log(`%c🪨 PULSATING  FOUND IN ROOM ${i}`, 'color: #ff6600; font-weight: bold; font-size: 14px');
     }
     if (description.includes('glittering')) {
-      console.log(`%c✨ Glittering cave salt FOUND IN ROOM ${i}`, 'color: #ff6600; font-weight: bold; font-size: 14px');
+      console.log(`%c✨ Glittering cave salt  FOUND IN ROOM ${i}`, 'color: #ff6600; font-weight: bold; font-size: 14px');
     }
     if (description.includes('stalactites')) {
-      console.log(`%c🏔️ Stalactites FOUND IN ROOM ${i}`, 'color: #ff6600; font-weight: bold; font-size: 14px');
+      console.log(`%c🏔️ Stalactities  FOUND IN ROOM ${i}`, 'color: #ff6600; font-weight: bold; font-size: 14px');
     }
     if (description.includes('root-like tendrils')) {
       console.log(`%c🌿 root-like tendrils FOUND IN ROOM ${i}`, 'color: #ff6600; font-weight: bold; font-size: 14px');
@@ -4945,41 +4693,59 @@ const createRoomDescriptions = (gamePositions) => {
     }
   }
   
-  // ========== ADVANCED EXIT PLACEMENT SYSTEM ==========
   // After the main loop, handle exit placement with conflict checking
   if (gamePositions && gamePositions.exitPosition) {
-    const exitRoom = newRoomDescriptions[gamePositions.exitPosition];
+  const exitRoom = newRoomDescriptions[gamePositions.exitPosition];
+  
+  // First, check if we need to relocate due to special rooms
+  let needsRelocation = false;
+  if (exitRoom?.text && (
+      // Check for rooms that shouldn't be exits
+      (exitRoom.text.includes('gift shop')) ||
+      (exitRoom.text.includes('backpack') && exitRoom.text.includes('RUN!')) ||
+      (exitRoom.text.includes('tranquil pool') && exitRoom.text.includes('mirror')) ||
+      (exitRoom.text.includes('soft') && exitRoom.text.includes('comfortable')) ||
+      (exitRoom.text.includes('luminescent fungi'))
+  )) {
+    needsRelocation = true;
+  }
+  
+  // Also relocate if current room doesn't have enhanced text
+  if (!needsRelocation && !exitRoom?.enhancedText) {
+    console.log(`Exit room ${gamePositions.exitPosition} has no enhanced text - looking for better option`);
+    needsRelocation = true;
+  }
+  
+  if (needsRelocation) {
+    console.log(`%c⚠️ EXIT NEEDS RELOCATION FROM ROOM ${gamePositions.exitPosition}`, 'color: #ff0000; font-weight: bold');
     
-    // ========== EXIT CONFLICT DETECTION ==========
-    // First, check if we need to relocate due to special rooms
-    let needsRelocation = false;
-    if (exitRoom?.text && (
-        // Check for rooms that shouldn't be exits
-        (exitRoom.text.includes('gift shop')) ||
-        (exitRoom.text.includes('backpack') && exitRoom.text.includes('RUN!')) ||
-        (exitRoom.text.includes('tranquil pool') && exitRoom.text.includes('mirror')) ||
-        (exitRoom.text.includes('soft') && exitRoom.text.includes('comfortable')) ||
-        (exitRoom.text.includes('luminescent fungi'))
-    )) {
-      needsRelocation = true;
-    }
-    
-    // ========== ENHANCED ROOM PREFERENCE ==========
-    // Also relocate if current room doesn't have enhanced text
-    if (!needsRelocation && !exitRoom?.enhancedText) {
-      console.log(`Exit room ${gamePositions.exitPosition} has no enhanced text - looking for better option`);
-      needsRelocation = true;
-    }
-    
-    // ========== INTELLIGENT EXIT RELOCATION ==========
-    if (needsRelocation) {
-      console.log(`%c⚠️ EXIT NEEDS RELOCATION FROM ROOM ${gamePositions.exitPosition}`, 'color: #ff0000; font-weight: bold');
-      
-      // First try to find a room with enhanced text
-      let newExitPosition = null;
-      
-      // ========== PRIORITY 1: ENHANCED ROOMS ==========
+    // First try to find a room with enhanced text
+    let newExitPosition = null;
+
+       // ========== PRIORITY 1: ENHANCED ROOMS ==========
       // Priority 1: Find a safe room WITH enhanced text
+    for (let i = 1; i <= 30; i++) {
+      const room = newRoomDescriptions[i];
+      if (i !== gamePositions.wumpusPosition &&
+          i !== gamePositions.pitPosition1 &&
+          i !== gamePositions.pitPosition2 &&
+          i !== gamePositions.batPosition &&
+          room?.text &&
+          room?.enhancedText && // Must have enhanced text
+          !room.text.includes('gift shop') &&
+          !(room.text.includes('backpack') && room.text.includes('RUN!')) &&
+          !(room.text.includes('tranquil pool') && room.text.includes('mirror')) &&
+          !(room.text.includes('sand') && room.text.includes('comfortable') && room.text.includes('swirls')) &&
+          !room.text.includes('luminescent fungi')) {
+        newExitPosition = i;
+        console.log(`Found enhanced room ${i} for exit`);
+        break;
+      }
+    }
+    
+    // Priority 2: If no enhanced rooms available, fall back to any safe room
+    if (!newExitPosition) {
+      console.log("No enhanced rooms available for exit, using any safe room");
       for (let i = 1; i <= 30; i++) {
         const room = newRoomDescriptions[i];
         if (i !== gamePositions.wumpusPosition &&
@@ -4987,106 +4753,77 @@ const createRoomDescriptions = (gamePositions) => {
             i !== gamePositions.pitPosition2 &&
             i !== gamePositions.batPosition &&
             room?.text &&
-            room?.enhancedText && // Must have enhanced text
             !room.text.includes('gift shop') &&
             !(room.text.includes('backpack') && room.text.includes('RUN!')) &&
             !(room.text.includes('tranquil pool') && room.text.includes('mirror')) &&
             !(room.text.includes('sand') && room.text.includes('comfortable') && room.text.includes('swirls')) &&
             !room.text.includes('luminescent fungi')) {
           newExitPosition = i;
-          console.log(`Found enhanced room ${i} for exit`);
           break;
         }
       }
+    }
+    
+    if (newExitPosition) {
+      console.log(`Moving exit from ${gamePositions.exitPosition} to ${newExitPosition}`);
       
-      // ========== PRIORITY 2: ANY SAFE ROOM ==========
-      // Priority 2: If no enhanced rooms available, fall back to any safe room
-      if (!newExitPosition) {
-        console.log("No enhanced rooms available for exit, using any safe room");
-        for (let i = 1; i <= 30; i++) {
-          const room = newRoomDescriptions[i];
-          if (i !== gamePositions.wumpusPosition &&
-              i !== gamePositions.pitPosition1 &&
-              i !== gamePositions.pitPosition2 &&
-              i !== gamePositions.batPosition &&
-              room?.text &&
-              !room.text.includes('gift shop') &&
-              !(room.text.includes('backpack') && room.text.includes('RUN!')) &&
-              !(room.text.includes('tranquil pool') && room.text.includes('mirror')) &&
-              !(room.text.includes('sand') && room.text.includes('comfortable') && room.text.includes('swirls')) &&
-              !room.text.includes('luminescent fungi')) {
-            newExitPosition = i;
-            break;
-          }
-        }
-      }
+      // Update the game positions
+      gamePositions.exitPosition = newExitPosition;
       
-      // ========== EXIT RELOCATION EXECUTION ==========
-      if (newExitPosition) {
-        console.log(`Moving exit from ${gamePositions.exitPosition} to ${newExitPosition}`);
-        
-        // Update the game positions
-        gamePositions.exitPosition = newExitPosition;
-        
-        // Get the existing description WITHOUT adding exit text
-        const existingDesc = newRoomDescriptions[newExitPosition];
-        
-        // ========== HIDDEN LADDER SYSTEM ==========
-        // Store the exit ladder text separately (hidden until wyrmglass activation)
-        const exitAddition = " In the corner, you notice a rickety ladder leading up through a shaft in the ceiling. Light filters down from above - this appears to be the way out!";
-        
-        newRoomDescriptions[newExitPosition] = {
-          ...existingDesc,
-          text: existingDesc?.text || "A cavern chamber.", // NO EXIT TEXT ADDED
-          mood: existingDesc?.mood || "hopeful",
-          special: "exit",
-          isExitRoom: true,
-          // Preserve enhanced text WITHOUT exit addition
-          enhancedText: existingDesc?.enhancedText,
-          // STORE THE EXIT TEXT FOR LATER USE
-          hiddenExitText: exitAddition
-        };
-        
-        // ========== POSITION STATE SYNCHRONIZATION ==========
-        // Update positions in state
-        setPositions(prev => ({
-          ...prev,
-          exitPosition: newExitPosition
-        }));
-        
-        console.log(`%c🚪 EXIT RELOCATED TO ${existingDesc?.enhancedText ? 'ENHANCED' : 'REGULAR'} ROOM ${newExitPosition} (ladder hidden until wyrmglass)`, 'color: #00ff00; font-weight: bold; font-size: 14px');
-      } else {
-        console.error("Could not find a suitable room for exit!");
-      }
-    } else {
-      // ========== EXIT IN PLACE PROCESSING ==========
-      // Exit is in a good room, but DON'T add exit description
+      // Get the existing description WITHOUT adding exit text
+      const existingDesc = newRoomDescriptions[newExitPosition];
+      
+      // Store the exit ladder text separately
       const exitAddition = " In the corner, you notice a rickety ladder leading up through a shaft in the ceiling. Light filters down from above - this appears to be the way out!";
       
-      newRoomDescriptions[gamePositions.exitPosition] = {
-        ...exitRoom,
-        text: exitRoom?.text || "A cavern chamber.", // NO EXIT TEXT ADDED
-        mood: exitRoom?.mood || "hopeful",
+      newRoomDescriptions[newExitPosition] = {
+        ...existingDesc,
+        text: existingDesc?.text || "A cavern chamber.", // NO EXIT TEXT ADDED
+        mood: existingDesc?.mood || "hopeful",
         special: "exit",
         isExitRoom: true,
         // Preserve enhanced text WITHOUT exit addition
-        enhancedText: exitRoom?.enhancedText,
+        enhancedText: existingDesc?.enhancedText,
         // STORE THE EXIT TEXT FOR LATER USE
         hiddenExitText: exitAddition
       };
       
-      console.log(`%c🚪 EXIT ASSIGNED TO ${exitRoom?.enhancedText ? 'ENHANCED' : 'REGULAR'} ROOM ${gamePositions.exitPosition} (ladder hidden until wyrmglass)`, 'color: #00ff00; font-weight: bold; font-size: 14px');
+      // Update positions in state
+      setPositions(prev => ({
+        ...prev,
+        exitPosition: newExitPosition
+      }));
+      
+      console.log(`%c🚪 EXIT RELOCATED TO ${existingDesc?.enhancedText ? 'ENHANCED' : 'REGULAR'} ROOM ${newExitPosition} (ladder hidden until wyrmglass)`, 'color: #00ff00; font-weight: bold; font-size: 14px');
+    } else {
+      console.error("Could not find a suitable room for exit!");
     }
+  } else {
+    // Exit is in a good room, but DON'T add exit description
+    const exitAddition = " In the corner, you notice a rickety ladder leading up through a shaft in the ceiling. Light filters down from above - this appears to be the way out!";
     
-    // ========== EXIT ROOM STATE SYNCHRONIZATION ==========
-    // SAVE EXIT ROOM TO STATE
-    setRoomDescriptionMap(prev => ({
-      ...prev,
-      [gamePositions.exitPosition]: newRoomDescriptions[gamePositions.exitPosition]
-    }));
+    newRoomDescriptions[gamePositions.exitPosition] = {
+      ...exitRoom,
+      text: exitRoom?.text || "A cavern chamber.", // NO EXIT TEXT ADDED
+      mood: exitRoom?.mood || "hopeful",
+      special: "exit",
+      isExitRoom: true,
+      // Preserve enhanced text WITHOUT exit addition
+      enhancedText: exitRoom?.enhancedText,
+      // STORE THE EXIT TEXT FOR LATER USE
+      hiddenExitText: exitAddition
+    };
+    
+    console.log(`%c🚪 EXIT ASSIGNED TO ${exitRoom?.enhancedText ? 'ENHANCED' : 'REGULAR'} ROOM ${gamePositions.exitPosition} (ladder hidden until wyrmglass)`, 'color: #00ff00; font-weight: bold; font-size: 14px');
   }
   
-  // ========== FINAL VALIDATION AND DEBUGGING ==========
+  // SAVE EXIT ROOM TO STATE
+  setRoomDescriptionMap(prev => ({
+    ...prev,
+    [gamePositions.exitPosition]: newRoomDescriptions[gamePositions.exitPosition]
+  }));
+}
+  
   // Debug pit room assignments using passed positions
   if (gamePositions) {
     console.log(`Pit Room 1 (${gamePositions.pitPosition1}) text:`, newRoomDescriptions[gamePositions.pitPosition1]?.text);
@@ -5100,39 +4837,18 @@ const createRoomDescriptions = (gamePositions) => {
   
   return newRoomDescriptions;
 };
-  
- 
 
+
+ 
 
 
 // ==================== ROOM INITIALIZATION SYSTEM ====================
 
-/**
- * Advanced Room Description Initialization with Error Recovery
- * Master-level world generation that creates the entire cave system with comprehensive
- * fallback systems, ensuring a fully playable world regardless of edge cases.
- * 
- * **Enterprise-Level Features:**
- * - **Comprehensive Error Recovery**: Multiple fallback layers preventing critical failures
- * - **Intelligent Content Shuffling**: Randomized room assignments for infinite replayability  
- * - **Safe State Initialization**: Immediate React state updates for critical game systems
- * - **Professional Debugging**: Color-coded logging with detailed system feedback
- * 
- * **Advanced Programming Excellence:**
- * - **Defensive Programming**: Multi-layer validation preventing any possible failure mode
- * - **Memory Efficiency**: Optimized array operations and smart object manipulation
- * - **Immutable State Management**: React best practices with proper state synchronization
- * 
- * **System Architecture Mastery:**
- * This function demonstrates enterprise-level system coordination by managing multiple
- * interdependent systems (room descriptions, connections, special rooms) while maintaining
- * complete error resilience and professional debugging capabilities.
- * 
- * @returns {void} - Initializes global room description state
- */
-const initializeRoomDescriptions = () => {
+
+  // Initialize room descriptions
+  const initializeRoomDescriptions = () => {
   return createRoomDescriptions();
-};
+  };
 
 /**
  * Advanced Game Room Description Pool Management System
@@ -5154,23 +4870,21 @@ const initializeRoomDescriptions = () => {
  * 
  * @returns {Array} Shuffled array of available room descriptions for current game session
  */
-const initializeGameRoomDescriptions = () => {
-  // ========== CONTENT ACQUISITION ==========
-  // Get all available room descriptions from the collection
-  const allDescriptions = getAllRoomDescriptions();
-  console.log(`Total available room descriptions: ${allDescriptions.length}`);
-  
-  // ========== ADVANCED RANDOMIZATION SYSTEM ==========
-  // Shuffle the array of descriptions to randomize which ones are used in this game
-  // Uses Fisher-Yates shuffle algorithm for statistically uniform distribution
-  const shuffledDescriptions = [...allDescriptions].sort(() => Math.random() - 0.5);
-  
-  // ========== POOL CREATION ==========
-  // Create a pool of available descriptions for this game
-  return shuffledDescriptions;
-};
+  const initializeGameRoomDescriptions = () => {
+    // Get all available room descriptions from the collection
+    const allDescriptions = getAllRoomDescriptions();
+    console.log(`Total available room descriptions: ${allDescriptions.length}`);
+    
+    // Shuffle the array of descriptions to randomize which ones are used in this game
+    const shuffledDescriptions = [...allDescriptions].sort(() => Math.random() - 0.5);
+    
+    // Create a pool of available descriptions for this game
+    return shuffledDescriptions;
+  };
 
-// ==================== PROCEDURAL MAZE GENERATION SYSTEM ====================
+  
+  
+  // ==================== PROCEDURAL MAZE GENERATION SYSTEM ====================
 
 /**
  * Cryptographically Sound Maze Generation with Bidirectional Connectivity
@@ -5201,97 +4915,84 @@ const initializeGameRoomDescriptions = () => {
  * 
  * @returns {Object} Complete bidirectional connection mapping for all 30 cave rooms
  */
-const generateRoomConnections = () => {
-  const connections = {};
-  
-  // ========== PRIMARY CONNECTION GENERATION ==========
-  // For each room (1-30), create connections to other rooms
-  for (let room = 1; room <= 30; room++) {
-    // Each room will have 3 connections (following the original game's pattern)
-    const roomConnections = new Set();
+  const generateRoomConnections = () => {
+    const connections = {};
     
-    // ========== INTELLIGENT CONNECTION ALGORITHM ==========
-    // Keep trying to add connections until we have 3 unique ones
-    while (roomConnections.size < 3) {
-      // ========== STRUCTURED RANDOMNESS SYSTEM ==========
-      // Create a connection to another room within +/-5 range
-      // This creates a more structured maze rather than completely random connections
-      let offset;
-      do {
-        // Random offset between -5 and +5, but never 0 (prevents self-connection)
-        offset = Math.floor(Math.random() * 11) - 5;
-      } while (offset === 0);
+    // For each room (1-30), create connections to other rooms
+    for (let room = 1; room <= 30; room++) {
+      // Each room will have 3 connections (following the original game's pattern)
+      const roomConnections = new Set();
       
-      let connectedRoom = room + offset;
+      // Keep trying to add connections until we have 3 unique ones
+      while (roomConnections.size < 3) {
+        // Create a connection to another room within +/-5 range
+        // This creates a more structured maze rather than completely random connections
+        let offset;
+        do {
+          // Random offset between -5 and +5, but never 0
+          offset = Math.floor(Math.random() * 11) - 5;
+        } while (offset === 0);
+        
+        let connectedRoom = room + offset;
+        
+        // Handle wraparound to keep all rooms in the 1-30 range
+        if (connectedRoom < 1) connectedRoom += 30;
+        if (connectedRoom > 30) connectedRoom -= 30;
+        
+        // Add this connection
+        roomConnections.add(connectedRoom);
+      }
       
-      // ========== MODULAR ARITHMETIC BOUNDARY HANDLING ==========
-      // Handle wraparound to keep all rooms in the 1-30 range
-      if (connectedRoom < 1) connectedRoom += 30;
-      if (connectedRoom > 30) connectedRoom -= 30;
-      
-      // ========== COLLISION-FREE ADDITION ==========
-      // Add this connection (Set automatically prevents duplicates)
-      roomConnections.add(connectedRoom);
+      // Convert Set to Array and store in our connections object
+      connections[room] = Array.from(roomConnections);
     }
     
-    // ========== EFFICIENT STATE CONVERSION ==========
-    // Convert Set to Array and store in our connections object
-    connections[room] = Array.from(roomConnections);
-  }
-  
-  // ========== BIDIRECTIONAL RELATIONSHIP ENFORCEMENT ==========
-  // Ensure connections are bidirectional (if A connects to B, B must connect to A)
-  for (let room = 1; room <= 30; room++) {
-    for (const connectedRoom of connections[room]) {
-      // ========== SYMMETRY VALIDATION AND CORRECTION ==========
-      // If the connected room doesn't have this room in its connections, add it
-      if (!connections[connectedRoom].includes(room)) {
-        // ========== INTELLIGENT CONNECTION REPLACEMENT ==========
-        // Remove one random connection to maintain 3 connections per room
-        const randomIndex = Math.floor(Math.random() * connections[connectedRoom].length);
-        const replacedRoom = connections[connectedRoom][randomIndex];
-        
-        // Replace with the current room
-        connections[connectedRoom][randomIndex] = room;
-        
-        // ========== CASCADE CONFLICT RESOLUTION ==========
-        // Update the replaced room's connections to remove the connection being replaced
-        const replacedRoomConnections = connections[replacedRoom];
-        const indexToRemove = replacedRoomConnections.indexOf(connectedRoom);
-        if (indexToRemove !== -1) {
-          // ========== SAFE REPLACEMENT ALGORITHM ==========
-          // Find a new connection for the replaced room
-          let newConnection;
-          do {
-            newConnection = Math.floor(Math.random() * 30) + 1;
-          } while (
-            newConnection === replacedRoom || 
-            replacedRoomConnections.includes(newConnection)
-          );
+    // Ensure connections are bidirectional (if A connects to B, B must connect to A)
+    for (let room = 1; room <= 30; room++) {
+      for (const connectedRoom of connections[room]) {
+        // If the connected room doesn't have this room in its connections, add it
+        if (!connections[connectedRoom].includes(room)) {
+          // Remove one random connection to maintain 3 connections per room
+          const randomIndex = Math.floor(Math.random() * connections[connectedRoom].length);
+          const replacedRoom = connections[connectedRoom][randomIndex];
           
-          replacedRoomConnections[indexToRemove] = newConnection;
+          // Replace with the current room
+          connections[connectedRoom][randomIndex] = room;
           
-          // ========== RECURSIVE BIDIRECTIONAL ENFORCEMENT ==========
-          // Make sure the new connection is bidirectional
-          if (!connections[newConnection].includes(replacedRoom)) {
-            const randomIdx = Math.floor(Math.random() * connections[newConnection].length);
-            connections[newConnection][randomIdx] = replacedRoom;
+          // Update the replaced room's connections to remove the connection being replaced
+          const replacedRoomConnections = connections[replacedRoom];
+          const indexToRemove = replacedRoomConnections.indexOf(connectedRoom);
+          if (indexToRemove !== -1) {
+            // Find a new connection for the replaced room
+            let newConnection;
+            do {
+              newConnection = Math.floor(Math.random() * 30) + 1;
+            } while (
+              newConnection === replacedRoom || 
+              replacedRoomConnections.includes(newConnection)
+            );
+            
+            replacedRoomConnections[indexToRemove] = newConnection;
+            
+            // Make sure the new connection is bidirectional
+            if (!connections[newConnection].includes(replacedRoom)) {
+              const randomIdx = Math.floor(Math.random() * connections[newConnection].length);
+              connections[newConnection][randomIdx] = replacedRoom;
+            }
           }
         }
       }
     }
-  }
-  
-  // ========== PROFESSIONAL DEBUGGING OUTPUT ==========
-  console.log('=== ROOM CONNECTIONS GENERATED ===');
-  for (let i = 1; i <= 30; i++) {
-    console.log(`Room ${i} connects to:`, connections[i].join(', '));
-  }
-  
-  return connections;
-};
+    
+    console.log('=== ROOM CONNECTIONS GENERATED ===');
+    for (let i = 1; i <= 30; i++) {
+      console.log(`Room ${i} connects to:`, connections[i].join(', '));
+    }
+    
+    return connections;
+  };
 
-// ==================== COMPREHENSIVE STATE MANAGEMENT DECLARATIONS ====================
+ // ==================== COMPREHENSIVE STATE MANAGEMENT DECLARATIONS ====================
 
 /**
  * Complete Game State Architecture with Professional Organization
@@ -5377,6 +5078,8 @@ const loseSoundPlayed = useRef(false);                                  // Ref: 
 const backgroundMusicStarted = useRef(false);                           // Ref: track background music state
 const previousRoomSpecial = useRef(null);                               // Ref: previous room special properties
 
+
+
 // ==================== ITEM SYSTEM ARCHITECTURE ====================
 
 /**
@@ -5397,7 +5100,6 @@ const previousRoomSpecial = useRef(null);                               // Ref: 
  * - **Flag-Based Systems**: Complex boolean logic for item behavior
  * - **Inheritance Patterns**: Base item properties with specialized extensions
  */
-
 const itemTypes = {
   // ========== QUEST AND UTILITY ITEMS ==========
   rusty_key: { 
@@ -5585,6 +5287,9 @@ const itemTypes = {
   }
 };
 
+
+
+
 // ==================== GIFT SHOP ECONOMIC SYSTEM ====================
 
 /**
@@ -5608,16 +5313,17 @@ const giftShopCatalog = {
   torch_oil: { price: 3 },           // Consumable fuel
   invisibility_cloak: { price: 6 },  // Premium equipment
   
-  // ========== SOUVENIR AND NOVELTY ITEMS ==========
+  
+ // ========== SOUVENIR AND NOVELTY ITEMS ==========
   wumpus_tshirt: { 
     id: 'wumpus_tshirt',
     name: 'Druika Cave T-shirt', 
     price: 1,
     icon: '👕',
-    description: 'A tacky souvenir t-shirt that reads "I Survived Ye Olde Ancient Cave!" But why does it say "Wumpus" on it?',
+    description: 'A tacky souvenir t-shirt that reads "I Survived Ye Olde Ancient Cave!"  But why does it say "Wumpus" on it?',
     canUse: true,
-    isSouvenir: true,     // Souvenir category flag
-    equippable: true      // Wearable equipment
+    isSouvenir: true,
+    equippable: true
   },
   souvenir_mug: { 
     id: 'souvenir_mug',
@@ -5626,16 +5332,16 @@ const giftShopCatalog = {
     icon: '☕',
     description: 'A ceramic mug with "DON\'T WAKE THE WUMPUS" printed on the side.',
     canUse: true,
-    isSouvenir: true      // Souvenir category flag
+  isSouvenir: true
   },
   canvas_bag: { 
     id: 'canvas_bag',
     name: 'Adventure Canvas Bag', 
     price: 2,
     icon: '🛍️',
-    description: 'A sturdy souvenir canvas bag emblazoned with a cave map (but not this cave).',
+    description: 'A sturdy sourvenier canvas bag emblazoned with a cave map(but not this cave).',
     canUse: true,
-    isSouvenir: true      // Souvenir category flag
+    isSouvenir: true
   },
   druika_plush: { 
     id: 'druika_plush',
@@ -5644,10 +5350,9 @@ const giftShopCatalog = {
     icon: '🧸',
     description: 'A cuddly stuffed version of the terrifying ancient cave monster.',
     canUse: true,
-    isSouvenir: true      // Souvenir category flag
+    isSouvenir: true
   }
 };
-
 // ========== PURCHASE RESTRICTION SYSTEM ==========
 /**
  * Economic Balance Control System
@@ -5693,63 +5398,28 @@ const nonPurchasableItems = [
  * @returns {void} - Initializes gift shop items into the global item system
  */
 const initializeGiftShop = () => {
-  // ========== DYNAMIC ITEM DATABASE EXTENSION ==========
   // Add new souvenir items to itemTypes
   Object.entries(giftShopCatalog).forEach(([itemId, itemData]) => {
-    
-    // ========== DUPLICATE PREVENTION SYSTEM ==========
     // Only add if it's a new item not already in itemTypes
     if (!itemTypes[itemId] && itemData.id) {
-      
-      // ========== COMPREHENSIVE ITEM OBJECT CREATION ==========
       // Add the new item definition to itemTypes
       itemTypes[itemId] = {
-        id: itemId,                                               // Unique identifier
-        name: itemData.name,                                      // Display name
-        icon: itemData.icon,                                      // Visual representation
-        description: itemData.description,                        // Flavor text
-        canUse: itemData.canUse !== undefined ? itemData.canUse : false,  // Usage capability with fallback
-        isSouvenir: itemData.isSouvenir || false                 // Category classification
+        id: itemId,
+        name: itemData.name,
+        icon: itemData.icon,
+        description: itemData.description,
+        canUse: itemData.canUse !== undefined ? itemData.canUse : false,
+        isSouvenir: itemData.isSouvenir || false
       };
       
-      // ========== REGISTRATION CONFIRMATION ==========
       console.log(`Added new gift shop item: ${itemId}`);
     }
   });
 };
 
-// ==================== COMPREHENSIVE AUDIO SYSTEM ARCHITECTURE ====================
 
-/**
- * Master Audio Manager with 40+ Sound Effects and Music Systems
- * Professional-grade audio architecture supporting ambient, interactive, UI, and narrative audio
- * 
- * **Audio System Excellence:**
- * This audio system demonstrates AAA game development audio architecture with comprehensive
- * sound design covering every aspect of player interaction. It includes specialized audio
- * for creatures, environments, UI feedback, and narrative moments.
- * 
- * **Sound Categories & Features:**
- * - **Core Game Audio**: Win/lose, movement, exploration feedback
- * - **Creature Audio**: Specialized sounds for Druika, bats, sand creatures, nixies
- * - **Interactive Audio**: Pickup sounds, item usage, spell effects
- * - **Environmental Audio**: Room ambience, teleportation, trap sounds
- * - **UI Audio**: Button feedback, menu sounds, commerce interactions
- * - **Narrative Audio**: Character voices, story moment emphasis
- * - **Save System Audio**: Game state management feedback
- * 
- * **Professional Audio Design:**
- * - **Context-Aware Playback**: Different sounds for different interaction types
- * - **Audio State Management**: Enable/disable functionality for accessibility
- * - **Dynamic Music System**: Background music with room-specific variations
- * - **Sound Pooling**: Efficient audio resource management
- * - **Cleanup Systems**: Proper audio resource disposal
- * 
- * **Game Development Excellence:**
- * This audio system rivals professional game studios in scope and organization.
- * The 40+ distinct sound effects create immersive gameplay experiences that
- * enhance every player interaction and story moment.
- */
+
+
 const { 
   // ========== CORE GAME STATE AUDIO ==========
   playWinSound,                        // Victory celebration
@@ -5843,8 +5513,12 @@ const {
   playDeleteSavedGameSound,            // Delete operation feedback
   disableAllSounds,                    // Audio system disable
   enableAllSounds,                     // Audio system enable
-  cleanupSounds                        // Audio resource cleanup
+  cleanupSounds,                       // Audio resource cleanup
+
+
 } = useSounds();
+
+
 
 // ==================== ADVANCED MAP FRAGMENT DANGER DETECTION SYSTEM ====================
 
@@ -5889,93 +5563,81 @@ const {
  * 
  * @returns {boolean} True if map fragment was successfully used, false otherwise
  */
-const handleMapFragmentDangerSense = () => {
-  // ========== INITIALIZATION AND DEBUG LOGGING ==========
-  // Add debug information
-  console.log("RUNNING DANGER SENSE MAP FRAGMENT FUNCTION");
-  
-  // ========== GRAPH TRAVERSAL ANALYSIS ==========
-  // Get connected rooms to current position
-  const connectedRooms = roomConnections[currentPosition] || [];
-  console.log("Connected rooms:", connectedRooms);
-  
-  // ========== THREAT STORAGE INITIALIZATION ==========
-  // Store which rooms have dangers
-  const dangerRooms = [];
-  
-  // ========== COMPREHENSIVE THREAT ANALYSIS ==========
-  // Check each connected room for various threats and resources
-  connectedRooms.forEach(room => {
+  const handleMapFragmentDangerSense = () => {
+    // Add debug information
+    console.log("RUNNING DANGER SENSE MAP FRAGMENT FUNCTION");
     
-    // ========== DRUIKA THREAT DETECTION ==========
-    // Check if Wumpus is in this room
-    if (room === positions.wumpusPosition) {
-      dangerRooms.push({
-        room: room,
-        type: 'wumpus',
-        color: '#ff4d4d' // Red - High danger
-      });
-      console.log(`Room ${room} has wumpus`);
+    // Get connected rooms to current position
+    const connectedRooms = roomConnections[currentPosition] || [];
+    console.log("Connected rooms:", connectedRooms);
+    
+    // Store which rooms have dangers
+    const dangerRooms = [];
+    
+    // Check each connected room
+    connectedRooms.forEach(room => {
+      // Check if Wumpus is in this room
+      if (room === positions.wumpusPosition) {
+        dangerRooms.push({
+          room: room,
+          type: 'wumpus',
+          color: '#ff4d4d' // Red
+        });
+        console.log(`Room ${room} has wumpus`);
+      }
+      
+      // Check for pits
+      if (room === positions.pitPosition1 || room === positions.pitPosition2) {
+        dangerRooms.push({
+          room: room,
+          type: 'pit',
+          color: '#4d4dff' // Blue
+        });
+        console.log(`Room ${room} has pit`);
+      }
+      
+      // Check for bats
+      if (room === positions.batPosition) {
+        dangerRooms.push({
+          room: room,
+          type: 'bat',
+          color: '#9966ff' // Purple
+        });
+        console.log(`Room ${room} has bat`);
+      }
+      
+      // Check for oil flasks
+      if (roomDescriptionMap[room]?.interactiveItem === 'torch_oil') {
+        dangerRooms.push({
+          room: room,
+          type: 'oil',
+          color: '#ffcc00' // Yellow/gold
+        });
+        console.log(`Room ${room} has oil`);
+      }
+    });
+    
+    // If we found dangers, show them
+    if (dangerRooms.length > 0) {
+      console.log("Dangers found:", dangerRooms);
+      setMessage("The map fragment glows as you study it. Certain tunnels seem to pulse with warning...");
+      
+      // Start pulsing animation for the dangerous rooms ONLY IF dangers found
+      startDangerPulse(dangerRooms);
+    } else {
+      console.log("No dangers detected in connected rooms");
+      setMessage("The map fragment glows briefly, but indicates no immediate dangers nearby.");
     }
     
-    // ========== PIT HAZARD DETECTION ==========
-    // Check for pits
-    if (room === positions.pitPosition1 || room === positions.pitPosition2) {
-      dangerRooms.push({
-        room: room,
-        type: 'pit',
-        color: '#4d4dff' // Blue - Environmental hazard
-      });
-      console.log(`Room ${room} has pit`);
-    }
+    // When done, remove the map fragment
+    setInventory(prev => prev.filter(i => i.id !== 'old_map'));
     
-    // ========== BAT CREATURE DETECTION ==========
-    // Check for bats
-    if (room === positions.batPosition) {
-      dangerRooms.push({
-        room: room,
-        type: 'bat',
-        color: '#9966ff' // Purple - Creature threat
-      });
-      console.log(`Room ${room} has bat`);
-    }
-    
-    // ========== RESOURCE DETECTION ==========
-    // Check for oil flasks (beneficial items)
-    if (roomDescriptionMap[room]?.interactiveItem === 'torch_oil') {
-      dangerRooms.push({
-        room: room,
-        type: 'oil',
-        color: '#ffcc00' // Yellow/gold - Beneficial resource
-      });
-      console.log(`Room ${room} has oil`);
-    }
-  });
-  
-  // ========== THREAT RESPONSE SYSTEM ==========
-  // If we found dangers, show them
-  if (dangerRooms.length > 0) {
-    console.log("Dangers found:", dangerRooms);
-    setMessage("The map fragment glows as you study it. Certain tunnels seem to pulse with warning...");
-    
-    // ========== VISUAL FEEDBACK ACTIVATION ==========
-    // Start pulsing animation for the dangerous rooms ONLY IF dangers found
-    startDangerPulse(dangerRooms);
-  } else {
-    console.log("No dangers detected in connected rooms");
-    setMessage("The map fragment glows briefly, but indicates no immediate dangers nearby.");
-  }
-  
-  // ========== ITEM CONSUMPTION ==========
-  // When done, remove the map fragment
-  setInventory(prev => prev.filter(i => i.id !== 'old_map'));
-  
-  // ========== SUCCESS CONFIRMATION ==========
-  // Return true to indicate the item was used successfully
-  return true;
-};
+    // Return true to indicate the item was used successfully
+    return true;
+  };
 
-// ==================== ADVANCED VISUAL FEEDBACK ANIMATION SYSTEM ====================
+
+  // ==================== ADVANCED VISUAL FEEDBACK ANIMATION SYSTEM ====================
 
 /**
  * Dynamic CSS Animation Engine with Professional Visual Effects
@@ -6016,169 +5678,135 @@ const handleMapFragmentDangerSense = () => {
  * @param {Array} dangerRooms - Array of room objects with threat information
  * @returns {void} - Executes visual feedback animations
  */
-const startDangerPulse = (dangerRooms) => {
-  console.log("Starting danger pulse for rooms:", dangerRooms.map(d => d.room));
-  
-  // ========== DOM ELEMENT DISCOVERY ==========
-  // Check what buttons we have available
-  const allButtons = document.querySelectorAll('.connection-btn');
-  console.log(`Found ${allButtons.length} connection buttons`);
-  
-  // ========== UNIQUE ANIMATION IDENTIFIER SYSTEM ==========
-  // Create a unique style ID for this pulse session
-  const uniqueStyleID = `danger-pulse-${Date.now()}`;
-  
-  // ========== DYNAMIC CSS GENERATION ==========
-  // Create a style element for our custom animations
-  const styleElement = document.createElement('style');
-  styleElement.id = uniqueStyleID;
-  
-  // ========== ADVANCED CSS ANIMATION CONSTRUCTION ==========
+  const startDangerPulse = (dangerRooms) => {
+    console.log("Starting danger pulse for rooms:", dangerRooms.map(d => d.room));
+    
+    // Check what buttons we have available
+    const allButtons = document.querySelectorAll('.connection-btn');
+    console.log(`Found ${allButtons.length} connection buttons`);
+    
+    // Create a unique style ID for this pulse session
+    const uniqueStyleID = `danger-pulse-${Date.now()}`;
+    
+    // Create a style element for our custom animations
+    const styleElement = document.createElement('style');
+    styleElement.id = uniqueStyleID;
+    
+   // ========== ADVANCED CSS ANIMATION CONSTRUCTION ==========
   // Build CSS for different types of pulses - STRONGER VISUAL EFFECT
   let cssRules = '';
   
   // ========== MULTI-THREAT ANIMATION GENERATION ==========
   // Create animation for each danger type
-  dangerRooms.forEach((danger, index) => {
-    const animationName = `pulse-danger-${index}-${uniqueStyleID}`;
-    
-    // ========== SOPHISTICATED KEYFRAME ANIMATION ==========
-    cssRules += `
-      @keyframes ${animationName} {
-        0% { 
-          transform: scale(1);
-          box-shadow: 0 0 0 0 ${danger.color}; 
-          border: 2px solid transparent;
-        }
-        50% { 
-          transform: scale(1.15);
-          box-shadow: 0 0 15px 5px ${danger.color}; 
-          border: 2px solid ${danger.color};
-        }
-        100% { 
-          transform: scale(1);
-          box-shadow: 0 0 0 0 ${danger.color}; 
-          border: 2px solid transparent;
-        }
-      }
+    dangerRooms.forEach((danger, index) => {
+      const animationName = `pulse-danger-${index}-${uniqueStyleID}`;
       
-      .danger-pulse-${index}-${uniqueStyleID} {
-        position: relative;
-        animation: ${animationName} 1s ease-in-out 3;
-        z-index: 100 !important;
-      }
-    `;
-  });
-  
-  // ========== CSS INJECTION SYSTEM ==========
-  // Add the styles to the document
-  styleElement.textContent = cssRules;
-  document.head.appendChild(styleElement);
-  
-  // ========== BUTTON TARGETING AND STATE MANAGEMENT ==========
-  // Apply classes to buttons
-  const pulsedButtons = [];
-  
-  dangerRooms.forEach((danger, index) => {
-    // ========== INTELLIGENT BUTTON DISCOVERY ==========
-    // Find button by its text content (the room number)
-    const roomButton = Array.from(allButtons).find(btn => 
-      btn.textContent.trim() === danger.room.toString()
-    );
-    
-    if (!roomButton) {
-      console.log(`Could not find button for room ${danger.room}`);
-      return;
-    }
-    
-    console.log(`Adding pulse to room ${danger.room} button (${danger.type})`);
-    
-    // ========== ORIGINAL STATE PRESERVATION ==========
-    // Store original styles for restoration
-    const originalTransform = roomButton.style.transform;
-    const originalBoxShadow = roomButton.style.boxShadow;
-    const originalBorder = roomButton.style.border;
-    const originalZIndex = roomButton.style.zIndex;
-    
-    // ========== ANIMATION CLASS APPLICATION ==========
-    // Add the pulse class
-    const pulseClass = `danger-pulse-${index}-${uniqueStyleID}`;
-    roomButton.classList.add(pulseClass);
-    
-    // ========== ENHANCED VISIBILITY SYSTEM ==========
-    // Also set a backup direct style for extra visibility
-    roomButton.style.zIndex = "100";
-    
-    // ========== CLEANUP DATA STORAGE ==========
-    // Store for cleanup
-    pulsedButtons.push({
-      button: roomButton,
-      class: pulseClass,
-      originalStyles: {
-        transform: originalTransform,
-        boxShadow: originalBoxShadow,
-        border: originalBorder,
-        zIndex: originalZIndex
-      }
-    });
-  });
-  
-  // ========== AUTOMATIC CLEANUP SYSTEM ==========
-  // Clean up after animation finishes
-  setTimeout(() => {
-    // ========== STYLE RESTORATION ==========
-    // Remove classes and restore original styles
-    pulsedButtons.forEach(item => {
-      item.button.classList.remove(item.class);
-      
-      // ========== ORIGINAL STATE RESTORATION ==========
-      // Restore original styles
-      item.button.style.transform = item.originalStyles.transform;
-      item.button.style.boxShadow = item.originalStyles.boxShadow;
-      item.button.style.border = item.originalStyles.border;
-      item.button.style.zIndex = item.originalStyles.zIndex;
+      cssRules += `
+        @keyframes ${animationName} {
+          0% { 
+            transform: scale(1);
+            box-shadow: 0 0 0 0 ${danger.color}; 
+            border: 2px solid transparent;
+          }
+          50% { 
+            transform: scale(1.15);
+            box-shadow: 0 0 15px 5px ${danger.color}; 
+            border: 2px solid ${danger.color};
+          }
+          100% { 
+            transform: scale(1);
+            box-shadow: 0 0 0 0 ${danger.color}; 
+            border: 2px solid transparent;
+          }
+        }
+        
+        .danger-pulse-${index}-${uniqueStyleID} {
+          position: relative;
+          animation: ${animationName} 1s ease-in-out 3;
+          z-index: 100 !important;
+        }
+      `;
     });
     
-    // ========== MEMORY MANAGEMENT ==========
-    // Remove the style element
-    const styleElem = document.getElementById(uniqueStyleID);
-    if (styleElem) {
-      document.head.removeChild(styleElem);
-    }
+    // Add the styles to the document
+    styleElement.textContent = cssRules;
+    document.head.appendChild(styleElement);
     
-    console.log("Danger pulse animations cleaned up");
-  }, 3000); // 3 pulses at 1s each plus buffer
-};
-
+    // Apply classes to buttons
+    const pulsedButtons = [];
+    
+    dangerRooms.forEach((danger, index) => {
+      // Find button by its text content (the room number)
+      const roomButton = Array.from(allButtons).find(btn => 
+        btn.textContent.trim() === danger.room.toString()
+      );
+      
+      if (!roomButton) {
+        console.log(`Could not find button for room ${danger.room}`);
+        return;
+      }
+      
+      console.log(`Adding pulse to room ${danger.room} button (${danger.type})`);
+      
+      // Store original styles for restoration
+      const originalTransform = roomButton.style.transform;
+      const originalBoxShadow = roomButton.style.boxShadow;
+      const originalBorder = roomButton.style.border;
+      const originalZIndex = roomButton.style.zIndex;
+      
+      // Add the pulse class
+      const pulseClass = `danger-pulse-${index}-${uniqueStyleID}`;
+      roomButton.classList.add(pulseClass);
+      
+      // Also set a backup direct style for extra visibility
+      roomButton.style.zIndex = "100";
+      
+      // Store for cleanup
+      pulsedButtons.push({
+        button: roomButton,
+        class: pulseClass,
+        originalStyles: {
+          transform: originalTransform,
+          boxShadow: originalBoxShadow,
+          border: originalBorder,
+          zIndex: originalZIndex
+        }
+      });
+    });
+    
+    // Clean up after animation finishes
+    setTimeout(() => {
+      // Remove classes and restore original styles
+      pulsedButtons.forEach(item => {
+        item.button.classList.remove(item.class);
+        
+        // Restore original styles
+        item.button.style.transform = item.originalStyles.transform;
+        item.button.style.boxShadow = item.originalStyles.boxShadow;
+        item.button.style.border = item.originalStyles.border;
+        item.button.style.zIndex = item.originalStyles.zIndex;
+      });
+      
+      // Remove the style element
+      const styleElem = document.getElementById(uniqueStyleID);
+      if (styleElem) {
+        document.head.removeChild(styleElem);
+      }
+      
+      console.log("Danger pulse animations cleaned up");
+    }, 3000); // 3 pulses at 1s each plus buffer
+  };
 
 // ==================== GAME LOGIC FUNCTION REFERENCE SYSTEM ====================
-
-/**
- * Advanced Function Reference Management for Cross-Component Communication
- * Professional-grade solution for accessing game logic functions across component boundaries
- * 
- * **Architectural Excellence:**
- * This useRef pattern demonstrates advanced React architecture by creating a stable
- * reference system that allows components to access game logic functions without
- * prop drilling or complex context passing. It ensures function availability across
- * the entire application lifecycle.
- * 
- * **Key Design Features:**
- * - **Reference Stability**: useRef provides consistent function access across renders
- * - **Null Safety**: Graceful handling of uninitialized function references
- * - **Cross-Component Access**: Enables any component to access core game functions
- * - **Performance Optimization**: Avoids function recreation on every render
- * - **Debugging Support**: Clear function naming for development transparency
- * 
- * **React Best Practices:**
- * - **Memory Efficiency**: Refs don't trigger re-renders when updated
- * - **Lifecycle Management**: Functions remain accessible throughout component lifecycle
- * - **Clean Architecture**: Separates function storage from component rendering logic
- */
+// A stable reference function that allows components to access game logic functions without
+//  prop drilling or complex context passing. It ensures function availability across
+//  the entire application lifecycle.
 const gameLogicFunctions = useRef({
   startGame: null,        // Reference to game initialization function
   checkPosition: null     // Reference to position validation and encounter handler
 });
+
+
 
 // ==================== MASTER TREASURE HUNT INITIALIZATION SYSTEM ====================
 
@@ -6235,17 +5863,14 @@ const gameLogicFunctions = useRef({
 const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap = positions) => {
   console.log("Starting treasure hunt initialization with STRONGER SAFEGUARDS");
   
-  // ========== COMPREHENSIVE PARAMETER VALIDATION ==========
   // Debug the parameters
   console.log("roomDescMap provided:", !!roomDescMap, "positionsMap provided:", !!positionsMap);
   
-  // ========== POSITION VALIDATION WITH FALLBACK SYSTEMS ==========
   // If positions are not provided or invalid, use the current state
   if (!positionsMap || !positionsMap.wumpusPosition) {
     console.log("Invalid positions provided, using current state positions");
     positionsMap = positions;
     
-    // ========== CRITICAL ERROR DETECTION ==========
     // If still invalid, we can't proceed
     if (!positionsMap || !positionsMap.wumpusPosition) {
       console.error("ERROR: No valid positions available for treasure hunt initialization!");
@@ -6253,13 +5878,11 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
     }
   }
   
-  // ========== ROOM DESCRIPTION VALIDATION WITH FALLBACK CREATION ==========
   // If room descriptions are not provided or invalid, use current state
   if (!roomDescMap || Object.keys(roomDescMap).length === 0) {
     console.log("Invalid room descriptions provided, using current state");
     roomDescMap = roomDescriptionMap;
     
-    // ========== EMERGENCY ROOM CREATION SYSTEM ==========
     // If still invalid, try to create them
     if (!roomDescMap || Object.keys(roomDescMap).length === 0) {
       console.log("Creating room descriptions on the fly");
@@ -6268,7 +5891,6 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
     }
   }
   
-  // ========== FINAL VALIDATION CHECK ==========
   // Debug the room descriptions
   if (!roomDescMap || !roomDescMap[1]) {
     console.error("ERROR: Room descriptions not initialized properly!");
@@ -6285,7 +5907,6 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
     positionsMap.exitPosition      // Exit portal location
   ];
   
-  // ========== GIFT SHOP INTEGRATION ==========
   // ADD THIS: Check if gift shop position exists in positions
   if (positionsMap.giftShopPosition) {
     dangerousRooms.push(positionsMap.giftShopPosition);
@@ -6294,7 +5915,6 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
   
   console.log("DANGER ROOMS TO AVOID:", dangerousRooms);
   
-  // ========== SAFE ROOM CALCULATION ALGORITHM ==========
   // Create array of all possible safe rooms (1-30 excluding dangerous rooms)
   const allSafeRooms = [];
   for (let i = 1; i <= 30; i++) {
@@ -6303,22 +5923,18 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
     }
   }
   
-  // ========== OCCUPATION TRACKING SYSTEM ==========
   // Add tracking array for all occupied rooms
   let occupiedRooms = [...dangerousRooms];
   
   console.log("TOTAL SAFE ROOMS:", allSafeRooms.length);
   
-  // ========== ADVANCED SPECIAL ROOM DETECTION SYSTEM ==========
   // Define special purpose rooms to exclude from map AND treasure placement
   const specialRoomsToExclude = [];
 
-  // ========== COMPREHENSIVE ROOM CONTENT ANALYSIS ==========
   // Check for gift shop room and other special rooms
   for (let i = 1; i <= 30; i++) {
     const roomDesc = roomDescMap[i]?.text || "";
     
-    // ========== GIFT SHOP DETECTION ==========
     // Check for gift shop
     if (roomDesc.toLowerCase().includes('gift shop') || 
         roomDesc.toLowerCase().includes('t-shirt') || 
@@ -6328,7 +5944,7 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
       console.log(`Excluding gift shop room ${i} from treasure/map placement`);
     }
     
-    // ========== WATER SPIRIT DETECTION ==========
+ // ========== WATER SPIRIT DETECTION ==========
     // Check for water sprite room
     if ((roomDesc.toLowerCase().includes('tranquil pool') && roomDesc.toLowerCase().includes('mirror')) ||
         (specialRooms && specialRooms[i]?.hasWaterSpirit)) {
@@ -6353,34 +5969,30 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
     }
   }
 
-  // ========== INTELLIGENT ROOM FILTERING SYSTEM ==========
+    // ========== INTELLIGENT ROOM FILTERING SYSTEM ==========
   // UPDATED: Remove special rooms from allSafeRooms for BOTH map and treasure placement
   const filteredSafeRooms = allSafeRooms.filter(room => !specialRoomsToExclude.includes(room));
   console.log(`Safe rooms after filtering special rooms: ${filteredSafeRooms.length}`);
 
-  // ========== MAP PLACEMENT ALGORITHM WITH FALLBACK ==========
+   // ========== MAP PLACEMENT ALGORITHM WITH FALLBACK ==========
   // Select map room from filtered list
   let mapRoom;
   if (filteredSafeRooms.length === 0) {
     console.error("No rooms available for map placement! Using fallback method.");
-    // ========== EMERGENCY FALLBACK SYSTEM ==========
     // Fallback - use original method
     const mapRoomIndex = Math.floor(Math.random() * allSafeRooms.length);
     mapRoom = allSafeRooms[mapRoomIndex];
     console.log(`Fallback map placement in room ${mapRoom}`);
   } else {
-    // ========== OPTIMAL MAP PLACEMENT ==========
     // Pick a random room from the filtered safe list
     const mapRoomIndex = Math.floor(Math.random() * filteredSafeRooms.length);
     mapRoom = filteredSafeRooms[mapRoomIndex];
     console.log(`Map placed in room ${mapRoom}`);
   }
   
-  // ========== OCCUPATION TRACKING UPDATE ==========
   // Add map room to occupied rooms
   occupiedRooms.push(mapRoom);
   
-  // ========== TREASURE ROOM POOL CREATION ==========
   // UPDATED: Remove map room from filtered safe rooms for treasure placement
   const treasureRooms = filteredSafeRooms.filter(room => room !== mapRoom);
   
@@ -6412,30 +6024,24 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
     }
   ];
   
-  // ========== CLUE SYSTEM INITIALIZATION ==========
   // Get the direct match clues
   const directClues = treasureClues();
   
-  // ========== TREASURE PLACEMENT SYSTEM INITIALIZATION ==========
   // Assign rooms to treasures and determine clues
   const treasures = [];
   const debugInfo = [];
   
-  // ========== INTELLIGENT TREASURE PLACEMENT ALGORITHM ==========
   // Process one treasure at a time
   for (let i = 0; i < treasureTypes.length; i++) {
-    // ========== ROOM AVAILABILITY CHECK ==========
     if (treasureRooms.length === 0) {
       console.error("Ran out of safe rooms for treasures!");
       break;
     }
     
-    // ========== RANDOM ROOM SELECTION ==========
     // Pick a random room from the filtered treasure rooms
     const randomIndex = Math.floor(Math.random() * treasureRooms.length);
     const treasureRoom = treasureRooms[randomIndex];
     
-    // ========== TRIPLE SAFETY VALIDATION ==========
     // Triple-check this is a safe room
     if (dangerousRooms.includes(treasureRoom)) {
       console.error(`ERROR: Room ${treasureRoom} is marked as safe but is actually dangerous! Skipping.`);
@@ -6447,7 +6053,6 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
       continue;
     }
     
-    // ========== FINAL GIFT SHOP VALIDATION ==========
     // FINAL CHECK: Make sure this isn't a gift shop room
     const roomDesc = roomDescMap[treasureRoom];
     const roomText = roomDesc && roomDesc.text ? roomDesc.text : "";
@@ -6460,7 +6065,6 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
       continue;
     }
     
-    // ========== ROOM ALLOCATION AND TRACKING ==========
     // Remove this room from available treasure rooms
     treasureRooms.splice(randomIndex, 1);
     
@@ -6470,11 +6074,9 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
     console.log(`Assigned ${treasureTypes[i].id} to room ${treasureRoom}`);
     console.log(`Room description: "${roomText}"`);
     
-    // ========== ADVANCED CLUE MATCHING ALGORITHM ==========
     // Choose a clue based on EXACT room text match
     let clue = directClues.default[treasureTypes[i].id]; // Start with default clue
     
-    // ========== EXACT MATCH DETECTION ==========
     // Try for an exact match with the room text
     if (directClues[roomText] && directClues[roomText][treasureTypes[i].id]) {
       clue = directClues[roomText][treasureTypes[i].id];
@@ -6482,16 +6084,13 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
     } else {
       console.log(`No exact match for room ${treasureRoom}, using default clue`);
       
-      // ========== FUZZY MATCHING ALGORITHM ==========
       // Try to find a similar room description to use
       let bestMatch = '';
       let bestMatchScore = 0;
       
-      // ========== TEXT SIMILARITY ANALYSIS ==========
       // Look through all keys in directClues
       for (const key in directClues) {
         if (key !== 'default') {
-          // ========== SIMILARITY CALCULATION ==========
           // Calculate similarity
           const similarity = calculateTextSimilarity(roomText, key);
           if (similarity > 0.7 && similarity > bestMatchScore) {
@@ -6501,7 +6100,6 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
         }
       }
       
-      // ========== BEST MATCH APPLICATION ==========
       // If found a good match, use that clue
       if (bestMatch && directClues[bestMatch][treasureTypes[i].id]) {
         clue = directClues[bestMatch][treasureTypes[i].id];
@@ -6510,7 +6108,6 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
       }
     }
     
-    // ========== TREASURE OBJECT CREATION ==========
     // Create this treasure with room and clue
     treasures.push({
       ...treasureTypes[i],
@@ -6519,7 +6116,6 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
       originalRoomDesc: roomText // Store the original room description
     });
     
-    // ========== ROOM DESCRIPTION ENHANCEMENT ==========
     // Update room description map to mark this room has a treasure
     setRoomDescriptionMap(prev => ({
       ...prev,
@@ -6533,7 +6129,6 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
       }
     }));
     
-    // ========== DEBUG INFORMATION COLLECTION ==========
     // Save debug info
     debugInfo.push({
       treasureId: treasureTypes[i].id,
@@ -6547,16 +6142,14 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
     console.log(`- Clue: "${clue}"`);
   }
   
-  // ========== INITIALIZATION COMPLETION LOGGING ==========
   console.log('=== TREASURE HUNT INITIALIZED ===');
   console.log('DDD    Map Room:', mapRoom);
+
   console.log('=== TREASURE HUNT INITIALIZED ===', mapRoom); 
   console.log('Treasures placed:', treasures.map(t => `${t.name} in room ${t.room}`));
   console.log('Debug Info:', debugInfo);
   console.log('Final occupied rooms:', occupiedRooms);
-  console.log('DDD    Map Room:', mapRoom);
-  
-  // ========== CRITICAL VALIDATION SYSTEM ==========
+    console.log('DDD    Map Room:', mapRoom);
   // VALIDATION: Double-check no treasures are in gift shop
   const giftShopRooms = [];
   for (let i = 1; i <= 30; i++) {
@@ -6568,21 +6161,18 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
     }
   }
   
-  // ========== FINAL CONFLICT DETECTION ==========
   treasures.forEach(treasure => {
     if (giftShopRooms.includes(treasure.room)) {
       console.error(`CRITICAL ERROR: Treasure ${treasure.name} was placed in gift shop room ${treasure.room}!`);
     }
   });
 
-  // ========== PROFESSIONAL MAP CLUE GENERATION ==========
   // Set the map clue with better formatting
   const mapClueText = "The ancient map shows four lost artifacts scattered throughout these caves.\n\n" +
     "To lift the curse on the village, you must find all the treasures and return to the exit.\n\n" +
     "The map provides these cryptic clues:\n\n" +
     treasures.map(t => `• ${t.clue}`).join('\n\n');
 
-  // ========== ATOMIC STATE UPDATES ==========
   // Update state
   setTreasureMap(mapRoom);
   setTreasurePieces(treasures);
@@ -6591,26 +6181,24 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
   setMapClue(mapClueText);
   setTreasureDebugInfo(debugInfo);
   
-  // ========== CRITICAL STATE SYNCHRONIZATION ==========
   // CRITICAL STEP: Force the room descriptions to be exactly what we expect
   // This ensures that the room descriptions during gameplay match what we used for clues
   setRoomDescriptionMap(roomDescMap);
 
-  // ========== COMPLETION CONFIRMATION AND FLAGS ==========
   // At the very end of this function, add these lines:
   console.log('=== TREASURE HUNT INITIALIZATION COMPLETE ===');
   console.log(`Treasures created: ${treasures.length}`);
   
-  // ========== STATE CONFIRMATION ==========
   // IMPORTANT: Make sure treasurePieces state is set before attempting shifting room setup
   setTreasurePieces(treasures);
   setTreasureDebugInfo(debugInfo);
   
-  // ========== CROSS-SYSTEM COORDINATION FLAG ==========
   // Instead of trying to initialize shifting room immediately,
   // set a flag indicating treasures are ready
   localStorage.setItem('treasuresInitialized', 'true');
 };
+
+
 
 
 // ==================== ADVANCED SHIFTING ROOM INITIALIZATION SYSTEM ====================
@@ -6655,7 +6243,6 @@ const initializeTreasureHunt = (roomDescMap = roomDescriptionMap, positionsMap =
 const initializeShiftingRoom = () => {
   console.log('Initializing shifting room feature...');
   
-  // ========== CRITICAL DEPENDENCY VALIDATION ==========
   // Force reload treasures from state if needed
   if (!treasurePieces || treasurePieces.length === 0) {
     console.log('Warning: treasurePieces is empty. This should not happen at this point!');
@@ -6664,7 +6251,7 @@ const initializeShiftingRoom = () => {
   
   console.log(`Found ${treasurePieces.length} treasures: ${treasurePieces.map(t => t.id).join(', ')}`);
   
-  // ==================== ADVANCED CONTENT FILTERING SYSTEM ====================
+// ==================== ADVANCED CONTENT FILTERING SYSTEM ====================
   
   /**
    * Sophisticated Content Analysis Engine for Problematic Content Detection
@@ -6687,13 +6274,12 @@ const initializeShiftingRoom = () => {
    * @param {Object} roomDesc - Room description object to analyze for conflicts
    * @returns {boolean} True if content has conflicts and should be excluded
    */
-  const hasProblematicContent = (roomDesc) => {
-    if (!roomDesc || !roomDesc.text) return false;
-    
-    const text = roomDesc.text.toLowerCase();
+    const hasProblematicContent = (roomDesc) => {
+      if (!roomDesc || !roomDesc.text) return false;
+      
+      const text = roomDesc.text.toLowerCase();
 
-    // ========== CRITICAL POOL ROOM EXCLUSION ==========
-    // CRITICAL: Exclude pool room (has special treasure mechanics)
+    // CRITICAL: Exclude pool room
     if (text.includes('pool of clear water') || 
         text.includes('nature\'s most inconvenient wading pool') ||
         (roomDesc.enhancedText && roomDesc.enhancedText.includes('deceptively clear pool')) ||
@@ -6702,95 +6288,85 @@ const initializeShiftingRoom = () => {
       return true;
     }
 
-    // ========== CRITICAL BACKPACK ROOM EXCLUSION ==========
-    // CRITICAL: Exclude backpack room (has special narrative mechanics)
-    if (text.includes('backpack') && text.includes('half-eaten rations') && text.includes('run!')) {
-      console.log("Excluding backpack room from shifting room descriptions");
-      return true;
-    }
-    
-    // ========== SPECIAL EFFECT ROOM EXCLUSIONS ==========
-    // Check for crystal room (sleep effect)
-    if ((text.includes('crystal columns') || text.includes('massive crystal')) && 
-        roomDesc.special === 'crystal') {
-      return true;
-    }
-    
-    // ========== CREATURE AREA EXCLUSIONS ==========
-    // Check for sand creature room
-    if (text.includes('soft sand') && roomDesc.mood === 'tempting') {
-      return true;
-    }
-    
-    // Check for water sprite room
-    if (text.includes('tranquil pool') && text.includes('mirror')) {
-      return true;
-    }
-    
-    // Check for fungi creature room
-    if (text.includes('luminescent fungi') && roomDesc.mood === 'otherworldly') {
-      return true;
-    }
-    
-    // ========== ENVIRONMENTAL SYSTEM EXCLUSIONS ==========
-    // Check for temperature-sensitive rooms
-    if (roomDesc.mood === 'cold' || roomDesc.mood === 'warm') {
-      return true;
-    }
-    
-    // ========== TECHNICAL CONFLICT EXCLUSIONS ==========
-    // Check for rooms with interactive items (they cause collection issues)
-    if (roomDesc.hasInteractiveItem || text.includes('<span class')) {
-      return true;
-    }
-    
-    // ========== COMMERCE SYSTEM EXCLUSIONS ==========
-    // Check for gift shop (has special trading logic)
-    if (text.includes('gift shop') || text.includes('t-shirt') || text.includes('souvenir')) {
-      return true;
-    }
-    
-    return false;
-  };
+      // CRITICAL: Exclude backpack room
+      if (text.includes('backpack') && text.includes('half-eaten rations') && text.includes('run!')) {
+        console.log("Excluding backpack room from shifting room descriptions");
+        return true;
+      }
+      
+      // Check for crystal room (sleep effect)
+      if ((text.includes('crystal columns') || text.includes('massive crystal')) && 
+          roomDesc.special === 'crystal') {
+        return true;
+      }
+      
+      // Check for sand creature room
+      if (text.includes('soft sand') && roomDesc.mood === 'tempting') {
+        return true;
+      }
+      
+      // Check for water sprite room
+      if (text.includes('tranquil pool') && text.includes('mirror')) {
+        return true;
+      }
+      
+      // Check for fungi creature room
+      if (text.includes('luminescent fungi') && roomDesc.mood === 'otherworldly') {
+        return true;
+      }
+      
+      // Check for temperature-sensitive rooms
+      if (roomDesc.mood === 'cold' || roomDesc.mood === 'warm') {
+        return true;
+      }
+      
+      // Check for rooms with interactive items (they cause collection issues)
+      if (roomDesc.hasInteractiveItem || text.includes('<span class')) {
+        return true;
+      }
+      
+      // Check for gift shop (has special trading logic)
+      if (text.includes('gift shop') || text.includes('t-shirt') || text.includes('souvenir')) {
+        return true;
+      }
+      
+      return false;
+    };
   
-  // ==================== INTELLIGENT ROOM SELECTION SYSTEM ====================
+ // ==================== INTELLIGENT ROOM SELECTION SYSTEM ====================
   
   // ========== TREASURE ROOM VALIDATION WITH SAFETY CHECKS ==========
   // Get all valid rooms for shifting (must contain treasures, no hazards, no problematic content)
   const validRooms = [];
   for (let i = 1; i <= 30; i++) {
-    // ========== TREASURE REQUIREMENT VALIDATION ==========
     // Must contain a treasure
     const hasTreasure = treasurePieces.some(treasure => treasure.room === i);
     const roomDesc = roomDescriptionMap[i];
     
-    // ========== COMPREHENSIVE SAFETY VALIDATION ==========
     if (hasTreasure && 
-        i !== positions.wumpusPosition &&      // Not Druika room
-        i !== positions.pitPosition1 &&        // Not pit room 1
-        i !== positions.pitPosition2 &&        // Not pit room 2
-        i !== positions.batPosition &&         // Not bat room
-        i !== positions.exitPosition &&        // Not exit room
-        !hasProblematicContent(roomDesc)) {    // No content conflicts
+        i !== positions.wumpusPosition &&
+        i !== positions.pitPosition1 &&
+        i !== positions.pitPosition2 &&
+        i !== positions.batPosition &&
+        i !== positions.exitPosition &&
+        !hasProblematicContent(roomDesc)) {
       validRooms.push(i);
     }
   }
   
   console.log(`Found ${validRooms.length} valid treasure rooms for shifting room selection: ${validRooms.join(', ')}`);
   
-  // ========== ADVANCED FALLBACK SYSTEM ==========
   // Simple fallback: if no safe rooms, just pick ANY treasure room
   let selectedRoom;
   if (validRooms.length === 0) {
     console.warn('No completely safe rooms found - using fallback: picking any treasure room');
     
-    // ========== EMERGENCY FALLBACK ALGORITHM ==========
     // Just pick any treasure room (game functionality over perfect safety)
     const anyTreasureRooms = [];
     for (let i = 1; i <= 30; i++) {
       const hasTreasure = treasurePieces.some(treasure => treasure.room === i);
       if (hasTreasure && 
-          i !== positions.wumpusPosition &&    // Still avoid critical hazards
+          i !== positions.wumpusPosition &&
           i !== positions.pitPosition1 &&
           i !== positions.pitPosition2 &&
           i !== positions.batPosition &&
@@ -6799,7 +6375,6 @@ const initializeShiftingRoom = () => {
       }
     }
     
-    // ========== CRITICAL ERROR DETECTION ==========
     if (anyTreasureRooms.length === 0) {
       console.error('CRITICAL ERROR: No treasure rooms found at all!');
       return;
@@ -6808,11 +6383,9 @@ const initializeShiftingRoom = () => {
     selectedRoom = anyTreasureRooms[Math.floor(Math.random() * anyTreasureRooms.length)];
     console.log(`Using fallback treasure room: ${selectedRoom}`);
   } else {
-    // ========== OPTIMAL ROOM SELECTION ==========
     selectedRoom = validRooms[Math.floor(Math.random() * validRooms.length)];
   }
   
-  // ========== TREASURE VALIDATION SYSTEM ==========
   // Find the treasure in this room
   const treasureInRoom = treasurePieces.find(t => t.room === selectedRoom);
   if (!treasureInRoom) {
@@ -6820,7 +6393,6 @@ const initializeShiftingRoom = () => {
     return;
   }
   
-  // ========== ROOM DESCRIPTION VALIDATION ==========
   // Get the room description
   const roomInfo = roomDescriptionMap[selectedRoom];
   if (!roomInfo) {
@@ -6828,11 +6400,9 @@ const initializeShiftingRoom = () => {
     return;
   }
   
-  // ========== ORIGINAL CONTENT PRESERVATION ==========
   // Save the original room description
   const originalDesc = roomInfo.text || "A mysterious chamber with shifting details.";
   
-  // ========== STATE INITIALIZATION ==========
   // Set up the shifting room state
   setShiftingRoomId(selectedRoom);
   setOriginalRoomDescription(originalDesc);
@@ -6842,19 +6412,13 @@ const initializeShiftingRoom = () => {
   console.log(`- Contains treasure: ${treasureInRoom.id} (${treasureInRoom.name})`);
   console.log(`- Original description: ${originalDesc.substring(0, 50)}...`);
   
-  // ==================== DYNAMIC CONTENT POOL CREATION ====================
-  
-  // ========== COMPREHENSIVE CONTENT FILTERING ==========
   // Prepare shifting room descriptions - Use safe fallbacks if needed
   let availableDescriptions = getAllRoomDescriptions().filter(desc => 
-    // ========== TECHNICAL CONFLICT FILTERING ==========
     // Skip descriptions with interactive items
     !desc.text.includes('<span class') && 
     !desc.hasInteractiveItem &&
-    // ========== CONTENT CONFLICT FILTERING ==========
     // Skip problematic content descriptions
     !hasProblematicContent(desc) &&
-    // ========== DUPLICATION PREVENTION ==========
     // Also filter out descriptions already in use
     !Object.values(roomDescriptionMap).some(roomDesc => 
       roomDesc.text === desc.text
@@ -6863,14 +6427,12 @@ const initializeShiftingRoom = () => {
 
   console.log(`Found ${availableDescriptions.length} safe room descriptions for shifting`);
 
-  // ========== FALLBACK CONTENT SYSTEM ==========
   // If we don't have enough safe descriptions, add generic fallbacks
   if (availableDescriptions.length < 4) {
     console.log(`Not enough safe descriptions (${availableDescriptions.length}), adding fallbacks`);
     
     const fallbackDescriptions = getShiftingRoomFallbacks();
     
-    // ========== INTELLIGENT FALLBACK ADDITION ==========
     // Add fallbacks until we have enough
     let fallbackIndex = 0;
     while (availableDescriptions.length < 4 && fallbackIndex < fallbackDescriptions.length) {
@@ -6881,13 +6443,12 @@ const initializeShiftingRoom = () => {
     console.log(`Added ${fallbackIndex} fallback descriptions, now have ${availableDescriptions.length} total`);
   }
 
-  // ========== CONTENT RANDOMIZATION SYSTEM ==========
   // Shuffle and take 4 additional descriptions
   const shuffled = [...availableDescriptions].sort(() => Math.random() - 0.5);
   const additionalDescriptions = shuffled.slice(0, 4);
 
-  // ========== SOPHISTICATED DESCRIPTION ARRAY CONSTRUCTION ==========
-  // Create the final descriptions array with original description as first element
+ // ========== SOPHISTICATED DESCRIPTION ARRAY CONSTRUCTION ==========
+  // Create the final descriptions array with original description as first elemen
   const shiftingDescriptions = [
     { 
       text: originalDesc, 
@@ -6905,13 +6466,9 @@ const initializeShiftingRoom = () => {
     }))
   ];
 
-  // ==================== ADVANCED ANCHOR CLUE INTEGRATION SYSTEM ====================
-  
-  // ========== NARRATIVE ENHANCEMENT WITH GAME MECHANIC INTEGRATION ==========
   // ADD ANCHOR CLUE HERE - after shiftingDescriptions is created
-  const updatedOriginalDesc = originalDesc + ' On the far wall, you notice a faint etching of an <span class="glowing-anchor">anchor symbol</span> that glows softly - odd, considering you\'re nowhere near deep water.';
+ const updatedOriginalDesc = originalDesc + ' On the far wall, you notice a faint etching of an <span class="glowing-anchor">anchor symbol</span> that glows softly - odd, considering you\'re nowhere near deep water.';
 
-  // ========== SOPHISTICATED DESCRIPTION UPDATE ==========
   // Update the first shifting description (index 0) to include the clue
   shiftingDescriptions[0] = {
     ...shiftingDescriptions[0],
@@ -6924,22 +6481,20 @@ const initializeShiftingRoom = () => {
     console.log(`  - Mood: ${desc.mood}, Special: ${desc.special}`);
   });
 
-  // ========== COMPREHENSIVE STATE SYNCHRONIZATION ==========
   // Update room description map with comprehensive information
   setRoomDescriptionMap(prev => ({
     ...prev,
     [selectedRoom]: {
       ...(prev[selectedRoom] || {}),
-      text: updatedOriginalDesc,                    // Use the updated description with anchor clue
-      isShiftingRoom: true,                         // Mark as shifting room
-      originalDescription: updatedOriginalDesc,     // Store the updated version as original
+      text: updatedOriginalDesc, // Use the updated description with anchor clue
+      isShiftingRoom: true,
+      originalDescription: updatedOriginalDesc, // Store the updated version as original
       originalMood: roomInfo.mood === 'cold' || roomInfo.mood === 'warm' ? 'mysterious' : (roomInfo.mood || 'mysterious'),
-      shiftingDescriptions: shiftingDescriptions,   // Store full descriptions (now with anchor clue)
-      currentShiftingIndex: 0                       // Initialize shifting index
+      shiftingDescriptions: shiftingDescriptions, // Store full descriptions (now with anchor clue)
+      currentShiftingIndex: 0
     }
   }));
 
-  // ========== MULTI-STATE COORDINATION ==========
   // Set the shifting room descriptions
   setShiftingRoomDescriptions(shiftingDescriptions);
   
@@ -6994,7 +6549,6 @@ const initializeShiftingRoom = () => {
  * @returns {void} - Places invisibility cloak in optimal safe room location
  */
 const addInvisibilityCloakToGame = () => {
-  // ========== COMPREHENSIVE ROOM ANALYSIS ==========
   // Pick a random safe room that doesn't already have an item
   console.log("INVISIBITYY CLOAK!!!!!!!!!!!!!!!!")
   const availableRooms = Object.keys(roomDescriptionMap)
@@ -7002,53 +6556,49 @@ const addInvisibilityCloakToGame = () => {
 
     const roomNum = parseInt(room);
     const roomText = roomDescriptionMap[roomNum]?.text || '';
-    
-    // ========== MULTI-CONSTRAINT SAFETY VALIDATION ==========
     // Check that this room:
     // 1. Doesn't have hazards
     // 2. Isn't the treasure map room
     // 3. Doesn't already have an item
     // 4. Isn't a treasure room
-    // 5. Isn't a pool room (special mechanics)
-    return roomNum !== positions.wumpusPosition &&              // Not Druika room
-      roomNum !== positions.pitPosition1 &&                     // Not pit room 1
-      roomNum !== positions.pitPosition2 &&                     // Not pit room 2  
-      roomNum !== positions.batPosition &&                      // Not bat room
-      roomNum !== positions.exitPosition &&                     // Not exit room
-      roomNum !== treasureMap &&                                // Not treasure map room
-      !specialRooms[roomNum]?.hasItem &&                        // No existing items
-      !treasurePieces.some(treasure => treasure.room === roomNum) && // No treasures
-      !isPoolRoom(roomText);                                    // Not pool room (special detection)
+    return roomNum !== positions.wumpusPosition &&
+      roomNum !== positions.pitPosition1 &&
+      roomNum !== positions.pitPosition2 &&
+      roomNum !== positions.batPosition &&
+      roomNum !== positions.exitPosition &&
+      roomNum !== treasureMap &&
+      !specialRooms[roomNum]?.hasItem &&
+      !treasurePieces.some(treasure => treasure.room === roomNum) &&
+      !isPoolRoom(roomText); 
   })
   .map(Number);
   
-  // ========== ROOM AVAILABILITY VALIDATION ==========
   if (availableRooms.length > 0) {
-    // ========== RANDOM ROOM SELECTION ==========
     // Select a random room
     const cloakRoom = availableRooms[Math.floor(Math.random() * availableRooms.length)];
     
-    // ========== DESIGN DECISION: INTERACTIVE-ONLY COLLECTION ==========
     // REMOVED: Don't add the invisibility cloak to specialRooms
     // We only want it to be collected via the interactive item in the room description
     
-    // ========== SOPHISTICATED ROOM DESCRIPTION ENHANCEMENT ==========
     // Update the room description to mention the cloak with interactive span
     setRoomDescriptionMap(prev => ({
       ...prev,
       [cloakRoom]: {
         ...prev[cloakRoom],
-        // ========== DYNAMIC HTML CONTENT GENERATION ==========
         text: prev[cloakRoom].text + "\nIn the corner, you spot a <span class='interactive-item' data-item='invisibility_cloak'>tattered cloth</span>. Looks like someone's musty old cloak, it's made out of some odd material.",
-        hasInteractiveItem: true,                    // Mark room as having interactive content
-        interactiveItem: 'invisibility_cloak',      // Specify item type for collection
-        textAfterCollection: prev[cloakRoom].text   // Store clean text for post-collection
+        hasInteractiveItem: true,
+        interactiveItem: 'invisibility_cloak',
+        textAfterCollection: prev[cloakRoom].text
       }
     }));
     
     console.log(`Invisibility cloak placed in room ${cloakRoom}`);
   }
 };
+
+
+
+
 
 // ==================== ADVANCED TEXT SIMILARITY ALGORITHM ====================
 
@@ -7106,6 +6656,8 @@ function calculateTextSimilarity(str1, str2) {
   return matches / Math.max(str1.length, str2.length);
 }
 
+
+
 // ==================== ADVANCED HIDDEN ROOM TRAP SYSTEM ====================
 
 /**
@@ -7149,66 +6701,24 @@ const handleHiddenRoomTrap = () => {
   
   // ========== TIMER-BASED CHALLENGE SYSTEM ==========
   // Set a 5-second timer for escape window
+  console.log("Hidden room trap activated!");
+  
+  // Set a 5-second timer
   const trapTimer = setTimeout(() => {
-    // ========== POSITION VALIDATION SYSTEM ==========
-    // Check if still in room 31 (trap room)
+    // Check if still in room 31
     if (currentPosition === 31) {
-      // ========== CONSEQUENCE EXECUTION ==========
       // Player didn't escape - trigger death
       setGameStatus('lost');
       setDeathCause('vortex_trap');
-      
-      // ========== DRAMATIC NARRATIVE OUTCOME ==========
       setMessage("The hidden door slams shut with finality! The vortex expands explosively, its otherworldly pull irresistible! You're drawn into the swirling void, tumbling through dimensions unknown! Your adventure ends in the space between worlds... Game over!");
     }
-  }, 100); // Note: Extremely short timer in uploaded code - likely for testing
+  },100);
   
-  // ========== GLOBAL TIMER MANAGEMENT ==========
   // Store timer reference so we can clear it if player escapes
   window.HIDDEN_ROOM_TRAP_TIMER = trapTimer;
 };
-
-// ==================== COMPREHENSIVE GAME RESET WITH AUDIO INTEGRATION ====================
-
-/**
- * Professional Game Reset System with Audio Coordination and Multi-System Initialization
- * Master-level reset function that coordinates audio systems, generates new world state,
- * and reinitializes all game systems with proper sequencing and error handling.
- * 
- * **System Coordination Excellence:**
- * This function demonstrates enterprise-level system management by coordinating
- * audio playback, world generation, treasure systems, and state management
- * in a precise sequence ensuring smooth game transitions.
- * 
- * **Key System Features:**
- * - **Professional Audio Management**: Coordinated music stopping, sound effects, and playback
- * - **Complete World Regeneration**: New positions, room descriptions, and connections
- * - **Multi-System Reset**: Coordinates treasure hunt, room systems, and state management
- * - **Proper Audio Sequencing**: Manages music transitions with timing coordination
- * - **Comprehensive State Cleanup**: Resets all game flags and special room states
- * - **Professional Error Prevention**: Enables/disables audio systems properly
- * 
- * **Advanced Programming Architecture:**
- * - **Sequential Processing**: Carefully ordered operations preventing race conditions
- * - **Audio State Management**: Professional handling of multiple audio streams
- * - **Cross-System Coordination**: Synchronizes multiple independent game systems
- * - **Timing Management**: Uses setTimeout for proper audio transition sequencing
- * - **State Synchronization**: Ensures all systems reset to consistent initial state
- * 
- * **Professional Audio Engineering:**
- * - **Music Transition Management**: Stops victory/lose music before reset
- * - **Sound Effect Coordination**: Plays appropriate transition sounds
- * - **Audio System Control**: Disable/enable cycle preventing audio conflicts
- * - **Background Music Restart**: Properly timed background music resumption
- * 
- * **Game Development Best Practices:**
- * - **Complete State Reset**: Every game system returned to initial state
- * - **Resource Regeneration**: New world generation for fresh gameplay
- * - **Debug Integration**: Comprehensive logging for development support
- * - **Error Prevention**: Proper sequencing preventing edge case failures
- * 
- * @returns {void} - Performs complete game reset with audio coordination
- */
+  
+  // Create a wrapped version of resetGame that plays the play again sound
 const resetGameWithSound = () => {
   console.log("=== RESETTING GAME WITH SOUND ===");
   
@@ -7243,9 +6753,9 @@ const resetGameWithSound = () => {
   setRoomDescriptionMap(newRoomDescriptions);
   
   // Set available descriptions
-  setAvailableRoomDescriptions(initializeGameRoomDescriptions());
-  
-  // ========== NAVIGATION SYSTEM REGENERATION ==========
+    setAvailableRoomDescriptions(initializeGameRoomDescriptions());
+    
+    // ========== NAVIGATION SYSTEM REGENERATION ==========
   // Generate new room connections
   const newConnections = generateRoomConnections();
   setRoomConnections(newConnections);
@@ -7268,12 +6778,14 @@ const resetGameWithSound = () => {
   
   // ========== CORE RESET EXECUTION ==========
   // Call the original resetGame
-  resetGame();
+    resetGame();
 
-  console.log("=== GAME RESET COMPLETE ===");
-};
+    console.log("=== GAME RESET COMPLETE ===");
+  };
 
-// ==================== ADVANCED GAME INITIALIZATION WITH AUDIO ORCHESTRATION ====================
+
+
+  // ==================== ADVANCED GAME INITIALIZATION WITH AUDIO ORCHESTRATION ====================
 
 /**
  * Professional Game Startup System with Audio Coordination and State Management
@@ -7321,51 +6833,43 @@ const resetGameWithSound = () => {
  * @param {number|null} testRoom - Optional room number for testing purposes
  * @returns {void} - Initializes game with full audio coordination
  */
-const startGameFromContext = (testRoom = null) => {
-  // ========== AUDIO RESOURCE INITIALIZATION ==========
-  // First start playing the cave entry sound
-  const entrySound = new Audio(caveEntrySoundFile);
-  entrySound.volume = 0.7;
-  
-  // ========== IMMEDIATE UI STATE TRANSITION ==========
-  // Hide the intro immediately
-  setShowIntro(false);
-  
-  console.log("showIntro", showIntro)
+  const startGameFromContext = (testRoom = null) => {
+    // First start playing the cave entry sound
+    const entrySound = new Audio(caveEntrySoundFile);
+    entrySound.volume = 0.7;
+    
+    // Hide the intro immediately
+    setShowIntro(false);
+    
 
-  // ========== TESTING ROOM CONFIGURATION ==========
-  // If a test room is provided, use it
-  // (Commented out in uploaded code - likely for production build)
-  // if (testRoom !== null) {
-  //   setStartingRoomFixed(parseInt(testRoom));
-  // } else {
-  //   setStartingRoomFixed(null);
-  // }
-  
-  // ========== GAME LOGIC INITIALIZATION ==========
-  // Call the startGame function from useGameLogic immediately
-  if (gameLogicFunctions.current && gameLogicFunctions.current.startGame) {
-    gameLogicFunctions.current.startGame(testRoom);
-  } else {
-    console.error("startGame function not available");
-  }
-  
-  // ========== SOPHISTICATED AUDIO ORCHESTRATION ==========
-  // Start the sound (it will play over the game)
-  entrySound.play()
-    .then(() => {
-      console.log("Cave entry sound started");
-      
-      // ========== CONTEXTUAL MUSIC SYSTEM ==========
-      // When the sound ends, start the background music
-      entrySound.onended = () => {
+    console.log("showIntro", showIntro)
+
+    // If a test room is provided, use it
+ //   if (testRoom !== null) {
+  //    setStartingRoomFixed(parseInt(testRoom));
+  //  } else {
+  //    setStartingRoomFixed(null);
+   // }
+    
+    // Call the startGame function from useGameLogic immediately
+    if (gameLogicFunctions.current && gameLogicFunctions.current.startGame) {
+      gameLogicFunctions.current.startGame(testRoom);
+    } else {
+      console.error("startGame function not available");
+    }
+    
+    // Start the sound (it will play over the game)
+    entrySound.play()
+      .then(() => {
+        console.log("Cave entry sound started");
+        
+        // When the sound ends, start the background music
+     entrySound.onended = () => {
         console.log("Cave entry sound finished");
         
-        // ========== INTELLIGENT MUSIC SELECTION ==========
         // Check if we're in a room with special music
         const hasSpecialMusic = roomSpecial && ['crystal', 'waterfall', 'trinkets', 'low_pulsing', 'gift'].includes(roomSpecial);
         
-        // ========== CONDITIONAL BACKGROUND MUSIC ==========
         if (!backgroundMusicStarted.current && !hasSpecialMusic) {
           console.log("No special music in this room - starting background music");
           playBackgroundMusic();
@@ -7375,21 +6879,19 @@ const startGameFromContext = (testRoom = null) => {
           backgroundMusicStarted.current = true; // Still set this to prevent future attempts
         }
       };
-    })
-    .catch(error => {
-      // ========== AUDIO ERROR RECOVERY ==========
-      console.error("Error playing cave entry sound:", error);
-      // Start background music anyway if there's an error
-      if (!backgroundMusicStarted.current) {
-        playBackgroundMusic();
-        backgroundMusicStarted.current = true;
-      }
-    });
-};
-
-
+      })
+      .catch(error => {
+        console.error("Error playing cave entry sound:", error);
+        // Start background music anyway if there's an error
+        if (!backgroundMusicStarted.current) {
+          playBackgroundMusic();
+          backgroundMusicStarted.current = true;
+        }
+      });
+  };
 
   
+ 
 // 1. Enhanced updateRoomDescriptionAfterCollection function
 // ==================== MASTER ROOM DESCRIPTION UPDATE SYSTEM ====================
 
@@ -7441,23 +6943,20 @@ const updateRoomDescriptionAfterCollection = (itemId) => {
   if (!roomInfo) return;
   
 
-  // ========== HIDDEN ROOM TRAP ACTIVATION ==========
   if (currentPosition === 31 && !window.HIDDEN_ROOM_TRAP_TRIGGERED) {
     window.HIDDEN_ROOM_TRAP_TRIGGERED = true;
     
-    // ========== DRAMATIC TENSION BUILDING ==========
+     // ========== DRAMATIC TENSION BUILDING ==========
     // Subtle warning
     setMessage(prev => prev + "\n\nThe chamber suddenly rumbles ominously. The vortex in the room begins to pulse more violently and the door is slowly CLOSING on you!...");
-    playHiddenRoomRumblingSound()
-    
-    // ========== CROSS-COMPONENT COMMUNICATION ==========
+   playHiddenRoomRumblingSound()
     // Notify GameBoard to start the trap
     window.dispatchEvent(new CustomEvent('hidden_room_trap', { 
       detail: { trapActive: true } 
     }));
   }
 
-  // ========== TEXT STATE INITIALIZATION ==========
+
   // Start with the current text
   let updatedText = roomInfo.text;
   let updatedEnhancedText = roomInfo.enhancedText;
@@ -7468,8 +6967,7 @@ const updateRoomDescriptionAfterCollection = (itemId) => {
   // ========== MULTI-ITEM TYPE HANDLER ==========
   // Update text based on item type
   switch(itemId) {
-    
-    // ========== BASIC CONSUMABLE ITEMS ==========
+     // ========== BASIC CONSUMABLE ITEMS ==========
     case 'torch_oil':
       playInteractivePickupSound()
       // Remove oil mention from both regular and enhanced text
@@ -7479,896 +6977,854 @@ const updateRoomDescriptionAfterCollection = (itemId) => {
       }
       break;
 
-    // ========== ADVANCED CURRENCY SYSTEM WITH MULTIPLE PATTERNS ==========
+   // ========== ADVANCED CURRENCY SYSTEM WITH MULTIPLE PATTERNS ==========
     case 'single_gold_coin':
       // Handle single gold coin patterns separately
-      playInteractivePickupSound();   //adding this here because for some reason this won't play in addItemToInventory function when this is picked up
-      
-      // ========== COMPREHENSIVE PATTERN MATCHING ==========
-      const singleCoinPatterns = [
-        // Single coin patterns from enhanced descriptions
-        / In a crevice illuminated by your lantern's stronger beam, you notice a single <span class=['"]interactive-item['"][^>]*>ancient gold coin<\/span> that your torch missed\./g,
-        / In a crevice illuminated by your lantern's stronger beam, you notice a single that your torch missed\./g,
-        / Your lantern reveals a <span class=['"]interactive-item['"][^>]*>tarnished gold coin<\/span> tucked behind a small rock formation\./g,
-        / Your lantern reveals a tucked behind a small rock formation\./g,
+  playInteractivePickupSound();   //adding this here becuase for some reason this wont play in addItemToInventory function when this is picked up
+  const singleCoinPatterns = [
+    // Single coin patterns from enhanced descriptions
+    / In a crevice illuminated by your lantern's stronger beam, you notice a single <span class=['"]interactive-item['"][^>]*>ancient gold coin<\/span> that your torch missed\./g,
+    / In a crevice illuminated by your lantern's stronger beam, you notice a single that your torch missed\./g,
+    / Your lantern reveals a <span class=['"]interactive-item['"][^>]*>tarnished gold coin<\/span> tucked behind a small rock formation\./g,
+    / Your lantern reveals a tucked behind a small rock formation\./g,
 
-        // ========== ROOM-SPECIFIC PATTERNS ==========
         // ADD THIS PATTERN FOR ROOM 31:
-        / A beautifully crafted ancient <span class=['"]interactive-item['"][^>]*>coin<\/span> sits on a velvet cushion like it was worshiped by its inhabitants\. But since they arent around, maybe you should take it/g,
-        // Simpler version in case of typos:
-        / A beautifully crafted[^.]*<span class=['"]interactive-item['"][^>]*>coin<\/span>[^.]*\./g,
-        / A beautifually crafted ancient <span class=['"]interactive-item['"][^>]*>coin<\/span> sits on a velvet cushio like it was worhiped by its inhabitants\. But since they arent around, maybe you should take it/g,
-        // Generic pattern for single_gold_coin only
-        /<span class=['"]interactive-item['"][^>]*data-item=['"]single_gold_coin['"][^>]*>.*?<\/span>/g
-      ];
-      
-      // ========== PATTERN APPLICATION SYSTEM ==========
-      // Apply patterns for single coin
-      singleCoinPatterns.forEach(pattern => {
-        updatedText = updatedText.replace(pattern, '');
-        if (updatedEnhancedText) {
-          updatedEnhancedText = updatedEnhancedText.replace(pattern, '');
-        }
-      });
-      
-      // Don't add anything to inventory here - it should be handled elsewhere
-      break;
+    / A beautifully crafted ancient <span class=['"]interactive-item['"][^>]*>coin<\/span> sits on a velvet cushion like it was worshiped by its inhabitants\. But since they arent around, maybe you should take it/g,
+    // Simpler version in case of typos:
+    / A beautifully crafted[^.]*<span class=['"]interactive-item['"][^>]*>coin<\/span>[^.]*\./g,
+     / A beautifually crafted ancient <span class=['"]interactive-item['"][^>]*>coin<\/span> sits on a velvet cushio like it was worhiped by its inhabitants\. But since they arent around, maybe you should take it/g,
+    // Generic pattern for single_gold_coin only
+    /<span class=['"]interactive-item['"][^>]*data-item=['"]single_gold_coin['"][^>]*>.*?<\/span>/g
+  ];
+  
+  // Apply patterns for single coin
+  singleCoinPatterns.forEach(pattern => {
+    updatedText = updatedText.replace(pattern, '');
+    if (updatedEnhancedText) {
+      updatedEnhancedText = updatedEnhancedText.replace(pattern, '');
+    }
+  });
+  
+  // Don't add anything to inventory here - it should be handled elsewhere
+  break;
+
       
     // ========== EQUIPMENT ITEMS WITH COMPLEX CLEANUP ==========
     case 'invisibility_cloak':
       playInteractivePickupSound();   //adding this here because for some reason this won't play in addItemToInventory function when this is picked up
 
-      // ========== COMPREHENSIVE CLOAK TEXT REMOVAL ==========
-      // FIXED: More comprehensive patterns to remove all variations of the cloak text
-      const cloakPatterns = [
-        // Full sentence with both span and description
-        / In the corner, you spot a <span class=['"]interactive-item['"][^>]*>tattered cloth<\/span>\. Looks like someone['"]s musty old cloak, it['"]s made out of some odd material\./g,
-        // Just the interactive span with period
-        / In the corner, you spot a <span class=['"]interactive-item['"][^>]*>tattered cloth<\/span>\./g,
-        // After collection part without the span
-        / In the corner, you spot a\. Looks like someone['"]s musty old cloak, it['"]s made out of some odd material\./g,
-        // Simple text after span removed
-        / In the corner, you spot a tattered cloth\. Looks like someone['"]s musty old cloak, it['"]s made out of some odd material\./g,
-        // Just the span itself (fallback)
-        /<span class=['"]interactive-item['"][^>]*data-item=['"]invisibility_cloak['"][^>]*>.*?<\/span>/g,
-        // Just the description after the span is removed
-        / Looks like someone['"]s musty old cloak, it['"]s made out of some odd material\./g,
-        // Very important - remove the entire first part of the sentence that remains after the span is removed
-        / In the corner, you spot a\.?/g,
-        // Any remaining fragment with tattered cloth
-        / In the corner, you spot a tattered cloth\.?/g
-      ];
-      
-      // ========== AGGRESSIVE PATTERN CLEANUP ==========
-      // Apply each pattern to both texts
-      cloakPatterns.forEach(pattern => {
-        updatedText = updatedText.replace(pattern, '');
-        if (updatedEnhancedText) {
-          updatedEnhancedText = updatedEnhancedText.replace(pattern, '');
+        // ========== COMPREHENSIVE CLOAK TEXT REMOVAL ==========
+        // FIXED: More comprehensive patterns to remove all variations of the cloak text
+        const cloakPatterns = [
+          // Full sentence with both span and description
+          / In the corner, you spot a <span class=['"]interactive-item['"][^>]*>tattered cloth<\/span>\. Looks like someone['"]s musty old cloak, it['"]s made out of some odd material\./g,
+          // Just the interactive span with period
+          / In the corner, you spot a <span class=['"]interactive-item['"][^>]*>tattered cloth<\/span>\./g,
+          // After collection part without the span
+          / In the corner, you spot a\. Looks like someone['"]s musty old cloak, it['"]s made out of some odd material\./g,
+          // Simple text after span removed
+          / In the corner, you spot a tattered cloth\. Looks like someone['"]s musty old cloak, it['"]s made out of some odd material\./g,
+          // Just the span itself (fallback)
+          /<span class=['"]interactive-item['"][^>]*data-item=['"]invisibility_cloak['"][^>]*>.*?<\/span>/g,
+          // Just the description after the span is removed
+          / Looks like someone['"]s musty old cloak, it['"]s made out of some odd material\./g,
+          // Very important - remove the entire first part of the sentence that remains after the span is removed
+          / In the corner, you spot a\.?/g,
+          // Any remaining fragment with tattered cloth
+          / In the corner, you spot a tattered cloth\.?/g
+        ];
+        
+        // Apply each pattern to both texts
+        cloakPatterns.forEach(pattern => {
+          updatedText = updatedText.replace(pattern, '');
+          if (updatedEnhancedText) {
+            updatedEnhancedText = updatedEnhancedText.replace(pattern, '');
+          }
+        });
+        
+        // Additional cleanup specifically for the cloak 
+        // Try a more aggressive approach to remove the entire sentence if fragments remain
+        if (updatedText.includes("In the corner")) {
+          // Extract the full sentence containing "In the corner"
+          const cornerRegex = /[^.!?]*In the corner[^.!?]*\.?/g;
+          updatedText = updatedText.replace(cornerRegex, '');
+          if (updatedEnhancedText) {
+            updatedEnhancedText = updatedEnhancedText.replace(cornerRegex, '');
+          }
         }
-      });
-      
-      // ========== FALLBACK CLEANUP SYSTEM ==========
-      // Additional cleanup specifically for the cloak 
-      // Try a more aggressive approach to remove the entire sentence if fragments remain
-      if (updatedText.includes("In the corner")) {
-        // Extract the full sentence containing "In the corner"
-        const cornerRegex = /[^.!?]*In the corner[^.!?]*\.?/g;
-        updatedText = updatedText.replace(cornerRegex, '');
-        if (updatedEnhancedText) {
-          updatedEnhancedText = updatedEnhancedText.replace(cornerRegex, '');
-        }
-      }
-      break;  
-      
-    // ========== SPECIAL MAGICAL ITEMS WITH CREATURE INTERACTIONS ==========
+        break;  
+
+   // ========== SPECIAL MAGICAL ITEMS WITH CREATURE INTERACTIONS ==========
     case 'cave_salt':
       // ========== CONTENT PRESERVATION SYSTEM ==========
       // Function to preserve appended content
-      const preserveAppendedContent = (text) => {
-        // Find any content after the main description
-        const mainDescriptionEnd = text.indexOf("nature's nightlight, apparently.") + "nature's nightlight, apparently.".length;
-        const appendedContent = text.substring(mainDescriptionEnd);
-        
-        // Replace just the cave salt part
-        const baseText = text.substring(0, mainDescriptionEnd);
-        const newBaseText = baseText.replace(/ Among them, you spot unusual <span class=['"]interactive-item['"][^>]*>salt-like crystals<\/span> with a subtle blue glow—nature's nightlight, apparently\./g, ' Where the glowing salt once was, a small hole remains.');
-        
-        // Return updated text with preserved appended content
-        return newBaseText + appendedContent;
-      };
-      
-      updatedText = preserveAppendedContent(updatedText);
-      if (updatedEnhancedText) {
-        updatedEnhancedText = preserveAppendedContent(updatedEnhancedText);
-      }
-      
-      // ========== CREATURE INTERACTION SYSTEM ==========
-      // Still show the creature as a one-time message
-      setMessage(prev => prev + "\n As you pocket the salt, a pale creature pokes its head out of the new hole, shrieks at you, and retreats muttering curses.");
-      break;
+  const preserveAppendedContent = (text) => {
+    // Find any content after the main description
+    const mainDescriptionEnd = text.indexOf("nature's nightlight, apparently.") + "nature's nightlight, apparently.".length;
+    const appendedContent = text.substring(mainDescriptionEnd);
+    
+    // Replace just the cave salt part
+    const baseText = text.substring(0, mainDescriptionEnd);
+    const newBaseText = baseText.replace(/ Among them, you spot unusual <span class=['"]interactive-item['"][^>]*>salt-like crystals<\/span> with a subtle blue glow—nature's nightlight, apparently\./g, ' Where the glowing salt once was, a small hole remains.');
+    
+    // Return updated text with preserved appended content
+    return newBaseText + appendedContent;
+  };
+  
+  updatedText = preserveAppendedContent(updatedText);
+  if (updatedEnhancedText) {
+    updatedEnhancedText = preserveAppendedContent(updatedEnhancedText);
+  }
+  
+  // Still show the creature as a one-time message
+  setMessage(prev => prev + "\n As you pocket the salt, a pale creature pokes its head out of the  new hole, shrieks at you, and retreats muttering curses.");
+  break;
       
     // ========== DANGEROUS ITEMS WITH CURSE MECHANICS ==========
     case 'sulfur_crystal':
       // ========== CURSE INTERACTION DETECTION ==========
       // EVIL CHECK: Does player have the cursed utility knife?
-      const hasCursedKnife = inventory.some(item =>
-        (item.originalId || item.id) === 'utility_knife'
-      );
-      
-      if (hasCursedKnife) {
-        // ========== DEATH TRAP SEQUENCE ==========
+  const hasCursedKnife = inventory.some(item =>
+    (item.originalId || item.id) === 'utility_knife'
+  );
+  
+  if (hasCursedKnife) {
+         // ========== DEATH TRAP SEQUENCE ==========
         // DEATH TRAP ACTIVATED!
+    setTimeout(() => {
+      setMessage(`As you touch the sulfur crystal, it instantly reacts with the ornate dagger in your pack! Your entire body begins vibrating uncontrollably - the cursed dagger and crystal are creating a catastrophic alchemical reaction!`);
+      
+      // Death sequence
+      setTimeout(() => {
+        setMessage(`The vibrations intensify to an unbearable frequency! Your body glows bright yellow as the sulfur infuses every cell! With a soft *POOF*, you explode into a cloud of yellow dust that settles gently on the cave floor. Perhaps grabbing cursed items wasn't the wisest choice...`);
+        
+        // Kill player
         setTimeout(() => {
-          setMessage(`As you touch the sulfur crystal, it instantly reacts with the ornate dagger in your pack! Your entire body begins vibrating uncontrollably - the cursed dagger and crystal are creating a catastrophic alchemical reaction!`);
-          
-          // ========== DRAMATIC DEATH SEQUENCE ==========
-          // Death sequence
-          setTimeout(() => {
-            setMessage(`The vibrations intensify to an unbearable frequency! Your body glows bright yellow as the sulfur infuses every cell! With a soft *POOF*, you explode into a cloud of yellow dust that settles gently on the cave floor. Perhaps grabbing cursed items wasn't the wisest choice...`);
-            
-            // ========== GAME OVER EXECUTION ==========
-            // Kill player
-            setTimeout(() => {
-              setGameStatus('lost');
-              setDeathCause('sulfur_explosion');
-              setMessage("You have been reduced to sulfur dust. Game over!");
-            }, 3500);
-          }, 5000);
-        }, 500);
-      }
+          setGameStatus('lost');
+          setDeathCause('sulfur_explosion');
+          setMessage("You have been reduced to sulfur dust. Game over!");
+        }, 3500);
+      }, 5000);
+    }, 500);
+
+  }   //end switch
+
+
 
       // ========== STANDARD CRYSTAL REMOVAL ==========
-      // Pattern for regular text
-      updatedText = updatedText.replace(/ Yellow <span class=['"]interactive-item['"][^>]*>sulfur crystals<\/span> line the walls like evil butterscotch\./g, ' The walls where you removed the crystals still emit a faint yellow residue.');
+      // Pattern for regular textt
+  updatedText = updatedText.replace(/ Yellow <span class=['"]interactive-item['"][^>]*>sulfur crystals<\/span> line the walls like evil butterscotch\./g, ' The walls where you removed the crystals still emit a faint yellow residue.');
+  
+  if (updatedEnhancedText) {
+    // Different pattern for enhanced text - note the lowercase 'yellow' and different sentence structure
+    updatedEnhancedText = updatedEnhancedText.replace(/illuminates yellow <span class=['"]interactive-item['"][^>]*>sulfur crystals<\/span> line the walls like evil butterscotch/g, 'reveals bare walls where you removed the crystals. They still emit a faint yellow residue');
+    
+    // Also handle if the enhanced text has been modified or has variations
+    if (updatedEnhancedText.includes('sulfur crystals')) {
+      // Fallback: just remove the interactive span if the exact match fails
+      updatedEnhancedText = updatedEnhancedText.replace(/<span class=['"]interactive-item['"][^>]*data-item=['"]sulfur_crystal['"][^>]*>sulfur crystals<\/span>/g, 'empty crystal sockets');
+    }
+  }
+  break;
+
+case 'druika_repellent':
+  // Remove the vial mention from room 31
+  if (currentPosition === 31) {
+    const baseText = "A hidden chamber untouched for centuries. The air is thick with dust and mystery. Ancient artifacts, a sarcophagus(?), and strange symbols cover the walls.";
+    updatedText = baseText + " An empty shelf shows where something important once stood.";
+    if (updatedEnhancedText) {
+      updatedEnhancedText = baseText + " An empty shelf shows where something important once stood.";
+    }
+  }
+  break;
+
+case 'wizard_journal':
+  // Remove journal if added as interactive
+  if (currentPosition === 31) {
+    const baseText = "A hidden chamber untouched for centuries. The air is thick with dust and mystery. Ancient artifacts, a sarcophagus(?), and strange symbols cover the walls.";
+    updatedText = baseText + " A dusty outline remains where a book once rested.";
+    if (updatedEnhancedText) {
+      updatedEnhancedText = baseText + " A dusty outline remains where a book once rested.";
+    }
+  }
+  break;
+
+
+
+ case 'lantern':
+  // Get current room's special properties
+  const hasTeleport = specialRooms[currentPosition]?.hasTeleport;
+  const hasHiddenDoor = specialRooms[currentPosition]?.hasHiddenDoor;
+  
+  // Check if room has textAfterCollection defined
+  if (roomInfo.textAfterCollection) {
+    console.log("Current textAfterCollection:", roomInfo.textAfterCollection);
+    console.log("Does it contain lantern?", roomInfo.textAfterCollection?.includes('lantern'));
+    
+    // Start with the textAfterCollection
+    updatedText = roomInfo.textAfterCollection;
+    
+    // Preserve special room hints
+    if (hasTeleport) {
+      const orbFeature = specialRooms[currentPosition]?.orbFeature || "unusual rock formations that seem to form a doorframe";
       
+      // Check if this is the first or second teleport room
+      const teleportRooms = Object.entries(specialRooms)
+        .filter(([roomId, roomData]) => roomData.hasTeleport && parseInt(roomId) <= 30)
+        .map(([roomId]) => parseInt(roomId))
+        .sort((a, b) => a - b);
+      
+      const isFirstTeleportRoom = teleportRooms[0] === currentPosition;
+      
+      // Add the appropriate teleport hint if not already present
+      if (!updatedText.includes('strange circular pattern') && !updatedText.includes('unusual energy')) {
+        if (isFirstTeleportRoom) {
+          updatedText += ` There's a strange circular pattern around ${orbFeature}.`;
+        } else {
+          updatedText += ` You notice unusual energy emanating from ${orbFeature}.`;
+        }
+      }
+    }
+    
+    if (hasHiddenDoor) {
+      const doorFeature = specialRooms[currentPosition]?.doorFeature || "the northern wall";
+      // Add hidden door hint if not already present
+      if (!updatedText.includes('keyhole')) {
+        updatedText += ` You notice what appears to be a keyhole hidden among ${doorFeature}.`;
+      }
+    }
+    
+    // Apply to enhanced text too
+    if (updatedEnhancedText) {
+      updatedEnhancedText = updatedText;
+    }
+  } else {
+    // Fallback - clean current text
+    console.log("LANTERN: No textAfterCollection, cleaning current text");
+    
+    // Start with current text
+    updatedText = roomInfo.text || updatedText;
+    
+    // More specific pattern for the exact text structure
+    const lanternPatterns = [
+      // Specific pattern for "You find a rusty lantern and mining equipment"
+      /You find a <span class=['"]interactive-item['"][^>]*>rusty lantern<\/span> and/gi,
+      // Generic patterns
+      /\ba\s+<span class=['"]interactive-item['"][^>]*>(?:rusty|old)?\s*lantern<\/span>/gi,
+      /\ban\s+<span class=['"]interactive-item['"][^>]*>(?:rusty|old)?\s*lantern<\/span>/gi,
+      /<span class=['"]interactive-item['"][^>]*>(?:rusty|old)?\s*lantern<\/span>/gi,
+    ];
+    
+    lanternPatterns.forEach(pattern => {
+      updatedText = updatedText.replace(pattern, (match) => {
+        console.log(`Removing pattern: "${match}"`);
+        // Special handling for "You find a lantern and"
+        if (match.includes('You find') && match.includes('and')) {
+          return 'You find';
+        }
+        return '';
+      });
       if (updatedEnhancedText) {
-        // Different pattern for enhanced text - note the lowercase 'yellow' and different sentence structure
-        updatedEnhancedText = updatedEnhancedText.replace(/illuminates yellow <span class=['"]interactive-item['"][^>]*>sulfur crystals<\/span> line the walls like evil butterscotch/g, 'reveals bare walls where you removed the crystals. They still emit a faint yellow residue');
-        
-        // ========== FALLBACK PATTERN MATCHING ==========
-        // Also handle if the enhanced text has been modified or has variations
-        if (updatedEnhancedText.includes('sulfur crystals')) {
-          // Fallback: just remove the interactive span if the exact match fails
-          updatedEnhancedText = updatedEnhancedText.replace(/<span class=['"]interactive-item['"][^>]*data-item=['"]sulfur_crystal['"][^>]*>sulfur crystals<\/span>/g, 'empty crystal sockets');
-        }
-      }
-      break;
-
-    // ========== ROOM-SPECIFIC ITEM HANDLING ==========
-    case 'druika_repellent':
-      // Remove the vial mention from room 31
-      if (currentPosition === 31) {
-        const baseText = "A hidden chamber untouched for centuries. The air is thick with dust and mystery. Ancient artifacts, a sarcophagus(?), and strange symbols cover the walls.";
-        updatedText = baseText + " An empty shelf shows where something important once stood.";
-        if (updatedEnhancedText) {
-          updatedEnhancedText = baseText + " An empty shelf shows where something important once stood.";
-        }
-      }
-      break;
-
-    case 'wizard_journal':
-      // Remove journal if added as interactive
-      if (currentPosition === 31) {
-        const baseText = "A hidden chamber untouched for centuries. The air is thick with dust and mystery. Ancient artifacts, a sarcophagus(?), and strange symbols cover the walls.";
-        updatedText = baseText + " A dusty outline remains where a book once rested.";
-        if (updatedEnhancedText) {
-          updatedEnhancedText = baseText + " A dusty outline remains where a book once rested.";
-        }
-      }
-      break;
-
-    // ========== COMPLEX EQUIPMENT WITH SPECIAL ROOM FEATURES ==========
-    case 'lantern':
-      // ========== SPECIAL ROOM FEATURE DETECTION ==========
-      // Get current room's special properties
-      const hasTeleport = specialRooms[currentPosition]?.hasTeleport;
-      const hasHiddenDoor = specialRooms[currentPosition]?.hasHiddenDoor;
-      
-      // ========== INTELLIGENT TEXT MANAGEMENT ==========
-      // Check if room has textAfterCollection defined
-      if (roomInfo.textAfterCollection) {
-        console.log("Current textAfterCollection:", roomInfo.textAfterCollection);
-        console.log("Does it contain lantern?", roomInfo.textAfterCollection?.includes('lantern'));
-        
-        // Start with the textAfterCollection
-        updatedText = roomInfo.textAfterCollection;
-        
-        // ========== SPECIAL FEATURE PRESERVATION ==========
-        // Preserve special room hints
-        if (hasTeleport) {
-          const orbFeature = specialRooms[currentPosition]?.orbFeature || "unusual rock formations that seem to form a doorframe";
-          
-          // ========== TELEPORT ROOM DIFFERENTIATION ==========
-          // Check if this is the first or second teleport room
-          const teleportRooms = Object.entries(specialRooms)
-            .filter(([roomId, roomData]) => roomData.hasTeleport && parseInt(roomId) <= 30)
-            .map(([roomId]) => parseInt(roomId))
-            .sort((a, b) => a - b);
-          
-          const isFirstTeleportRoom = teleportRooms[0] === currentPosition;
-          
-          // ========== DYNAMIC HINT GENERATION ==========
-          // Add the appropriate teleport hint if not already present
-          if (!updatedText.includes('strange circular pattern') && !updatedText.includes('unusual energy')) {
-            if (isFirstTeleportRoom) {
-              updatedText += ` There's a strange circular pattern around ${orbFeature}.`;
-            } else {
-              updatedText += ` You notice unusual energy emanating from ${orbFeature}.`;
-            }
+        updatedEnhancedText = updatedEnhancedText.replace(pattern, (match) => {
+          if (match.includes('You find') && match.includes('and')) {
+            return 'You find';
           }
-        }
-        
-        if (hasHiddenDoor) {
-          const doorFeature = specialRooms[currentPosition]?.doorFeature || "the northern wall";
-          // Add hidden door hint if not already present
-          if (!updatedText.includes('keyhole')) {
-            updatedText += ` You notice what appears to be a keyhole hidden among ${doorFeature}.`;
-          }
-        }
-        
-        // Apply to enhanced text too
-        if (updatedEnhancedText) {
-          updatedEnhancedText = updatedText;
-        }
-      } else {
-        // ========== FALLBACK TEXT PROCESSING ==========
-        // Fallback - clean current text
-        console.log("LANTERN: No textAfterCollection, cleaning current text");
-        
-        // Start with current text
-        updatedText = roomInfo.text || updatedText;
-        
-        // ========== ADVANCED PATTERN MATCHING ==========
-        // More specific pattern for the exact text structure
-        const lanternPatterns = [
-          // Specific pattern for "You find a rusty lantern and mining equipment"
-          /You find a <span class=['"]interactive-item['"][^>]*>rusty lantern<\/span> and/gi,
-          // Generic patterns
-          /\ba\s+<span class=['"]interactive-item['"][^>]*>(?:rusty|old)?\s*lantern<\/span>/gi,
-          /\ban\s+<span class=['"]interactive-item['"][^>]*>(?:rusty|old)?\s*lantern<\/span>/gi,
-          /<span class=['"]interactive-item['"][^>]*>(?:rusty|old)?\s*lantern<\/span>/gi,
+          return '';
+        });
+      }
+    });
+    
+    // Clean up grammar
+    updatedText = updatedText.replace(/You find\s+mining/g, 'You find mining');
+    updatedText = updatedText.replace(/\s{2,}/g, ' ');
+    updatedText = updatedText.trim();
+    
+    if (updatedEnhancedText) {
+      updatedEnhancedText = updatedEnhancedText.replace(/You find\s+mining/g, 'You find mining');
+      updatedEnhancedText = updatedEnhancedText.replace(/\s{2,}/g, ' ');
+      updatedEnhancedText = updatedEnhancedText.trim();
+    }
+  }
+  
+  
+  break;
+      case 'spellbook':
+        // Comprehensive patterns to remove all variations of the spellbook text
+        const spellbookPatterns = [
+          / Your lantern's light reveals an <span class=['"]interactive-item['"][^>]*>ancient spellbook<\/span> tucked underneath the backpack, its leather cover embossed with strange protective symbols\./g,
+          / Your lantern's light reveals an ancient spellbook tucked underneath the backpack, its leather cover embossed with strange protective symbols\./g,
+          / The space underneath where you found the spellbook is now empty\./g,
+          /<span class=['"]interactive-item['"][^>]*data-item=['"]spellbook['"][^>]*>.*?<\/span>/g
         ];
         
-        // ========== INTELLIGENT TEXT REPLACEMENT ==========
-        lanternPatterns.forEach(pattern => {
-          updatedText = updatedText.replace(pattern, (match) => {
-            console.log(`Removing pattern: "${match}"`);
-            // Special handling for "You find a lantern and"
-            if (match.includes('You find') && match.includes('and')) {
-              return 'You find';
-            }
-            return '';
-          });
+        // Apply each pattern
+        spellbookPatterns.forEach(pattern => {
+          updatedText = updatedText.replace(pattern, '');
           if (updatedEnhancedText) {
-            updatedEnhancedText = updatedEnhancedText.replace(pattern, (match) => {
-              if (match.includes('You find') && match.includes('and')) {
-                return 'You find';
-              }
-              return '';
-            });
+            updatedEnhancedText = updatedEnhancedText.replace(pattern, '');
           }
         });
         
-        // ========== GRAMMAR CLEANUP SYSTEM ==========
-        // Clean up grammar
-        updatedText = updatedText.replace(/You find\s+mining/g, 'You find mining');
-        updatedText = updatedText.replace(/\s{2,}/g, ' ');
-        updatedText = updatedText.trim();
-        
-        if (updatedEnhancedText) {
-          updatedEnhancedText = updatedEnhancedText.replace(/You find\s+mining/g, 'You find mining');
-          updatedEnhancedText = updatedEnhancedText.replace(/\s{2,}/g, ' ');
-          updatedEnhancedText = updatedEnhancedText.trim();
-        }
-      }
-      break;
-
-    // ========== NARRATIVE-RICH ITEMS WITH ENVIRONMENTAL STORYTELLING ==========
-    case 'spellbook':
-      // ========== COMPREHENSIVE SPELLBOOK PATTERN REMOVAL ==========
-      // Comprehensive patterns to remove all variations of the spellbook text
-      const spellbookPatterns = [
-        / Your lantern's light reveals an <span class=['"]interactive-item['"][^>]*>ancient spellbook<\/span> tucked underneath the backpack, its leather cover embossed with strange protective symbols\./g,
-        / Your lantern's light reveals an ancient spellbook tucked underneath the backpack, its leather cover embossed with strange protective symbols\./g,
-        / The space underneath where you found the spellbook is now empty\./g,
-        /<span class=['"]interactive-item['"][^>]*data-item=['"]spellbook['"][^>]*>.*?<\/span>/g
-      ];
-      
-      // Apply each pattern
-      spellbookPatterns.forEach(pattern => {
-        updatedText = updatedText.replace(pattern, '');
-        if (updatedEnhancedText) {
-          updatedEnhancedText = updatedEnhancedText.replace(pattern, '');
-        }
-      });
-      
-      // ========== DRAMATIC ENVIRONMENTAL TRANSFORMATION ==========
-      // Replace with more interesting "after collection" text AND replace the original backpack text
-      if (updatedText.includes('backpack')) {
-        
-        // ========== BACKPACK DESTRUCTION SEQUENCE ==========                 
-        // Remove the original backpack text - updated for new whimsical description
-        const backpackPattern = /You find a backpack with half-eaten rations\(someone wasn't a stress eater\)\. Inside is a map that simply says ['"]RUN!['"] in what appears to be blood, ketchup, or very dramatic red ink\.?/g;
-        updatedText = updatedText.replace(backpackPattern, "");
-        if (updatedEnhancedText) {
-          updatedEnhancedText = updatedEnhancedText.replace(backpackPattern, "");
-        }
-        
-        // ========== PERSISTENT VS TRANSIENT TEXT SYSTEM ==========
-        // IMPORTANT: Create the persistent text for future visits FIRST
-        // This should only be the "state" description without action text
-        const persistentText = "You find a pile of ancient dust on the floor. A weathered piece of parchment with the word 'RUN!' is all that remains visible.";
-        
-        // Define the transition text for the immediate feedback (separate from persistent)
-        const transitionText = " As you take the spellbook, the backpack suddenly shudders and collapses into dust, as if it had been waiting centuries to be relieved of its burden.";
-        
-        // ========== IMMEDIATE FEEDBACK SYSTEM ==========
-        // For the CURRENT visit: show both persistent state + transition action
-        updatedText = persistentText + transitionText;
-        if (updatedEnhancedText) {
-          updatedEnhancedText = persistentText + transitionText;
-        }
-        
-        // ========== STATE PERSISTENCE MANAGEMENT ==========
-        // Save this as the "textAfterCollection" for this room
-        // CRITICAL: Only save the persistent text without the transition text
-        setRoomDescriptionMap(prev => ({
-          ...prev,
-          [currentPosition]: {
-            ...prev[currentPosition],
-            textAfterCollection: persistentText, // ONLY the persistent state text
-            text: updatedText, // Current text includes transition for immediate feedback
-            enhancedText: updatedEnhancedText,
-            hasInteractiveItem: false,
-            interactiveItem: null,
-            collectedItems: [...(prev[currentPosition].collectedItems || []), itemId]
+        // Replace with more interesting "after collection" text AND replace the original backpack text
+        if (updatedText.includes('backpack')) {
+    
+                   
+          // Remove the original backpack text - updated for new whimsical description
+const backpackPattern = /You find a backpack with half-eaten rations\(someone wasn't a stress eater\)\. Inside is a map that simply says ['"]RUN!['"] in what appears to be blood, ketchup, or very dramatic red ink\.?/g;
+          updatedText = updatedText.replace(backpackPattern, "");
+          if (updatedEnhancedText) {
+            updatedEnhancedText = updatedEnhancedText.replace(backpackPattern, "");
           }
-        }));
-        
-        // ========== LIGHTING SYSTEM COORDINATION ==========
-        // Set the room description based on lantern status
-        const lanternActive = inventory.some(item => 
-          (item.originalId || item.id) === 'lantern' && item.isActive
-        );
-        
-        // Force immediate update of room description
-        setRoomDescription(lanternActive && updatedEnhancedText ? updatedEnhancedText : updatedText);
-        
-        // Exit early since we've handled everything specifically
-        return;
-      }
-      break;
-
-    // ========== CURSED POOL ITEMS WITH COMPLEX INTERACTION SYSTEMS ==========
-    case 'fools_gold':
-    case 'utility_knife':
-    case 'tarnished_bracelet':
-      console.log(`Handling pool item collection: ${itemId}`);
-      
-      // ========== POOL ROOM DETECTION SYSTEM ==========
-      // Check if this is the pool room using the ORIGINAL room data
-      const roomData = roomDescriptionMap[currentPosition];
-      const originalText = roomData?.text || "";
-      const enhancedText = roomData?.enhancedText || "";
-      
-      // Check both original and enhanced text for pool indicators
-      const hasPoolItems = originalText.includes('pool of clear water') || 
-                           enhancedText.includes('deceptively clear pool') ||
-                           roomData?.hasPoolTreasures === true;
-      
-      console.log("Pool detection - hasPoolItems:", hasPoolItems);
-      
-      if (hasPoolItems) {
-        console.log("Pool room detected - disturbing the water");
-        
-        // ========== ENVIRONMENTAL STATE CHANGE ==========
-        // Use the specific disturbed text if available, otherwise use default
-        const persistentText = roomData?.enhancedTextAfterDisturbance || 
-          "The once-clear pool now churns with agitation. Whatever dwells in the depths has been disturbed, and the water has turned murky and threatening.";
-        
-        // For immediate feedback
-        const transitionText = " As you pull the treasure from the water, something massive stirs below!";
-        
-        // ========== CRITICAL ROOM STATE UPDATE ==========
-        // CRITICAL: Update the room description map IMMEDIATELY
-        setRoomDescriptionMap(prev => {
-          const updated = {
+          
+          // IMPORTANT: Create the persistent text for future visits FIRST
+          // This should only be the "state" description without action text
+          const persistentText = "You find a pile of ancient dust on the floor. A weathered piece of parchment with the word 'RUN!' is all that remains visible.";
+          
+          // Define the transition text for the immediate feedback (separate from persistent)
+          const transitionText = " As you take the spellbook, the backpack suddenly shudders and collapses into dust, as if it had been waiting centuries to be relieved of its burden.";
+          
+          // For the CURRENT visit: show both persistent state + transition action
+          updatedText = persistentText + transitionText;
+          if (updatedEnhancedText) {
+            updatedEnhancedText = persistentText + transitionText;
+          }
+          
+          // Save this as the "textAfterCollection" for this room
+          // CRITICAL: Only save the persistent text without the transition text
+          setRoomDescriptionMap(prev => ({
             ...prev,
             [currentPosition]: {
               ...prev[currentPosition],
-              text: persistentText, // Set the base text to persistent
-              enhancedText: persistentText, // CRITICAL: Set enhanced text to disturbed state too
-              textAfterCollection: persistentText,
-              enhancedTextAfterDisturbance: persistentText, // Store for consistency
-              originalText: prev[currentPosition].originalText || prev[currentPosition].text,
-              originalEnhancedText: prev[currentPosition].originalEnhancedText || prev[currentPosition].enhancedText,
+              textAfterCollection: persistentText, // ONLY the persistent state text
+              text: updatedText, // Current text includes transition for immediate feedback
+              enhancedText: updatedEnhancedText,
               hasInteractiveItem: false,
               interactiveItem: null,
-              poolDisturbed: true,
               collectedItems: [...(prev[currentPosition].collectedItems || []), itemId]
             }
-          };
+          }));
           
-          console.log("POOL DISTURBANCE UPDATE - Room map updated for position:", currentPosition);
-          console.log("Updated room data:", {
-            poolDisturbed: updated[currentPosition].poolDisturbed,
-            text: updated[currentPosition].text?.substring(0, 50),
-            textAfterCollection: updated[currentPosition].textAfterCollection?.substring(0, 50)
-          });
-          return updated;
-        });
+          // Set the room description based on lantern status
+          const lanternActive = inventory.some(item => 
+            (item.originalId || item.id) === 'lantern' && item.isActive
+          );
+          
+          // Force immediate update of room description
+          setRoomDescription(lanternActive && updatedEnhancedText ? updatedEnhancedText : updatedText);
+          
+          // Exit early since we've handled everything specifically
+          return;
+        }
+        break;
+     
+
+
+
+
+
+ case 'fools_gold':
+case 'utility_knife':
+case 'tarnished_bracelet':
+  console.log(`Handling pool item collection: ${itemId}`);
+  
+  // Check if this is the pool room using the ORIGINAL room data
+  const roomData = roomDescriptionMap[currentPosition];
+  const originalText = roomData?.text || "";
+  const enhancedText = roomData?.enhancedText || "";
+  
+  // Check both original and enhanced text for pool indicators
+  const hasPoolItems = originalText.includes('pool of clear water') || 
+                       enhancedText.includes('deceptively clear pool') ||
+                       roomData?.hasPoolTreasures === true;
+  
+  console.log("Pool detection - hasPoolItems:", hasPoolItems);
+  
+  if (hasPoolItems) {
+    console.log("Pool room detected - disturbing the water");
+    
+    // Use the specific disturbed text if available, otherwise use default
+    const persistentText = roomData?.enhancedTextAfterDisturbance || 
+      "The once-clear pool now churns with agitation. Whatever dwells in the depths has been disturbed, and the water has turned murky and threatening.";
+    
+    // For immediate feedback
+    const transitionText = " As you pull the treasure from the water, something massive stirs below!";
+    
+    // CRITICAL: Update the room description map IMMEDIATELY
+   setRoomDescriptionMap(prev => {
+  const updated = {
+    ...prev,
+    [currentPosition]: {
+      ...prev[currentPosition],
+      text: persistentText, // Set the base text to persistent
+      enhancedText: persistentText, // CRITICAL: Set enhanced text to disturbed state too
+      textAfterCollection: persistentText,
+      enhancedTextAfterDisturbance: persistentText, // Store for consistency
+      originalText: prev[currentPosition].originalText || prev[currentPosition].text,
+      originalEnhancedText: prev[currentPosition].originalEnhancedText || prev[currentPosition].enhancedText,
+      hasInteractiveItem: false,
+      interactiveItem: null,
+      poolDisturbed: true,
+      collectedItems: [...(prev[currentPosition].collectedItems || []), itemId]
+    }
+  };
+  
+  console.log("POOL DISTURBANCE UPDATE - Room map updated for position:", currentPosition);
+  console.log("Updated room data:", {
+    poolDisturbed: updated[currentPosition].poolDisturbed,
+    text: updated[currentPosition].text?.substring(0, 50),
+    textAfterCollection: updated[currentPosition].textAfterCollection?.substring(0, 50)
+  });
+  return updated;
+});
+    
+    // Force immediate update
+    setRoomDescription(persistentText + transitionText);
+    
+    // Show message
+   let poolMessage;
+if (itemId === 'fools_gold') {
+  poolMessage = `You plunge your hand into the cold water, grasping the glittering gold coins. \nBut as you pull them out, the 'gold' washes away like cheap paint, revealing worthless stone discs! \n\nThe pool erupts in furious bubbles—something massive below is NOT amused by your theft. \nThe remaining treasures vanish into the churning depths!`;
+} else {
+  poolMessage = `You reach into the cold water and grab the ${itemTypes[itemId].name}. \nThe pool suddenly erupts in violent ripples! Something large moves beneath the surface, and the remaining treasures sink rapidly into the murky depths.`;
+}
+
+setMessage(poolMessage);///
+    // Exit early - don't process any other updates
+  // Apply curse effects based on which item was collected
+switch(itemId) {
+ case 'fools_gold':
+  // Curse: Convert up to 2 coins total
+  let coinsToRemove = 2;
+  
+  // Check if we've already processed this curse
+  if (window._foolsGoldCurseApplied) {
+    break;
+  }
+  window._foolsGoldCurseApplied = true;
+  
+  // Process inventory to remove up to 2 coins worth of value
+  const updatedInventoryFools = inventory.map(item => {
+    if (coinsToRemove <= 0) return item; // No more coins to remove
+    
+    const itemId = item.originalId || item.id;
+    
+    // Check if this is a gold coin item
+    if (itemId === 'gold_coins') {
+      // This is the multi-coin item
+      const currentValue = item.value || 10;
+      
+      if (currentValue > coinsToRemove) {
+        // Remove only some coins
+        const newValue = currentValue - coinsToRemove;
         
-        // Force immediate update
-        setRoomDescription(persistentText + transitionText);
+        setTimeout(() => {
+          setMessage(prev => prev + `\n\nThe curse of greed strikes! Some of your Ancient Wyrm Coins crumble into worthless dust!`);
+        }, 2000);
         
-        // ========== CONTEXTUAL MESSAGING SYSTEM ==========
-        // Show message
-        let poolMessage;
-        if (itemId === 'fools_gold') {
-          poolMessage = `You plunge your hand into the cold water, grasping the glittering gold coins. \nBut as you pull them out, the 'gold' washes away like cheap paint, revealing worthless stone discs! \n\nThe pool erupts in furious bubbles—something massive below is NOT amused by your theft. \nThe remaining treasures vanish into the churning depths!`;
-        } else {
-          poolMessage = `You reach into the cold water and grab the ${itemTypes[itemId].name}. \nThe pool suddenly erupts in violent ripples! Something large moves beneath the surface, and the remaining treasures sink rapidly into the murky depths.`;
-        }
-
-        setMessage(poolMessage);
+        coinsToRemove = 0;
         
-        // ========== CURSE EFFECT PROCESSING ==========
-        // Apply curse effects based on which item was collected
-        switch(itemId) {
-          case 'fools_gold':
-            // ========== GREED CURSE IMPLEMENTATION ==========
-            // Curse: Convert up to 2 coins total
-            let coinsToRemove = 2;
-            
-            // Check if we've already processed this curse
-            if (window._foolsGoldCurseApplied) {
-              break;
-            }
-            window._foolsGoldCurseApplied = true;
-            
-            // ========== INTELLIGENT COIN REMOVAL SYSTEM ==========
-            // Process inventory to remove up to 2 coins worth of value
-            const updatedInventoryFools = inventory.map(item => {
-              if (coinsToRemove <= 0) return item; // No more coins to remove
-              
-              const itemId = item.originalId || item.id;
-              
-              // Check if this is a gold coin item
-              if (itemId === 'gold_coins') {
-                // This is the multi-coin item
-                const currentValue = item.value || 10;
-                
-                if (currentValue > coinsToRemove) {
-                  // Remove only some coins
-                  const newValue = currentValue - coinsToRemove;
-                  
-                  setTimeout(() => {
-                    setMessage(prev => prev + `\n\nThe curse of greed strikes! Some of your Ancient Wyrm Coins crumble into worthless dust!`);
-                  }, 2000);
-                  
-                  coinsToRemove = 0;
-                  
-                  return {
-                    ...item,
-                    value: newValue,
-                    name: `Ancient Wyrm Coins (${newValue})`
-                  };
-                } else {
-                  // Remove all coins in this stack
-                  coinsToRemove -= currentValue;
-                  
-                  setTimeout(() => {
-                    setMessage(prev => prev + `\n\nThe curse of greed strikes! All ${currentValue} of your Ancient Wyrm Coins crumble into worthless dust!`);
-                  }, 2000);
-                  
-                  return null; // Mark for removal
-                }
-              } else if (itemId === 'single_gold_coin') {
-                // Single coin - worth 1
-                coinsToRemove -= 1;
-                
-                setTimeout(() => {
-                  setMessage(prev => prev + `\n\nThe curse of greed strikes! Your Ancient Wyrm Coin crumbles into worthless dust!`);
-                }, 2000);
-                
-                return null; // Remove it
-              }
-              
-              return item;
-            }).filter(item => item !== null); // Remove nulled items
-            
-            setInventory(updatedInventoryFools);
-            
-            // Clear the flag
-            setTimeout(() => {
-              window._foolsGoldCurseApplied = false;
-            }, 100);
-            break;
-
-          case 'tarnished_bracelet':
-            // ========== INVISIBILITY CLOAK CURSE INTERACTION ==========
-            // Check if we've already processed this curse
-            if (window._braceletCurseApplied) {
-              break;
-            }
-            window._braceletCurseApplied = true;
-            
-            // Check if player is currently wearing the cloak
-            const wornCloak = inventory.find(item => 
-              (item.originalId || item.id) === 'invisibility_cloak' && item.equipped === true
-            );
-            
-            if (wornCloak) {
-              // ========== DEADLY CURSE COMBINATION ==========
-              // EVIL DEATH TRAP!
-              setTimeout(() => {
-                setMessage(`\n\nAs you clasp the tarnished bracelet around your wrist, it suddenly glows with malevolent green energy! The bracelet reacts violently with your worn cloak - acidic green flames erupt from both items! You try to remove them but they've fused to your body! The cursed flames consume you entirely!`);
-                
-                // Kill the player after dramatic pause
-                setTimeout(() => {
-                  setGameStatus('lost');
-                  setDeathCause('cursed_items');
-                  setMessage("The combined curse of the bracelet and cloak proves fatal. Your last thought is that maybe wearing mysterious magical items together wasn't the brightest idea... Game over!");
-                }, 3500);
-              }, 4500);
-            } else {
-              // ========== CLOAK DESTRUCTION CURSE ==========
-              // Player has cloak but isn't wearing it - just destroy it
-              const hasCloak = inventory.some(item => 
-                (item.originalId || item.id) === 'invisibility_cloak'
-              );
-              
-              if (hasCloak) {
-                setTimeout(() => {
-                  setMessage(prev => prev + `\n\nThe tarnished bracelet emits a corrosive green mist! Your strange cloak dissolves into ash before your eyes!`);
-                }, 3000);
-                
-                const updatedInventoryBracelet = inventory.filter(item => 
-                  (item.originalId || item.id) !== 'invisibility_cloak'
-                );
-                setInventory(updatedInventoryBracelet);
-              }
-            }
-            
-            // Clear the flag
-            setTimeout(() => {
-              window._braceletCurseApplied = false;
-            }, 100);
-            break;
-
-          case 'utility_knife':
-            // ========== SULFUR CRYSTAL DISSOLUTION CURSE ==========
-            // Check if we've already processed this curse
-            if (window._utilityKnifeCurseApplied) {
-              break;
-            }
-            window._utilityKnifeCurseApplied = true;
-            
-            // Curse: Dissolve sulfur crystal if present
-            const hasSulfurCrystal = inventory.some(item =>
-              (item.originalId || item.id) === 'sulfur_crystal'
-            );
-            
-            if (hasSulfurCrystal) {
-              setTimeout(() => {
-                setMessage(prev => prev + `\n\nThe ornate dagger reacts violently with your sulfur crystal! The crystal dissolves into a foul-smelling yellow puddle that drips from your pack!`);
-              }, 2000);
-              
-              // Remove sulfur crystal from inventory
-              const updatedInventoryKnife = inventory.filter(item =>
-                (item.originalId || item.id) !== 'sulfur_crystal'
-              );
-              setInventory(updatedInventoryKnife);
-            } else {
-              // Optional: Add a subtle curse message even if no sulfur crystal
-              setTimeout(() => {
-                setMessage(prev => prev + `\n\nThe ornate dagger feels unnaturally cold and seems to radiate a corrosive aura.`);
-              }, 2000);
-            }
-            
-            // Clear the flag
-            setTimeout(() => {
-              window._utilityKnifeCurseApplied = false;
-            }, 100);
-            
-            break;
-        }
-
-        return;
+        return {
+          ...item,
+          value: newValue,
+          name: `Ancient Wyrm Coins (${newValue})`
+        };
+      } else {
+        // Remove all coins in this stack
+        coinsToRemove -= currentValue;
+        
+        setTimeout(() => {
+          setMessage(prev => prev + `\n\nThe curse of greed strikes! All ${currentValue} of your Ancient Wyrm Coins crumble into worthless dust!`);
+        }, 2000);
+        
+        return null; // Mark for removal
       }
-      break;
+    } else if (itemId === 'single_gold_coin') {
+      // Single coin - worth 1
+      coinsToRemove -= 1;
+      
+      setTimeout(() => {
+        setMessage(prev => prev + `\n\nThe curse of greed strikes! Your Ancient Wyrm Coin crumbles into worthless dust!`);
+      }, 2000);
+      
+      return null; // Remove it
+    }
+    
+    return item;
+  }).filter(item => item !== null); // Remove nulled items
+  
+  setInventory(updatedInventoryFools);
+  
+  // Clear the flag
+  setTimeout(() => {
+    window._foolsGoldCurseApplied = false;
+  }, 100);
+  break;
 
-    // ========== THROWABLE ITEMS WITH ENHANCED CLEANUP ==========        
-    case 'loose_rocks':
-      playInteractivePickupSound(); 
-      console.log("ROCKS: Handling collection of loose rocks");
+case 'tarnished_bracelet':
+  // Check if we've already processed this curse
+  if (window._braceletCurseApplied) {
+    break;
+  }
+  window._braceletCurseApplied = true;
+  
+  // Check if player is currently wearing the cloak
+  const wornCloak = inventory.find(item => 
+    (item.originalId || item.id) === 'invisibility_cloak' && item.equipped === true
+  );
+  
+  if (wornCloak) {
+    // EVIL DEATH TRAP!
+    setTimeout(() => {
+      setMessage(`\n\nAs you clasp the tarnished bracelet around your wrist, it suddenly glows with malevolent green energy! The bracelet reacts violently with your worn cloak - acidic green flames erupt from both items! You try to remove them but they've fused to your body! The cursed flames consume you entirely!`);
       
-      // ========== MULTI-PATTERN ROCK REMOVAL ==========
-      // Patterns for regular room descriptions
-      const regularRockPatterns = [
-        // Original pattern for regular rooms
-        / Near the entrance, you notice a pile of.*?that might be useful\./g,
-      ];
-      
-      // Patterns for enhanced room descriptions (from lantern)
-      const enhancedRockPatterns = [
-        // Full pattern with span
-        /\s*Near the wall, your lantern illuminates[^.]*<span[^>]*>loose rocks<\/span>[^.]*for throwing\.\s*/gi,
-        // After span removed
-        /\s*Near the wall, your lantern illuminates[^.]*for throwing\.\s*/gi,
-        // Any fragment
-        /\s*Near the wall[^.]*for throwing\.\s*/gi
-      ];
-      
-      // Apply regular patterns
-      regularRockPatterns.forEach(pattern => {
-        updatedText = updatedText.replace(pattern, '');
-        if (updatedEnhancedText) {
-          updatedEnhancedText = updatedEnhancedText.replace(pattern, '');
-        }
-      });
-      
-      // Apply enhanced patterns
-      enhancedRockPatterns.forEach(pattern => {
-        updatedText = updatedText.replace(pattern, '');
-        if (updatedEnhancedText) {
-          updatedEnhancedText = updatedEnhancedText.replace(pattern, '');
-        }
-      });
-      
-      // ========== FALLBACK TEXT SYSTEM ==========
-      // Fallback to using textAfterCollection if defined
-      if (roomInfo.textAfterCollection) {
-        console.log("ROCKS: Using textAfterCollection:", roomInfo.textAfterCollection);
-        updatedText = roomInfo.textAfterCollection;
-        if (updatedEnhancedText) {
-          updatedEnhancedText = roomInfo.textAfterCollection;
-        }
-      }
-      break;
-
-    // ========== TRAP ITEMS WITH IMMEDIATE DEATH CONSEQUENCES ==========
-    case 'shiny_trinkets':
-      playTrinketTrapDeathSound();
-      // ========== TRAP ACTIVATION SYSTEM ==========
-      // This is a trap! Don't actually add to inventory
-      console.log("TRAP TRIGGERED: Shiny trinkets!");
-      
-      // ========== SARCASTIC AFTERMATH DISPLAY ==========
-      // Update the room description with sarcastic aftermath text
-      const trapTriggeredText = "OH NO!  \nYOU JUST SET OFF AN OBVIOUS TRAP! \n You are not the intrepid cave adventurer you and everyone else thought you were!";
-      
-      // Update the room description BEFORE killing the player
-      updatedText = trapTriggeredText;
-      if (updatedEnhancedText) {
-        updatedEnhancedText = trapTriggeredText;
-      }
-      
-      // ========== IMMEDIATE ROOM STATE UPDATE ==========
-      // Update room description map to remove the interactive item
-      setRoomDescriptionMap(prev => ({
-        ...prev,
-        [currentPosition]: {
-          ...prev[currentPosition],
-          text: trapTriggeredText,
-          enhancedText: trapTriggeredText,
-          hasInteractiveItem: false,
-          interactiveItem: null,
-          textAfterCollection: trapTriggeredText,
-          collectedItems: [...(prev[currentPosition].collectedItems || []), itemId]
-        }
-      }));
-      
-      // Force immediate update of room description
-      setRoomDescription(trapTriggeredText);
-
-      // ========== DRAMATIC DEATH SEQUENCE ==========
-      // THEN trigger the death sequence
+      // Kill the player after dramatic pause
       setTimeout(() => {
         setGameStatus('lost');
-        setDeathCause('trinket_trap');
-        playLadderTrapSound();
-        setMessage("As you grab the white golden bauble, the floor suddenly gives way beneath you! A massive trapdoor swings open, and tentacles shoot up from the darkness below. The last thing you see is rows of teeth in a gaping maw as something ancient and hungry swallows you whole. Perhaps not everything that glitters is gold... Game over!");
-      }, 500); // Small delay to ensure description updates first
-      return;
-
-    // ========== SPECIAL MYSTICAL ITEMS WITH REALITY EFFECTS ==========
-    case 'golden_compass':
-      // ========== COMPREHENSIVE COMPASS REMOVAL SYSTEM ==========
-      console.log("Golden compass collection case running");
-      console.log("Before text:", updatedText);
+        setDeathCause('cursed_items');
+        setMessage("The combined curse of the bracelet and cloak proves fatal. Your last thought is that maybe wearing mysterious magical items together wasn't the brightest idea... Game over!");
+      }, 3500);
+    }, 4500);
+  } else {
+    // Player has cloak but isn't wearing it - just destroy it
+    const hasCloak = inventory.some(item => 
+      (item.originalId || item.id) === 'invisibility_cloak'
+    );
+    
+    if (hasCloak) {
+      setTimeout(() => {
+        setMessage(prev => prev + `\n\nThe tarnished bracelet emits a corrosive green mist! Your strange cloak dissolves into ash before your eyes!`);
+      }, 3000);
       
-      // Comprehensive patterns to remove all variations of the compass text
-      // Use more permissive patterns that focus on the key phrases
-      const compassPatterns = [
-        // More precise patterns first
-        / Your lantern['"]s bright beam reveals a <span class=['"]interactive-item['"][^>]*>golden compass<\/span> hidden in a shadowy crevice, its metal surface reflecting the light\./g,
-        / Your lantern['"]s bright beam reveals a golden compass hidden in a shadowy crevice, its metal surface reflecting the light\./g,
-        /\s*In a corner, you spot a <span class=['"]interactive-item['"][^>]*>golden compass<\/span> glinting in your torchlight\./g,
-        /\s*In a corner, you spot a <span class=['"]interactive-item['"][^>]*data-item=['"]golden_compass['"][^>]*>golden compass<\/span> glinting in your torchlight\./g,
-        /\s*In a corner, you spot a golden compass glinting in your torchlight\./g,
-        
-        // More general patterns
-        / In a corner, you spot a .*?golden compass.*?\./g,
-        / Your lantern.*?reveals a .*?golden compass.*?\./g,
-        
-        // Last resort - direct lookup for the span
-        /<span class=['"]interactive-item['"][^>]*data-item=['"]golden_compass['"][^>]*>.*?<\/span>/g
-      ];
-      
-      // ========== PATTERN EFFECTIVENESS TRACKING ==========
-      // Apply each pattern and track if any changes were made
-      let anyChanges = false;
-      compassPatterns.forEach(pattern => {
-        const beforeLength = updatedText.length;
-        updatedText = updatedText.replace(pattern, '');
-        
-        // Check if this pattern made a change
-        if (updatedText.length !== beforeLength) {
-          anyChanges = true;
-          console.log("Pattern matched and replaced:", pattern.toString().substring(0, 50) + "...");
-        }
-        
-        if (updatedEnhancedText) {
-          updatedEnhancedText = updatedEnhancedText.replace(pattern, '');
-        }
-      });
-      
-      // ========== AGGRESSIVE FALLBACK CLEANUP ==========
-      // If no changes were made, try a more brute force approach
-      if (!anyChanges) {
-        console.log("No compass patterns matched, trying more aggressive approach");
-        
-        // Look for sentences containing "golden compass"
-        const sentences = updatedText.split(/(?<=[.!?])\s+/);
-        const newSentences = sentences.filter(sentence => 
-          !sentence.toLowerCase().includes('golden compass')
-        );
-        
-        // Only update if we actually removed something
-        if (newSentences.length < sentences.length) {
-          updatedText = newSentences.join(' ');
-          console.log("Removed sentences containing 'golden compass'");
-          anyChanges = true;
-        }
-      }
-      
-      console.log("After pattern replacements:", updatedText);
-      
-      // ========== REALITY DISTORTION EFFECTS ==========
-      // Add interesting after-collection text
-      const compassAfterTexts = [
-        "The spot where the compass rested still glimmers oddly, as if reality itself is thinner there.",
-        "With the compass gone, you notice that the stone beneath it is unnaturally warm and etched with a perfect circle.",
-        "The corner where you found the compass now appears distorted, as if space itself is reluctant to fill the void left by the mystical object."
-      ];
-      
-      // Select a random after-collection text for immediate feedback only
-      const selectedCompassText = compassAfterTexts[Math.floor(Math.random() * compassAfterTexts.length)];
-      
-      // ========== PERSISTENT VS TRANSIENT STATE MANAGEMENT ==========
-      // CRITICAL FIX: Create the persistent text FIRST, before adding the transition text
-      // This is what we'll save for future visits - just the cleaned description with no compass or effect
-      const persistentCompassText = updatedText.trim();
-      
-      // Add the transition text only for the current display
-      updatedText = persistentCompassText + " " + selectedCompassText;
-      if (updatedEnhancedText) {
-        updatedEnhancedText = (updatedEnhancedText || persistentCompassText) + " " + selectedCompassText;
-      }
-      
-      console.log("Final text with transition:", updatedText);
-      console.log("Persistent text for future visits:", persistentCompassText);
-      
-      // ========== SPECIALIZED ROOM STATE HANDLING ==========
-      // Store the permanent description change for future visits
-      setRoomDescriptionMap(prev => ({
-        ...prev,
-        [currentPosition]: {
-          ...prev[currentPosition],
-          textAfterCollection: persistentCompassText, // Only the persistent state for future visits
-          text: updatedText, // Current text includes transition for immediate feedback
-          enhancedText: updatedEnhancedText,
-          hasInteractiveItem: false,
-          interactiveItem: null,
-          collectedItems: [...(prev[currentPosition].collectedItems || []), itemId]
-        }
-      }));
-      
-      // ========== LIGHTING COORDINATION ==========
-      // Set the room description based on lantern status
-      const lanternActive = inventory.some(item => 
-        (item.originalId || item.id) === 'lantern' && item.isActive
+      const updatedInventoryBracelet = inventory.filter(item => 
+        (item.originalId || item.id) !== 'invisibility_cloak'
       );
-      
-      // Force immediate update of room description
-      setRoomDescription(lanternActive && updatedEnhancedText ? updatedEnhancedText : updatedText);
-      
-      // Exit early since we've handled everything specifically
-      return;
+      setInventory(updatedInventoryBracelet);
+    }
+  }
+  
+  // Clear the flag
+  setTimeout(() => {
+    window._braceletCurseApplied = false;
+  }, 100);
+  break;
 
-    // ========== MYSTICAL ARTIFACTS WITH SPECIAL ROOM COORDINATION ==========
-    case 'wyrmglass':
-      // ========== SPECIAL ROOM STATE UPDATE ==========
-      // Mark wyrmglass as collected in room 32
-      setSpecialRooms(prev => ({
-        ...prev,
-        32: {
-          ...prev[32],
-          wyrmglassCollected: true
-        }
-      }));
-      
-      // ========== ARTIFACT REMOVAL FROM TEXT ==========
-      // Remove wyrmglass mention from room text
-      updatedText = updatedText.replace(/ On a pedestal where the hole once was, you notice a <span class=['"]interactive-item['"][^>]*>polished glass sphere<\/span> that seems to hold swirling mists within\./g, '');
-      if (updatedEnhancedText) {
-        updatedEnhancedText = updatedEnhancedText.replace(/ On a pedestal where the hole once was, you notice a <span class=['"]interactive-item['"][^>]*>polished glass sphere<\/span> that seems to hold swirling mists within\./g, '');
-      }
-      break;
-      
-    // ========== GENERIC ITEM HANDLING ==========
+
+    
+ case 'utility_knife':
+  // Check if we've already processed this curse
+  if (window._utilityKnifeCurseApplied) {
+    break;
+  }
+  window._utilityKnifeCurseApplied = true;
+  
+  // Curse: Dissolve sulfur crystal if present
+  const hasSulfurCrystal = inventory.some(item =>
+    (item.originalId || item.id) === 'sulfur_crystal'
+  );
+  
+  if (hasSulfurCrystal) {
+    setTimeout(() => {
+      setMessage(prev => prev + `\n\nThe ornate dagger reacts violently with your sulfur crystal! The crystal dissolves into a foul-smelling yellow puddle that drips from your pack!`);
+    }, 2000);
+    
+    // Remove sulfur crystal from inventory
+    const updatedInventoryKnife = inventory.filter(item =>
+      (item.originalId || item.id) !== 'sulfur_crystal'
+    );
+    setInventory(updatedInventoryKnife);
+  } else {
+    // Optional: Add a subtle curse message even if no sulfur crystal
+    setTimeout(() => {
+      setMessage(prev => prev + `\n\nThe ornate dagger feels unnaturally cold and seems to radiate a corrosive aura.`);
+    }, 2000);
+  }
+  
+  // Clear the flag
+  setTimeout(() => {
+    window._utilityKnifeCurseApplied = false;
+  }, 100);
+  
+  break;
+}
+
+    return;
+  }
+  break;
+
+  
+
+        case 'loose_rocks':
+          playInteractivePickupSound(); 
+  console.log("ROCKS: Handling collection of loose rocks");
+  
+  // Patterns for regular room descriptions
+  const regularRockPatterns = [
+    // Original pattern for regular rooms
+    / Near the entrance, you notice a pile of.*?that might be useful\./g,
+  ];
+  
+  // Patterns for enhanced room descriptions (from lantern)
+  const enhancedRockPatterns = [
+    // Full pattern with span
+    /\s*Near the wall, your lantern illuminates[^.]*<span[^>]*>loose rocks<\/span>[^.]*for throwing\.\s*/gi,
+    // After span removed
+    /\s*Near the wall, your lantern illuminates[^.]*for throwing\.\s*/gi,
+    // Any fragment
+    /\s*Near the wall[^.]*for throwing\.\s*/gi
+  ];
+  
+  // Apply regular patterns
+  regularRockPatterns.forEach(pattern => {
+    updatedText = updatedText.replace(pattern, '');
+    if (updatedEnhancedText) {
+      updatedEnhancedText = updatedEnhancedText.replace(pattern, '');
+    }
+  });
+  
+  // Apply enhanced patterns
+  enhancedRockPatterns.forEach(pattern => {
+    updatedText = updatedText.replace(pattern, '');
+    if (updatedEnhancedText) {
+      updatedEnhancedText = updatedEnhancedText.replace(pattern, '');
+    }
+  });
+  
+  // Fallback to using textAfterCollection if defined
+  if (roomInfo.textAfterCollection) {
+    console.log("ROCKS: Using textAfterCollection:", roomInfo.textAfterCollection);
+    updatedText = roomInfo.textAfterCollection;
+    if (updatedEnhancedText) {
+      updatedEnhancedText = roomInfo.textAfterCollection;
+    }
+  }
+  break;
+
+  case 'shiny_trinkets':
+    playTrinketTrapDeathSound();
+  // This is a trap! Don't actually add to inventory
+  console.log("TRAP TRIGGERED: Shiny trinkets!");
+  
+ // Update the room description with sarcastic aftermath text
+  const trapTriggeredText = "OH NO!  \nYOU JUST SET OFF AN OBVIOUS TRAP! \n You are not the intrepid cave adventerur you and everyone else thought you were!";
+  
+  // Update the room description BEFORE killing the player
+  updatedText = trapTriggeredText;
+  if (updatedEnhancedText) {
+    updatedEnhancedText = trapTriggeredText;
+  }
+    // Update room description map to remove the interactive item
+  setRoomDescriptionMap(prev => ({
+    ...prev,
+    [currentPosition]: {
+      ...prev[currentPosition],
+      text: trapTriggeredText,
+      enhancedText: trapTriggeredText,
+      hasInteractiveItem: false,
+      interactiveItem: null,
+      textAfterCollection: trapTriggeredText,
+      collectedItems: [...(prev[currentPosition].collectedItems || []), itemId]
+    }
+  }));
+  
+  // Force immediate update of room description
+  setRoomDescription(trapTriggeredText);
+
+   // THEN trigger the death sequence
+  setTimeout(() => {
+    setGameStatus('lost');
+    setDeathCause('trinket_trap');
+    playLadderTrapSound();
+    setMessage("As you grab the white golden bauble, the floor suddenly gives way beneath you! A massive trapdoor swings open, and tentacles shoot up from the darkness below. The last thing you see is rows of teeth in a gaping maw as something ancient and hungry swallows you whole. Perhaps not everything that glitters is gold... Game over!");
+  }, 500); // Small delay to ensure description updates first
+  return;
+
+      // 2. Similar improvements for the golden compass
+      case 'golden_compass':
+        // Comprehensive patterns to remove all variations of the compass text
+    
+  console.log("Golden compass collection case running");
+  console.log("Before text:", updatedText);
+  
+  // Comprehensive patterns to remove all variations of the compass text
+  // Use more permissive patterns that focus on the key phrases
+  const compassPatterns = [
+    // More precise patterns first
+    / Your lantern['"]s bright beam reveals a <span class=['"]interactive-item['"][^>]*>golden compass<\/span> hidden in a shadowy crevice, its metal surface reflecting the light\./g,
+    / Your lantern['"]s bright beam reveals a golden compass hidden in a shadowy crevice, its metal surface reflecting the light\./g,
+    /\s*In a corner, you spot a <span class=['"]interactive-item['"][^>]*>golden compass<\/span> glinting in your torchlight\./g,
+    /\s*In a corner, you spot a <span class=['"]interactive-item['"][^>]*data-item=['"]golden_compass['"][^>]*>golden compass<\/span> glinting in your torchlight\./g,
+    /\s*In a corner, you spot a golden compass glinting in your torchlight\./g,
+    
+    // More general patterns
+    / In a corner, you spot a .*?golden compass.*?\./g,
+    / Your lantern.*?reveals a .*?golden compass.*?\./g,
+    
+    // Last resort - direct lookup for the span
+    /<span class=['"]interactive-item['"][^>]*data-item=['"]golden_compass['"][^>]*>.*?<\/span>/g
+  ];
+  
+  // Apply each pattern and track if any changes were made
+  let anyChanges = false;
+  compassPatterns.forEach(pattern => {
+    const beforeLength = updatedText.length;
+    updatedText = updatedText.replace(pattern, '');
+    
+    // Check if this pattern made a change
+    if (updatedText.length !== beforeLength) {
+      anyChanges = true;
+      console.log("Pattern matched and replaced:", pattern.toString().substring(0, 50) + "...");
+    }
+    
+    if (updatedEnhancedText) {
+      updatedEnhancedText = updatedEnhancedText.replace(pattern, '');
+    }
+  });
+  
+  // If no changes were made, try a more brute force approach
+  if (!anyChanges) {
+    console.log("No compass patterns matched, trying more aggressive approach");
+    
+    // Look for sentences containing "golden compass"
+    //const sentences = updatedText.split(/(?<=\.|\!|\?)\s+/);
+    const sentences = updatedText.split(/(?<=[.!?])\s+/);
+    const newSentences = sentences.filter(sentence => 
+      !sentence.toLowerCase().includes('golden compass')
+    );
+    
+    // Only update if we actually removed something
+    if (newSentences.length < sentences.length) {
+      updatedText = newSentences.join(' ');
+      console.log("Removed sentences containing 'golden compass'");
+      anyChanges = true;
+    }
+  }
+  
+  console.log("After pattern replacements:", updatedText);
+  
+  // Add interesting after-collection text
+  const compassAfterTexts = [
+    "The spot where the compass rested still glimmers oddly, as if reality itself is thinner there.",
+    "With the compass gone, you notice that the stone beneath it is unnaturally warm and etched with a perfect circle.",
+    "The corner where you found the compass now appears distorted, as if space itself is reluctant to fill the void left by the mystical object."
+  ];
+  
+  // Select a random after-collection text for immediate feedback only
+  const selectedCompassText = compassAfterTexts[Math.floor(Math.random() * compassAfterTexts.length)];
+  
+  // CRITICAL FIX: Create the persistent text FIRST, before adding the transition text
+  // This is what we'll save for future visits - just the cleaned description with no compass or effect
+  const persistentCompassText = updatedText.trim();
+  
+  // Add the transition text only for the current display
+  updatedText = persistentCompassText + " " + selectedCompassText;
+  if (updatedEnhancedText) {
+    updatedEnhancedText = (updatedEnhancedText || persistentCompassText) + " " + selectedCompassText;
+  }
+  
+  console.log("Final text with transition:", updatedText);
+  console.log("Persistent text for future visits:", persistentCompassText);
+  
+  // Store the permanent description change for future visits
+  setRoomDescriptionMap(prev => ({
+    ...prev,
+    [currentPosition]: {
+      ...prev[currentPosition],
+      textAfterCollection: persistentCompassText, // Only the persistent state for future visits
+      text: updatedText, // Current text includes transition for immediate feedback
+      enhancedText: updatedEnhancedText,
+      hasInteractiveItem: false,
+      interactiveItem: null,
+      collectedItems: [...(prev[currentPosition].collectedItems || []), itemId]
+    }
+  }));
+  
+  // Set the room description based on lantern status
+  const lanternActive = inventory.some(item => 
+    (item.originalId || item.id) === 'lantern' && item.isActive
+  );
+  
+  // Force immediate update of room description
+  setRoomDescription(lanternActive && updatedEnhancedText ? updatedEnhancedText : updatedText);
+  
+  // Exit early since we've handled everything specifically
+  return;
+
+   case 'wyrmglass':
+  // Mark wyrmglass as collected in room 32
+  setSpecialRooms(prev => ({
+    ...prev,
+    32: {
+      ...prev[32],
+      wyrmglassCollected: true
+    }
+  }));
+  
+  // Remove wyrmglass mention from room text
+  updatedText = updatedText.replace(/ On a pedestal where the hole once was, you notice a <span class=['"]interactive-item['"][^>]*>polished glass sphere<\/span> that seems to hold swirling mists within\./g, '');
+  if (updatedEnhancedText) {
+    updatedEnhancedText = updatedEnhancedText.replace(/ On a pedestal where the hole once was, you notice a <span class=['"]interactive-item['"][^>]*>polished glass sphere<\/span> that seems to hold swirling mists within\./g, '');
+  }
+  
+  
+  break;
+  
+  
     default:
-      // ========== GENERIC INTERACTIVE ELEMENT REMOVAL ==========
       // Generic pattern for any other item
-      const pattern = new RegExp(`<span class=['"]interactive-item['"][^>]*data-item=['"]${itemId}['"][^>]*>.*?</span>`, 'g');
+     // const pattern = new RegExp(`<span class=['"]interactive-item['"][^>]*data-item=['"]${itemId}['"][^>]*>.*?<\/span>`, 'g');
+     const pattern = new RegExp(`<span class=['"]interactive-item['"][^>]*data-item=['"]${itemId}['"][^>]*>.*?</span>`, 'g');
       updatedText = updatedText.replace(pattern, '');
       if (updatedEnhancedText) {
         updatedEnhancedText = updatedEnhancedText.replace(pattern, '');
       }
   }
   
-  // ==================== TEXT CLEANUP AND FORMATTING SYSTEM ====================
-  
-  // ========== COMPREHENSIVE TEXT CLEANUP ==========
   // Clean up any double spaces or periods that might have been left
-  updatedText = updatedText
-    .replace(/\s+/g, ' ')           // Multiple spaces to single space
-    .replace(/\.\s*\./g, '.')       // Multiple periods to single period
-    .replace(/\s*\./g, '.')         // Space before period removal
-    .trim();                        // Trim whitespace
+updatedText = updatedText
+  .replace(/\s+/g, ' ')
+  .replace(/\.\s*\./g, '.')
+  .replace(/\s*\./g, '.')
+  .trim();
 
-  if (updatedEnhancedText) {
-    updatedEnhancedText = updatedEnhancedText
-      .replace(/\s+/g, ' ')
-      .replace(/\.\s*\./g, '.')
-      .replace(/\s*\./g, '.')
-      .trim();
+if (updatedEnhancedText) {
+  updatedEnhancedText = updatedEnhancedText
+    .replace(/\s+/g, ' ')
+    .replace(/\.\s*\./g, '.')
+    .replace(/\s*\./g, '.')
+    .trim();
+}
+
+// Update the room description map with both regular and enhanced text
+setRoomDescriptionMap(prev => ({
+  ...prev,
+  [currentPosition]: {
+    ...prev[currentPosition],
+    text: updatedText,
+    enhancedText: updatedEnhancedText,
+    hasInteractiveItem: false,
+    interactiveItem: null,
+    textAfterCollection: updatedText, // Default to using the current text for future visits
+    collectedItems: [...(prev[currentPosition].collectedItems || []), itemId], // Track collected items
+    // ADD THIS LINE for pool disturbance flag:
+    ...(itemId === 'fools_gold' || itemId === 'utility_knife' || itemId === 'tarnished_bracelet' ? { poolDisturbed: true } : {})
   }
+}));
 
-  // ==================== COMPREHENSIVE STATE UPDATE SYSTEM ====================
+// Set the room description based on lantern status
+const lanternActive = inventory.some(item =>
+  (item.originalId || item.id) === 'lantern' && item.isActive
+);
 
-  // ========== ROOM DESCRIPTION MAP UPDATE ==========
-  // Update the room description map with both regular and enhanced text
-  setRoomDescriptionMap(prev => ({
-    ...prev,
-    [currentPosition]: {
-      ...prev[currentPosition],
-      text: updatedText,                                        // Updated main text
-      enhancedText: updatedEnhancedText,                       // Updated enhanced text
-      hasInteractiveItem: false,                               // No longer interactive
-      interactiveItem: null,                                   // Clear interactive item reference
-      textAfterCollection: updatedText,                        // Default to using the current text for future visits
-      collectedItems: [...(prev[currentPosition].collectedItems || []), itemId], // Track collected items
-      // ========== SPECIAL POOL DISTURBANCE FLAG ==========
-      // ADD THIS LINE for pool disturbance flag:
-      ...(itemId === 'fools_gold' || itemId === 'utility_knife' || itemId === 'tarnished_bracelet' ? { poolDisturbed: true } : {})
-    }
-  }));
+// Force immediate update of room description
+setRoomDescription(lanternActive && updatedEnhancedText ? updatedEnhancedText : updatedText);
 
-  // ========== LIGHTING SYSTEM COORDINATION ==========
-  // Set the room description based on lantern status
-  const lanternActive = inventory.some(item =>
-    (item.originalId || item.id) === 'lantern' && item.isActive
-  );
 
-  // ========== IMMEDIATE VISUAL UPDATE ==========
-  // Force immediate update of room description
-  setRoomDescription(lanternActive && updatedEnhancedText ? updatedEnhancedText : updatedText);
 };
+  
 
-// ==================== ADVANCED LIGHTING SYSTEM WITH SURVIVAL MECHANICS ====================
+
+
+ // ==================== ADVANCED LIGHTING SYSTEM WITH SURVIVAL MECHANICS ====================
 
 /**
  * Professional Lantern Fuel Management with Dual-Light Survival System
@@ -8414,7 +7870,7 @@ const decreaseLanternFuel = () => {
     (item.originalId || item.id) === 'lantern' && item.isActive
   );
   
-  // ========== FUEL VALIDATION ==========
+   // ========== FUEL VALIDATION ==========
   if (!lanternItem || lanternItem.fuel <= 0) return;
   
   // ========== COMPREHENSIVE FUEL MANAGEMENT SYSTEM ==========
@@ -8424,13 +7880,10 @@ const decreaseLanternFuel = () => {
       if ((item.originalId || item.id) === 'lantern' && item.isActive) {
         const newFuel = item.fuel - 1;
         
-        // ========== CRITICAL FUEL DEPLETION HANDLING ==========
         // If fuel is now depleted
         if (newFuel <= 0) {
-          // ========== DUAL LIGHT SOURCE VALIDATION ==========
           // CHECK IF TORCH IS ALSO OUT
           if (torchLevel === 0) {
-            // ========== DRAMATIC DEATH SEQUENCE ==========
             // Both lights are out - player dies
             setTimeout(() => {
               setMessage("Your magical lantern flickers and dies, its last charge expended. With your torch already extinguished, absolute darkness engulfs you. You stumble in the blackness and fall to your doom. Game over!");
@@ -8438,12 +7891,10 @@ const decreaseLanternFuel = () => {
               setDeathCause('lantern_darkness');
             }, 100);
           } else {
-            // ========== GRACEFUL DEGRADATION ==========
             // Just the lantern is out
             setMessage(prev => prev + " Your magical lantern flickers and goes dark as its energy is depleted. You must rely on your torch now.");
           }
           
-          // ========== LANTERN STATE DEACTIVATION ==========
           return {
             ...item,
             fuel: 0,
@@ -8453,7 +7904,6 @@ const decreaseLanternFuel = () => {
           };
         }
         
-        // ========== PROGRESSIVE WARNING SYSTEM ==========
         // Warning messages as fuel gets low
         if (newFuel === 1) {
           setMessage(prev => prev + " Your lantern flickers. Only 1 charge remains!");
@@ -8461,7 +7911,6 @@ const decreaseLanternFuel = () => {
           setMessage(prev => prev + " Your lantern's glow weakens. Only 3 charges left.");
         }
         
-        // ========== DYNAMIC ITEM STATE UPDATE ==========
         return {
           ...item,
           fuel: newFuel,
@@ -8472,6 +7921,7 @@ const decreaseLanternFuel = () => {
     })
   );
 };
+
 
 // ==================== MASTER GAME LOGIC HOOK INTEGRATION SYSTEM ====================
 
@@ -8702,57 +8152,19 @@ const {
   playDeleteSavedGameSound              // Audio: delete save operation
 });
 
-// ==================== ENHANCED INPUT HANDLER WITH AUDIO INTEGRATION ====================
 
-/**
- * Professional Input Handler with Audio Coordination and Background Music Management
- * Advanced user interface system that coordinates player input with audio feedback
- * and intelligent background music management for immersive gameplay experience.
- * 
- * **Audio-Visual Integration Excellence:**
- * This function demonstrates professional game development by coordinating user input
- * with immediate audio feedback, creating responsive, immersive player interactions
- * that enhance the overall game experience through sound design.
- * 
- * **Key System Features:**
- * - **Immediate Audio Feedback**: Instant sound response to player actions
- * - **Background Music Management**: Intelligent music system coordination
- * - **Input Validation**: Ensures proper input processing before audio playback
- * - **Cross-System Communication**: Seamless integration with game logic systems
- * - **Performance Optimization**: Efficient audio playback without blocking UI
- * 
- * **User Experience Design:**
- * - **Responsive Feedback**: Immediate audio confirmation of player actions
- * - **Immersive Soundscape**: Rich audio environment enhancing gameplay
- * - **Professional Polish**: Audio feedback creating premium game feel
- * - **Accessibility Enhancement**: Audio cues supporting different player preferences
- * 
- * **Technical Implementation:**
- * - **Event Handling**: Proper event processing with audio coordination
- * - **Function Composition**: Wraps existing logic with enhanced audio features
- * - **Non-Blocking Audio**: Sound effects don't interfere with game logic
- * - **State Coordination**: Maintains proper game state throughout audio playback
- * 
- * @param {Event} event - The input event triggering the game action
- * @returns {void} - Processes input with enhanced audio feedback
- */
+// ==================== ENHANCED INPUT HANDLER WITH AUDIO INTEGRATION ====================
+  // Create a wrapped version of handleGuess that plays the explore sound
 const handleGuessWithSound = (event) => {
-  // ========== IMMEDIATE AUDIO FEEDBACK ==========
   // Play the explore button sound first
   playExploreSound();
   
-  // ========== BACKGROUND MUSIC COORDINATION ==========
-  // Start background music if not started yet
-  // (Commented out - likely handled elsewhere in production)
-  // if (!backgroundMusicStarted.current) {
-  //   playBackgroundMusic();
-  //   backgroundMusicStarted.current = true;
-  // }
-  
-  // ========== CORE GAME LOGIC EXECUTION ==========
+
   // Then immediately call the original handler
   handleGuess(event);
+  
 };
+
 
 // ==================== MASTER LIGHTING CONTROL SYSTEM ====================
 
@@ -8804,14 +8216,13 @@ const activateLantern = () => {
     poolDisturbed: roomDescriptionMap[currentPosition]?.poolDisturbed
   });
 
-  // ========== CROSS-COMPONENT COMMUNICATION SETUP ==========
   // Set a flag to prevent exit message from appearing
   window.SKIP_EXIT_CHECK = true;
   setTimeout(() => {
     window.SKIP_EXIT_CHECK = false;
   }, 1000);
 
-  // ========== LANTERN INVENTORY VALIDATION ==========
+    // ========== LANTERN INVENTORY VALIDATION ==========
   // Check if the lantern is already in inventory
   const lanternItem = inventory.find(item =>
     (item.originalId || item.id) === 'lantern'
@@ -8823,20 +8234,17 @@ const activateLantern = () => {
     return;
   }
   
-  // ========== STATE DETECTION SYSTEM ==========
   // Get the current active state
   const isCurrentlyActive = lanternItem.isActive || false;
   
   if (isCurrentlyActive) {
-    // ==================== LANTERN DEACTIVATION SEQUENCE ====================
-    
+     // ==================== LANTERN DEACTIVATION SEQUENCE ====================
+
     // TURNING OFF THE LANTERN
     console.log("Deactivating lantern");
     
-    // ========== CRITICAL SAFETY VALIDATION ==========
     // CHECK TORCH LEVEL BEFORE DEACTIVATING
     if (torchLevel === 0) {
-      // ========== DRAMATIC DEATH SEQUENCE ==========
       // Player is about to die from stupidity
       setMessage("You deactivate your only source of light. In the absolute darkness, you immediately stumble and fall to your doom. Perhaps keeping the light on would have been wiser? Game over!");
       
@@ -8844,7 +8252,6 @@ const activateLantern = () => {
       setGameStatus('lost');
       setDeathCause('lantern_darkness');
       
-      // ========== POST-DEATH INVENTORY UPDATE ==========
       // Still deactivate the lantern (they're dead anyway)
       setInventory(prev => prev.map(item => {
         if ((item.originalId || item.id) === 'lantern') {
@@ -8861,16 +8268,13 @@ const activateLantern = () => {
       return; // Exit early since player is dead
     }
     
-    // ========== NORMAL DEACTIVATION SEQUENCE ==========
     // Normal deactivation (torch is still lit)
     setMessage("You deactivate the magical lantern, conserving its remaining energy.");
     
-    // ========== ANTI-EXPLOIT FUEL CONSUMPTION ==========
     // Decrease lantern fuel by 1 when turning off to prevent exploit
     const currentFuel = lanternItem.fuel || 0;
     const newFuel = Math.max(0, currentFuel - 1);
     
-    // ========== INVENTORY STATE UPDATE ==========
     // Update lantern in inventory to show it's inactive and reduce fuel by 1
     setInventory(prev => {
       return prev.map(item => {
@@ -8887,18 +8291,20 @@ const activateLantern = () => {
       });
     });
     
-    // ========== ROOM-SPECIFIC HANDLING SYSTEM ==========
-    // Special handling for backpack room - need to completely reset description
+    // ========== ROOM TYPE DETECTION SYSTEM ==========
+    // IMPORTANT: Check if we're in the backpack room
     const isBackpackRoom = (roomId) => {
       const roomDesc = roomDescriptionMap[roomId]?.text || '';
       return roomDesc.toLowerCase().includes('backpack with half-eaten rations') &&
              roomDesc.toLowerCase().includes('map that simply says');
     };
     
+       // ========== SPECIAL BACKPACK ROOM HANDLING ==========
+    // SPECIAL HANDLING FOR BACKPACK ROOM
+    // If we're in the backpack room, add the spellbook directly
     if (currentPosition && isBackpackRoom(currentPosition)) {
       console.log("Special handling for backpack room - hiding spellbook");
       
-      // ========== BACKPACK ROOM CONTENT MANAGEMENT ==========
       // Get original room description without spellbook
       const roomInfo = roomDescriptionMap[currentPosition];
       
@@ -8907,11 +8313,9 @@ const activateLantern = () => {
         const originalText = roomInfo.originalText ||
           "You find a backpack with half-eaten rations. Inside is a map that simply says 'RUN!'";
         
-        // ========== ROOM DESCRIPTION RESTORATION ==========
         // Update room description to original text without enhancements
         setRoomDescription(originalText);
         
-        // ========== DIRECT DOM MANIPULATION ==========
         // Also update UI immediately to hide the spellbook
         const spellbookContainer = document.querySelector('.room-description');
         if (spellbookContainer) {
@@ -8931,41 +8335,32 @@ const activateLantern = () => {
         }
       }
     } else {
-      // ========== STANDARD ROOM DESCRIPTION RESTORATION ==========
       // Normal room - just set to non-enhanced text
       if (currentPosition && roomDescriptionMap[currentPosition]) {
         setRoomDescription(roomDescriptionMap[currentPosition].text || "");
       }
     }
     
-    // ========== CROSS-COMPONENT EVENT SYSTEM ==========
     // Trigger the lantern deactivation event
     const event = new CustomEvent('lantern_event', {
       detail: { action: 'lantern_deactivated' }
     });
     window.dispatchEvent(event);
-    
   } else {
-    // ==================== LANTERN ACTIVATION SEQUENCE ====================
-    
     // TURNING ON THE LANTERN
     console.log("Activating lantern");
     
-    // ========== MAGICAL INTERACTION DEATH TRAP ==========
     // NEW DEATH TRAP CHECK: Check if we're in the exit room with an extended ladder
     if (currentPosition === positions.exitPosition && 
         specialRooms[currentPosition]?.ladderExtended) {
       
-      // ========== CATASTROPHIC MAGICAL FAILURE ==========
       // CATASTROPHIC FAILURE!
       setMessage("You activate the lantern, and its magical light floods the chamber. The ethereal glow of the extended ladder suddenly flickers and wavers as the two magical energies interact. With a terrible crackling sound, the ladder's enchantment unravels! The magical rungs vanish one by one, and the ladder collapses back to its original, useless height. \n\nWorse yet, the conflicting magics create a null-magic field that extinguishes ALL light sources permanently! In the absolute darkness, you hear the skittering of a thousand nightcrawlers emerging from the walls. Their clicking mandibles are the last sound you hear as they swarm over you in the pitch black. Game over!");
       
-      // ========== DRAMATIC DEATH EXECUTION ==========
       // Kill the player
       setGameStatus('lost');
       setDeathCause('night_crawlers');
       
-      // ========== ENVIRONMENTAL STATE CHANGE ==========
       // Deactivate the ladder extension
       setSpecialRooms(prev => ({
         ...prev,
@@ -8982,23 +8377,19 @@ const activateLantern = () => {
       return; // Exit early since player is dead
     }
     
-    // ========== FUEL VALIDATION SYSTEM ==========
     // Check if lantern has fuel
     if (lanternItem.fuel <= 0) {
       setMessage("The magical lantern flickers briefly but fails to ignite. It seems to be out of magical energy.");
       return;
     }
     
-    // ========== FUEL CONSUMPTION MANAGEMENT ==========
     // Consume 1 fuel charge for normal activation
     const newFuel = lanternItem.fuel - 1;
     
-    // ========== AUDIO-VISUAL FEEDBACK ==========
     playLanternSound();
     // Set message about activating the lantern
     setMessage("You activate the magical lantern. It provides enhanced illumination around you. Which may or may not be a good thing.");
     
-    // ========== INVENTORY STATE UPDATE ==========
     // Update the lantern in inventory to show it's active with reduced charges
     setInventory(prev => {
       const updatedInventory = prev.map(item => {
@@ -9017,7 +8408,6 @@ const activateLantern = () => {
       return updatedInventory;
     });
     
-    // ========== ROOM TYPE DETECTION SYSTEM ==========
     // IMPORTANT: Check if we're in the backpack room
     const isBackpackRoom = (roomId) => {
       const roomDesc = roomDescriptionMap[roomId]?.text || '';
@@ -9025,13 +8415,11 @@ const activateLantern = () => {
             roomDesc.toLowerCase().includes('map that simply says');
     };
     
-    // ========== SPECIAL BACKPACK ROOM HANDLING ==========
     // SPECIAL HANDLING FOR BACKPACK ROOM
     // If we're in the backpack room, add the spellbook directly
     if (currentPosition && isBackpackRoom(currentPosition)) {
       console.log("Currently in backpack room - adding ONLY spellbook (no compass)");
       
-      // ========== ROOM CONTENT ENHANCEMENT ==========
       // Get current room info
       const roomInfo = roomDescriptionMap[currentPosition];
       if (roomInfo) {
@@ -9039,26 +8427,22 @@ const activateLantern = () => {
         const currentText = roomInfo.text || "";
         const originalText = roomInfo.originalText || currentText;
         
-        // ========== CONTENT CONFLICT PREVENTION ==========
         // CRITICAL FIX: Make sure we're not adding a compass AND a spellbook
         // Remove any existing compass text if it's there from an older implementation
         let cleanText = currentText;
         const compassPattern = / Your lantern's bright beam reveals a <span class=['"]interactive-item['"][^>]*>golden compass<\/span> hidden in a shadowy crevice, its metal surface reflecting the light\./g;
         cleanText = cleanText.replace(compassPattern, '');
         
-        // ========== SPELLBOOK CONTENT ADDITION ==========
         // If spellbook not already there, add it
         if (!cleanText.includes('ancient spellbook')) {
           const appendText = " Your lantern's light reveals an <span class='interactive-item' data-item='spellbook'>ancient spellbook</span> tucked underneath the backpack, its leather cover embossed with strange protective symbols.";
           
-          // ========== ENHANCED TEXT MANAGEMENT ==========
           // If there's enhanced text, append to it; otherwise append to current text
           let textToUpdate = roomInfo.enhancedText || cleanText;
           let newText = textToUpdate + appendText;
           
           console.log("Adding ONLY spellbook to backpack room");
           
-          // ========== ROOM STATE SYNCHRONIZATION ==========
           // Update room description with the spellbook
           setRoomDescriptionMap(prev => ({
             ...prev,
@@ -9072,11 +8456,9 @@ const activateLantern = () => {
             }
           }));
           
-          // ========== IMMEDIATE VISUAL UPDATE ==========
           // Update the displayed room description immediately
           setRoomDescription(newText);
           
-          // ========== SPECIAL ROOM STATE UPDATE ==========
           // Add to specialRooms
           setSpecialRooms(prev => ({
             ...prev,
@@ -9090,7 +8472,6 @@ const activateLantern = () => {
         }
       }
       
-      // ========== ITEM PLACEMENT COORDINATION ==========
       // CRITICAL: Place golden compass in a different room (NOT backpack room)
       setTimeout(() => {
         // Create a custom version that never adds to the backpack room
@@ -9098,14 +8479,12 @@ const activateLantern = () => {
       }, 500);
     }
     else {
-      // ========== STANDARD ROOM ENHANCEMENT ==========
       // Normal room - force refresh the current room description but preserve interactive items
       setTimeout(() => {
         if (currentPosition && roomDescriptionMap[currentPosition]) {
           // Get current room info
           const roomInfo = roomDescriptionMap[currentPosition];
           
-          // ========== ENHANCED TEXT VALIDATION ==========
           // If there's no enhanced text, nothing to do
           if (!roomInfo.enhancedText) {
             // Still trigger the golden compass placement
@@ -9113,7 +8492,6 @@ const activateLantern = () => {
             return;
           }
           
-          // ========== ENHANCED DESCRIPTION PROCESSING ==========
           // Handle enhanced text directly
           const currentDesc = roomInfo.text || "";
           
@@ -9126,7 +8504,6 @@ const activateLantern = () => {
             enhancedDesc = roomInfo.enhancedText;
           }
           
-          // ========== ROOM STATE UPDATES ==========
           // Update the room description in state
           setRoomDescription(enhancedDesc);
           
@@ -9139,20 +8516,17 @@ const activateLantern = () => {
             }
           }));
           
-          // ========== PERCEPTION SYSTEM COORDINATION ==========
           // Update perceptions to ensure they match the new description
           if (typeof checkPosition === 'function') {
             checkPosition(currentPosition);
           }
           
-          // ========== ITEM PLACEMENT SYSTEM ==========
           // Place the golden compass in a different room
           placeGoldenCompass(true);
         }
       }, 100);
     }
     
-    // ========== CROSS-COMPONENT EVENT SYSTEM ==========
     // Trigger the lantern activation event for other components to respond to
     const event = new CustomEvent('lantern_event', {
       detail: { action: 'lantern_activated' }
@@ -9160,6 +8534,7 @@ const activateLantern = () => {
     window.dispatchEvent(event);
   }
 };
+
 
 // ==================== INTELLIGENT ITEM PLACEMENT SYSTEM ====================
 
@@ -9198,15 +8573,14 @@ const activateLantern = () => {
 const placeGoldenCompassNotInBackpack = () => {
   console.log("Setting up golden compass placement (NEVER in backpack room)...");
   
-  // ========== BACKPACK ROOM DETECTION SYSTEM ==========
+   // ========== BACKPACK ROOM DETECTION SYSTEM ==========
   // Helper function to check if a room has a backpack description
   const hasBackpackDescription = (roomId) => {
     const roomDesc = roomDescriptionMap[roomId]?.text || '';
     return roomDesc.toLowerCase().includes('backpack with half-eaten rations') && 
            roomDesc.toLowerCase().includes('map that simply says');
   };
-  
-  // ========== COMPREHENSIVE BACKPACK ROOM SCANNING ==========
+    // ========== COMPREHENSIVE BACKPACK ROOM SCANNING ==========
   // Get ALL rooms with backpack text to make sure we exclude all of them
   const backpackRooms = [];
   for (let i = 1; i <= 30; i++) {
@@ -9236,7 +8610,6 @@ const placeGoldenCompassNotInBackpack = () => {
     }
   }
   
-  // ========== PLACEMENT VALIDATION ==========
   // Log available rooms
   console.log(`Found ${availableRooms.length} available rooms for golden compass placement (excluding backpack room)`);
   
@@ -9245,19 +8618,16 @@ const placeGoldenCompassNotInBackpack = () => {
     return;
   }
   
-  // ========== RANDOM ROOM SELECTION ==========
   // Pick a random room
   const compassRoom = availableRooms[Math.floor(Math.random() * availableRooms.length)];
   console.log(`Golden compass will be placed in room ${compassRoom} (definitely not backpack room)`);
   
-  // ========== FINAL SAFETY VALIDATION ==========
   // Triple-check this is not a backpack room
   if (hasBackpackDescription(compassRoom)) {
     console.error("CRITICAL ERROR: Still trying to place compass in backpack room!");
     return;
   }
   
-  // ========== ROOM DESCRIPTION ENHANCEMENT ==========
   // Update the room description to mention the compass
   setRoomDescriptionMap(prev => ({
     ...prev,
@@ -9271,44 +8641,16 @@ const placeGoldenCompassNotInBackpack = () => {
   }));
 };
 
-// ==================== MASTER REACT EFFECT SYSTEM ====================
 
-// ==================== TREASURE HUNT INITIALIZATION EFFECT ====================
 
-/**
- * Advanced Treasure Hunt Initialization with Dependency Orchestration
- * Professional initialization system ensuring treasure hunt only activates when all
- * critical dependencies are available and properly validated.
- * 
- * **Initialization Excellence:**
- * This effect demonstrates master-level React programming by implementing sophisticated
- * dependency validation, idempotency checking, and graceful error handling for complex
- * game system initialization. It prevents race conditions and ensures proper startup order.
- * 
- * **Key System Features:**
- * - **Comprehensive Dependency Validation**: Checks positions and room descriptions exist
- * - **Idempotency Protection**: Prevents duplicate initialization with state checking
- * - **Graceful Degradation**: Waits for dependencies rather than failing
- * - **Professional Logging**: Clear feedback for development and debugging
- * - **State Coordination**: Ensures proper timing of interdependent systems
- * 
- * **React Best Practices:**
- * - **Precise Dependencies**: Only re-runs when positions or roomDescriptionMap change
- * - **Early Return Pattern**: Efficient execution with validation gates
- * - **State Validation**: Comprehensive checking before expensive operations
- * - **Debug Integration**: Professional logging for development transparency
- * 
- * **Game Architecture Design:**
- * - **System Coordination**: Manages treasure placement after world generation
- * - **Resource Management**: Ensures expensive initialization only runs when needed
- * - **Error Prevention**: Multiple validation layers preventing startup failures
- */
-useEffect(() => {
-  // ========== COMPREHENSIVE DEPENDENCY VALIDATION ==========
+
+
+
+  // ==================== EFFECTS ====================
+  // Update the ref when functions change
+  useEffect(() => {
   // Only initialize treasure hunt if we have valid positions and room descriptions
   if (positions && positions.wumpusPosition && roomDescriptionMap && Object.keys(roomDescriptionMap).length > 0) {
-    
-    // ========== IDEMPOTENCY CHECK ==========
     if (!treasurePieces || treasurePieces.length === 0) {
       console.log("Treasures not initialized - initializing now");
       initializeTreasureHunt(roomDescriptionMap, positions);
@@ -9318,40 +8660,10 @@ useEffect(() => {
   } else {
     console.log("Waiting for positions and room descriptions before initializing treasures");
   }
-}, [positions, roomDescriptionMap]); // Precise dependency array for optimal performance
+}, [positions, roomDescriptionMap]); // Add dependencies
 
-// ==================== UI STATE CLEANUP EFFECT ====================
-
-/**
- * Intelligent UI State Management for Room Transitions
- * Professional UI state cleanup system ensuring modal dialogs and special scenes
- * are properly dismissed when player moves between game locations.
- * 
- * **UI Management Excellence:**
- * This effect demonstrates advanced React UI coordination by managing modal state
- * consistency across room transitions. It prevents UI elements from persisting
- * inappropriately when player context changes, ensuring clean user experience.
- * 
- * **Key System Features:**
- * - **Context-Aware UI Management**: Cleans up location-specific UI elements
- * - **Modal State Coordination**: Prevents dialogs from persisting across rooms
- * - **Performance Optimization**: Only runs when relevant state changes occur
- * - **User Experience Enhancement**: Maintains UI consistency during navigation
- * - **Cross-Room State Management**: Handles UI transitions seamlessly
- * 
- * **React Best Practices:**
- * - **Conditional Execution**: Only acts when cleanup is actually needed
- * - **Specific Dependencies**: Tracks exact state needed for decision-making
- * - **Clean State Transitions**: Ensures UI matches game context
- * - **Memory Efficiency**: Minimal overhead for common operation
- * 
- * **User Experience Design:**
- * - **Context Sensitivity**: UI elements appear/disappear based on location
- * - **Seamless Transitions**: No orphaned UI elements during navigation
- * - **Logical State Management**: Scene state matches physical location
- */
+// Add this useEffect in GameContext.js after your other useEffects
 useEffect(() => {
-  // ========== CONTEXT-AWARE UI CLEANUP ==========
   // Clear ladder extension scene when changing rooms
   if (showLadderExtendScene && currentPosition !== positions.exitPosition) {
     setShowLadderExtendScene(false);
@@ -9422,12 +8734,11 @@ useEffect(() => {
       window.HIDDEN_ROOM_TRAP_TRIGGERED = false;
     }
     
-    // ========== COMPLEX STATE OBJECT CLEANUP ==========
-    // Clear crystal room entry time - FIXED VERSION
+   // ========== COMPLEX STATE OBJECT CLEANUP ==========
+    // Clear crystal room entry time 
     setSpecialRooms(prev => {
       const updated = { ...prev };
       Object.keys(updated).forEach(room => {
-        // ========== DEFENSIVE TYPE CHECKING ==========
         // Check if the value is an object (not a boolean or other primitive)
         if (updated[room] && typeof updated[room] === 'object') {
           updated[room].crystalEntryTime = null;
@@ -9438,25 +8749,22 @@ useEffect(() => {
       return updated;
     });
     
-    // ========== WIZARD SYSTEM CLEANUP ==========
     // Clear wizard room timer
     setWizardRoomEntryTime(null);
     setWizardRoomWarning(false);
     
-    // ========== NIGHT CRAWLER SYSTEM CLEANUP ==========
     // Clear room entry time (for nightcrawlers)
     setRoomEntryTime(null);
     setNightCrawlerWarning(false);
     
-    // ========== CRYSTAL ROOM SYSTEM CLEANUP ==========
     // Clear crystal room warning
     setCrystalRoomWarning(false);
     
-    // ========== FUNGI SYSTEM CLEANUP ==========
     // Clear fungi warning
     setFungiWarning(false);
   }
 }, [gameStatus, temperatureTimer]);
+
 // ==================== NIGHT CRAWLER PROTECTION TIMER SYSTEM ====================
 /**
  * Real-time monitoring system for night crawler protection duration
@@ -9480,28 +8788,27 @@ useEffect(() => {
  */
 useEffect(() => {
   // Guard clause: Only run if protection is active and timer is set
-  if (!nightCrawlerProtection || !nightCrawlerProtectionTimer) return;
-  
-  // Create interval to check protection status every second
-  const checkInterval = setInterval(() => {
-    const timeRemaining = (nightCrawlerProtectionTimer - Date.now()) / 1000;
+    if (!nightCrawlerProtection || !nightCrawlerProtectionTimer) return;
     
-    // Protection has expired
-    if (timeRemaining <= 0) {
-      setNightCrawlerProtection(false);
-      setNightCrawlerProtectionTimer(null);
-      setMessage(prev => `${prev} The shimmering effect from the cave salt crystals fades away. You are no longer protected from the nightcrawlers.`);
-      clearInterval(checkInterval);
-    }
-    // Warning when protection is about to expire (30 seconds left)
-    else if (timeRemaining <= 30 && timeRemaining > 29) {
-      setMessage(prev => `${prev} The protective shimmer from the cave salt crystals is beginning to fade. You have about 30 seconds of protection left.`);
-    }
-  }, 1000);
-  
-  // Cleanup function to prevent memory leaks
-  return () => clearInterval(checkInterval);
-}, [nightCrawlerProtection, nightCrawlerProtectionTimer]);
+    const checkInterval = setInterval(() => {
+      const timeRemaining = (nightCrawlerProtectionTimer - Date.now()) / 1000;
+      
+      // Protection has expired
+      if (timeRemaining <= 0) {
+        setNightCrawlerProtection(false);
+        setNightCrawlerProtectionTimer(null);
+        setMessage(prev => `${prev} The shimmering effect from the cave salt crystals fades away. You are no longer protected from the nightcrawlers.`);
+        clearInterval(checkInterval);
+      }
+      // Warning when protection is about to expire (30 seconds left)
+      else if (timeRemaining <= 30 && timeRemaining > 29) {
+        setMessage(prev => `${prev} The protective shimmer from the cave salt crystals is beginning to fade. You have about 30 seconds of protection left.`);
+      }
+    }, 1000);
+    
+    return () => clearInterval(checkInterval);
+  }, [nightCrawlerProtection, nightCrawlerProtectionTimer]);
+
 
 // ==================== INITIAL ROOM TIMER SETUP SYSTEM ====================
 /**
@@ -9537,7 +8844,7 @@ useEffect(() => {
   
   console.log(`Checking initial room ${currentPosition} for special timer setup`);
   
-  // ========== FUNGI CREATURE TIMER INITIALIZATION ==========
+// ========== FUNGI CREATURE TIMER INITIALIZATION ==========
   // Check if player spawned in fungi room
   const inFungiRoom = specialRooms[currentPosition]?.hasFungiCreature;
   if (inFungiRoom && !specialRooms[currentPosition]?.fungiEntryTime) {
@@ -9553,9 +8860,10 @@ useEffect(() => {
     setFungiWarning(false);
   }
   
+
   // ========== CRYSTAL ROOM SLEEP TIMER INITIALIZATION ==========
-  // Check if player spawned in crystal room using description analysis
-  const inCrystalRoom = roomDescriptionMap[currentPosition]?.special === "crystal" &&
+  // Check if player spawned in crystal room
+  const inCrystalRoom = roomDescriptionMap[currentPosition]?.special === "crystal" && 
                        roomDescriptionMap[currentPosition]?.text?.includes("crystal columns");
   if (inCrystalRoom && !specialRooms[currentPosition]?.crystalEntryTime) {
     console.log("Player spawned in crystal room - initializing sleep timer");
@@ -9570,8 +8878,7 @@ useEffect(() => {
     setCrystalRoomWarning(false);
   }
   
-  // ========== NIGHT CRAWLER TIMER INITIALIZATION ==========
-  // Initialize night crawler timer for any room (universal threat system)
+  // Initialize night crawler timer for any room
   if (!roomEntryTime) {
     console.log("Initializing night crawler timer for spawn room");
     setRoomEntryTime(Date.now());
@@ -9579,7 +8886,10 @@ useEffect(() => {
   }
 }, [gameStatus, currentPosition]); // Only depend on gameStatus and currentPosition
 
-// ==================== SPELLBOOK BACKFIRE VISUAL EFFECTS SYSTEM ====================
+
+
+
+ // ==================== SPELLBOOK BACKFIRE VISUAL EFFECTS SYSTEM ====================
 /**
  * DOM manipulation system for spellbook backfire animation effects
  * 
@@ -9612,196 +8922,23 @@ useEffect(() => {
   // Logic to handle spellbook backfire animation
   if (spellbookBackfire) {
     // Add the backfire class to the game board
-    const gameBoard = document.querySelector('.game-board');
-    if (gameBoard && !gameBoard.classList.contains('spellbook-backfire')) {
-      gameBoard.classList.add('spellbook-backfire');
-    }
-    
-    // Remove the class after the animation completes
-    const timer = setTimeout(() => {
-      if (gameBoard && gameBoard.classList.contains('spellbook-backfire')) {
-        gameBoard.classList.remove('spellbook-backfire');
+     
+      const gameBoard = document.querySelector('.game-board');
+      if (gameBoard && !gameBoard.classList.contains('spellbook-backfire')) {
+        gameBoard.classList.add('spellbook-backfire');
       }
-      setSpellbookBackfire(false);
-    }, 3000); // 3 seconds matches our CSS animation duration
-    
-    // Cleanup function to prevent memory leaks
-    return () => clearTimeout(timer);
-  }
-}, [spellbookBackfire]);
-
-// ==================== NIGHT CRAWLER PROTECTION TIMER SYSTEM ====================
-/**
- * Real-time monitoring system for night crawler protection duration
- * 
- * This effect creates a countdown timer that tracks the remaining duration of 
- * night crawler protection (typically granted by cave salt crystals). It provides
- * both expiration handling and advance warning to the player.
- * 
- * Key Features:
- * - **Real-time Updates**: Checks protection status every second
- * - **Automatic Expiration**: Removes protection when timer reaches zero
- * - **Advance Warning**: Alerts player when 30 seconds remain
- * - **Clean Termination**: Clears interval when protection expires or component unmounts
- * - **Narrative Integration**: Updates game message with atmospheric descriptions
- * 
- * Dependencies:
- * - nightCrawlerProtection: Boolean state for protection status
- * - nightCrawlerProtectionTimer: Timestamp when protection will expire
- * 
- * @effects setNightCrawlerProtection, setNightCrawlerProtectionTimer, setMessage
- */
-useEffect(() => {
-  // Guard clause: Only run if protection is active and timer is set
-  if (!nightCrawlerProtection || !nightCrawlerProtectionTimer) return;
-  
-  // Create interval to check protection status every second
-  const checkInterval = setInterval(() => {
-    const timeRemaining = (nightCrawlerProtectionTimer - Date.now()) / 1000;
-    
-    // Protection has expired
-    if (timeRemaining <= 0) {
-      setNightCrawlerProtection(false);
-      setNightCrawlerProtectionTimer(null);
-      setMessage(prev => `${prev} The shimmering effect from the cave salt crystals fades away. You are no longer protected from the nightcrawlers.`);
-      clearInterval(checkInterval);
+      
+      // Remove the class after the animation completes
+      const timer = setTimeout(() => {
+        if (gameBoard && gameBoard.classList.contains('spellbook-backfire')) {
+          gameBoard.classList.remove('spellbook-backfire');
+        }
+        setSpellbookBackfire(false);
+      }, 3000); // 3 seconds matches our CSS animation duration
+      
+      return () => clearTimeout(timer);
     }
-    // Warning when protection is about to expire (30 seconds left)
-    else if (timeRemaining <= 30 && timeRemaining > 29) {
-      setMessage(prev => `${prev} The protective shimmer from the cave salt crystals is beginning to fade. You have about 30 seconds of protection left.`);
-    }
-  }, 1000);
-  
-  // Cleanup function to prevent memory leaks
-  return () => clearInterval(checkInterval);
-}, [nightCrawlerProtection, nightCrawlerProtectionTimer]);
-
-// ==================== INITIAL ROOM TIMER SETUP SYSTEM ====================
-/**
- * Comprehensive room initialization system for spawn-time timer setup
- * 
- * This effect handles the critical task of initializing various room-specific timers
- * when the player spawns into the game. Unlike regular room entry effects, this
- * specifically handles the edge case where a player starts the game in a special room
- * that requires immediate timer initialization.
- * 
- * Special Room Types Handled:
- * - **Fungi Rooms**: Creatures that attack after time limit
- * - **Crystal Rooms**: Cause permanent sleep after prolonged exposure  
- * - **General Rooms**: Night crawler spawn timer initialization
- * 
- * Key Features:
- * - **Spawn Safety**: Only activates during active gameplay with valid position
- * - **One-time Initialization**: Prevents duplicate timer creation on re-renders
- * - **Multi-system Setup**: Handles fungi, crystal, and night crawler systems
- * - **Warning State Reset**: Clears any stale warning flags
- * - **Defensive Coding**: Robust null checking and state validation
- * 
- * Technical Notes:
- * - Uses roomDescriptionMap for crystal room detection via text content
- * - Leverages specialRooms object for fungi room detection
- * - Dependencies limited to gameStatus and currentPosition for performance
- * 
- * @effects setSpecialRooms, setFungiWarning, setCrystalRoomWarning, setRoomEntryTime, setNightCrawlerWarning
- */
-useEffect(() => {
-  // Only run when game is playing and we have a valid position
-  if (gameStatus !== 'playing' || !currentPosition || currentPosition === null) return;
-  
-  console.log(`Checking initial room ${currentPosition} for special timer setup`);
-  
-  // ========== FUNGI CREATURE TIMER INITIALIZATION ==========
-  // Check if player spawned in fungi room
-  const inFungiRoom = specialRooms[currentPosition]?.hasFungiCreature;
-  if (inFungiRoom && !specialRooms[currentPosition]?.fungiEntryTime) {
-    console.log("Player spawned in fungi room - initializing timer");
-    setSpecialRooms(prev => ({
-      ...prev,
-      [currentPosition]: {
-        ...prev[currentPosition],
-        fungiEntryTime: Date.now(),
-        fungiCreatureActive: true
-      }
-    }));
-    setFungiWarning(false);
-  }
-  
-  // ========== CRYSTAL ROOM SLEEP TIMER INITIALIZATION ==========
-  // Check if player spawned in crystal room using description analysis
-  const inCrystalRoom = roomDescriptionMap[currentPosition]?.special === "crystal" &&
-                       roomDescriptionMap[currentPosition]?.text?.includes("crystal columns");
-  if (inCrystalRoom && !specialRooms[currentPosition]?.crystalEntryTime) {
-    console.log("Player spawned in crystal room - initializing sleep timer");
-    setSpecialRooms(prev => ({
-      ...prev,
-      [currentPosition]: {
-        ...prev[currentPosition],
-        hasCrystalSleep: true,
-        crystalEntryTime: Date.now()
-      }
-    }));
-    setCrystalRoomWarning(false);
-  }
-  
-  // ========== NIGHT CRAWLER TIMER INITIALIZATION ==========
-  // Initialize night crawler timer for any room (universal threat system)
-  if (!roomEntryTime) {
-    console.log("Initializing night crawler timer for spawn room");
-    setRoomEntryTime(Date.now());
-    setNightCrawlerWarning(false);
-  }
-}, [gameStatus, currentPosition]); // Only depend on gameStatus and currentPosition
-
-// ==================== SPELLBOOK BACKFIRE VISUAL EFFECTS SYSTEM ====================
-/**
- * DOM manipulation system for spellbook backfire animation effects
- * 
- * This effect manages the visual feedback when spellbook magic fails or backfires,
- * providing immediate visual cues to the player through CSS class manipulation.
- * The animation system is designed to be self-contained and automatically clean up.
- * 
- * Animation Lifecycle:
- * 1. **Trigger Detection**: Activates when spellbookBackfire state becomes true
- * 2. **DOM Manipulation**: Adds 'spellbook-backfire' CSS class to game board
- * 3. **Animation Duration**: Maintains effect for 3 seconds (matches CSS animation)
- * 4. **Automatic Cleanup**: Removes CSS class and resets state flag
- * 5. **Safety Checks**: Validates DOM element existence before manipulation
- * 
- * Technical Features:
- * - **Duplicate Prevention**: Checks for existing class before adding
- * - **Cleanup Safety**: Verifies class existence before removal
- * - **Timer Management**: Properly clears timeout on component unmount
- * - **State Synchronization**: Resets backfire flag after animation completes
- * - **CSS Integration**: Timing matches CSS animation duration exactly
- * 
- * Visual Effects:
- * - Applies dramatic visual feedback (likely screen shake, color changes, etc.)
- * - Provides immediate player feedback for failed magic attempts
- * - Creates immersive atmosphere for magical mishaps
- * 
- * @effects DOM class manipulation, setSpellbookBackfire
- */
-useEffect(() => {
-  // Logic to handle spellbook backfire animation
-  if (spellbookBackfire) {
-    // Add the backfire class to the game board
-    const gameBoard = document.querySelector('.game-board');
-    if (gameBoard && !gameBoard.classList.contains('spellbook-backfire')) {
-      gameBoard.classList.add('spellbook-backfire');
-    }
-    
-    // Remove the class after the animation completes
-    const timer = setTimeout(() => {
-      if (gameBoard && gameBoard.classList.contains('spellbook-backfire')) {
-        gameBoard.classList.remove('spellbook-backfire');
-      }
-      setSpellbookBackfire(false);
-    }, 3000); // 3 seconds matches our CSS animation duration
-    
-    // Cleanup function to prevent memory leaks
-    return () => clearTimeout(timer);
-  }
-}, [spellbookBackfire]);
+  }, [spellbookBackfire]);
 
 // ==================== WIZARD ROOM MECHANICS & FLOATING SPELL SYSTEM ====================
 /**
@@ -9846,7 +8983,7 @@ useEffect(() => {
     
     // Update the spellbook description in inventory if the player has it
     setInventory(prev => {
-      // Check if player has the spellbook (handles both originalId and id)
+      // Check if player has the spellbook
       const hasSpellbook = prev.some(item => (item.originalId || item.id) === 'spellbook');
       
       if (hasSpellbook) {
@@ -9878,7 +9015,6 @@ useEffect(() => {
     });
   }
   
-  // ========== FLOATING SPELL VISUAL EFFECTS SYSTEM ==========
   // Handle floating spell effects and update game UI
   if (floatingActive && gameStatus === 'playing') {
     // Add visual indicator for floating
@@ -9894,6 +9030,8 @@ useEffect(() => {
     }
   }
 }, [currentPosition, floatingActive, wizardRoomVisited, gameStatus]);
+
+
 
 // ==================== GAME LOGIC FUNCTION REFERENCE SYSTEM ====================
 /**
@@ -9915,14 +9053,16 @@ useEffect(() => {
  * 
  * @effects gameLogicFunctions.current reference updates
  */
-useEffect(() => {
-  gameLogicFunctions.current = {
-    startGame: startGameFromLogic,
-    checkPosition
-  };
-}, [startGameFromLogic, checkPosition]);
+  useEffect(() => {
+    gameLogicFunctions.current = {
+      startGame: startGameFromLogic,
+      checkPosition
+    };
+  }, [startGameFromLogic, checkPosition]);
 
-// ==================== WATER SPIRIT TRADE INTERFACE MANAGER ====================
+
+
+  // ==================== WATER SPIRIT TRADE INTERFACE MANAGER ====================
 /**
  * Water spirit trade button visibility controller
  * 
@@ -9943,23 +9083,125 @@ useEffect(() => {
  * 
  * @effects setShowWaterSpiritTradeButton
  */
-useEffect(() => {
-  // Hide water spirit trade button if toll is paid
-  if (currentPosition && 
-      specialRooms[currentPosition]?.hasWaterSpirit && 
-      specialRooms[currentPosition]?.tollPaid) {
-    console.log("Toll is paid - hiding water spirit trade button via useEffect");
-    setShowWaterSpiritTradeButton(false);
-  }
-}, [currentPosition, specialRooms]);
+  useEffect(() => {
+    // Hide water spirit trade button if toll is paid
+    if (currentPosition && 
+        specialRooms[currentPosition]?.hasWaterSpirit && 
+        specialRooms[currentPosition]?.tollPaid) {
+      console.log("Toll is paid - hiding water spirit trade button via useEffect");
+      setShowWaterSpiritTradeButton(false);
+    }
+  }, [currentPosition, specialRooms]);
 
-// ==================== FUNGI CREATURE ENCOUNTER SYSTEM ====================
-/**
- * Comprehensive fungi creature threat management system
- * 
- * This effect handles one of the game's most complex creature encounter mechanics,
- * managing time-based fungi attacks with torch-level protection. The system provides
- * graduated warnings and implements a sophisticated at// ==================== CRYSTAL ROOM SLEEP ENCHANTMENT SYSTEM ====================
+
+  // Fungi Creature Encounter System
+  // This effect manages the complex fungi creature encounter mechanics, including
+  // time-based attacks, warnings, and player protection via torch level.
+  // It provides a comprehensive system for handling one of the game's most intricate 
+  // creature threats, ensuring both player safety and immersive gameplay.
+  //somehow this useEffect got left out by the claudiAI when I was having it do extensive comments
+  //I pasted it back in from local backup 
+
+useEffect(() => {
+  if (gameStatus !== 'playing' || !currentPosition) return;
+  
+  const inFungiRoom = specialRooms[currentPosition]?.hasFungiCreature;
+  
+  if (!inFungiRoom) {
+    if (fungiWarning) {
+      setFungiWarning(false);
+    }
+    return;
+  }
+  
+  // Make sure we have an entry time - this handles both initial spawn and room entry
+  if (!specialRooms[currentPosition]?.fungiEntryTime) {
+    console.log("Setting fungi entry time for room", currentPosition);
+    setSpecialRooms(prev => ({
+      ...prev,
+      [currentPosition]: {
+        ...prev[currentPosition],
+        fungiEntryTime: Date.now(),
+        fungiCreatureActive: true,
+         hasFungiCreature: true    
+      }
+    }));
+  }
+  
+  const checkInterval = setInterval(() => {
+      // Check if game is still playing
+  if (gameStatus !== 'playing') {
+    return;
+  }
+    if (!specialRooms[currentPosition]?.fungiEntryTime) return;
+    
+    const timeInRoom = (Date.now() - specialRooms[currentPosition].fungiEntryTime) / 1000;
+    
+    // Enhanced debugging
+    console.log(`Time in fungi room: ${timeInRoom.toFixed(2)} seconds`);
+    console.log('Current room properties:', {
+        position: currentPosition,
+        hasFungiCreature: specialRooms[currentPosition]?.hasFungiCreature,
+        fungiCreatureActive: specialRooms[currentPosition]?.fungiCreatureActive,
+        fungiEntryTime: specialRooms[currentPosition]?.fungiEntryTime,
+        torchLevel: torchLevel
+    });
+    
+    // Warning at 20 seconds
+    if (timeInRoom > 20 && !fungiWarning) {
+        setFungiWarning(true);
+        setMessage(prev => {
+            const warningMsg = "\n\nThe fungi on the walls seem to be growing more active, pulsing faster and starting to extend in your direction.";
+            if (prev.includes(warningMsg)) {
+                return prev;
+            }
+            return prev + warningMsg;
+        });
+    }
+    
+    // Attack at 25 seconds
+    if (timeInRoom > 25) {
+        console.log('25 seconds reached! Checking attack conditions...');
+        console.log('fungiCreatureActive:', specialRooms[currentPosition]?.fungiCreatureActive);
+        console.log('hasFungiCreature:', specialRooms[currentPosition]?.hasFungiCreature);
+        
+        // Try checking both properties since you set both
+        const shouldAttack = specialRooms[currentPosition]?.fungiCreatureActive || 
+                           specialRooms[currentPosition]?.hasFungiCreature;
+        
+        if (shouldAttack) {
+            const hasBrightTorch = torchLevel > 80;
+            console.log('Should attack! Bright torch?', hasBrightTorch);
+            
+            if (!hasBrightTorch) {
+                console.log("ATTACK: 30 seconds exceeded - fungi attacking!");
+                setGameStatus('lost');
+                setDeathCause('fungi');
+                setMessage("The luminescent fungi suddenly expand rapidly, sending glowing tendrils across the floor toward you! Before you can react, they wrap around your legs and begin releasing spores. You feel yourself growing weak as the spores enter your lungs. The last thing you see is the fungi growing over your body as you collapse. Game over!");
+                clearInterval(checkInterval);
+            }
+            else  {
+               setMessage(prev => {
+            const warningMsg = "\n\nThe fungi dont seem to be able to quite get to you. \nSomething must beblocking or repulsing them.\nCool!";
+            if (prev.includes(warningMsg)) {
+                return prev;
+            }
+            return prev + warningMsg;
+        });
+            }
+
+        }
+    }
+}, 1000);
+  
+  return () => clearInterval(checkInterval);
+}, [gameStatus, currentPosition, specialRooms, fungiWarning, torchLevel]);
+
+
+
+
+// ==================== Crystal CREATURE ENCOUNTER SYSTEM ====================
+
 /**
  * Advanced crystal room sleep mechanics with amulet protection system
  * 
@@ -10013,7 +9255,6 @@ useEffect(() => {
   
   const currentRoom = currentPosition;
   
-  // ========== ROOM EXIT CLEANUP ==========
   if (!inCrystalRoom) {
     if (crystalRoomWarning) {
       setCrystalRoomWarning(false);
@@ -10021,7 +9262,6 @@ useEffect(() => {
     return;
   }
   
-  // ========== CRYSTAL TIMER INITIALIZATION ==========
   // Make sure we have an entry time
   if (!specialRooms[currentPosition]?.crystalEntryTime) {
     console.log("Setting crystal entry time for room", currentPosition);
@@ -10035,12 +9275,11 @@ useEffect(() => {
     }));
   }
   
-  // ========== CRYSTAL ENCHANTMENT MONITORING SYSTEM ==========
   const checkInterval = setInterval(() => {
-    // Check if game is still playing
-    if (gameStatus !== 'playing') {
-      return;
-    }
+      // Check if game is still playing
+  if (gameStatus !== 'playing') {
+    return;
+  }
     if (currentPosition !== currentRoom) return;
     
     // Re-check current state inside the interval
@@ -10050,7 +9289,7 @@ useEffect(() => {
     const timeInRoom = (Date.now() - currentSpecialRooms.crystalEntryTime) / 1000;
     console.log(`Time in crystal room: ${timeInRoom.toFixed(2)} seconds`);
     
-    // ========== WARNING PHASE (20 SECONDS) ==========
+    // Display warning at 20 seconds
     if (timeInRoom > 20 && !crystalRoomWarning) {
       setCrystalRoomWarning(true);
       setMessage(prev => {
@@ -10060,23 +9299,21 @@ useEffect(() => {
       });
     }
     
-    // ========== SLEEP ENCHANTMENT PHASE (30 SECONDS) ==========
+    // Sleep effect at 30 seconds
     if (timeInRoom > 30) {
       console.log("SLEEP: 30 seconds exceeded in crystal room!");
       
-      // Check current inventory state for amulet (avoid stale closure)
+      // Check current inventory state for amulet
       const currentInventory = inventory;
       const currentCollectedTreasures = collectedTreasures;
       
       const hasCrystalAmulet = currentCollectedTreasures.includes('amulet') || 
                               currentInventory.some(item => (item.originalId || item.id) === 'amulet');
       
-      // ========== PROTECTED ENCOUNTER (AMULET PROTECTION) ==========
       if (hasCrystalAmulet) {
         console.log("Player has crystal amulet - protected from the sleep effect");
         setMessage("The crystals' song grows overwhelming, but your crystal amulet resonates with a counter-melody, protecting your mind from the hypnotic effect. You feel alert despite the enchanting music.");
         
-        // Reset timer to allow continued exploration
         setSpecialRooms(prev => ({
           ...prev,
           [currentRoom]: {
@@ -10085,9 +9322,7 @@ useEffect(() => {
           }
         }));
         setCrystalRoomWarning(false);
-      } 
-      // ========== UNPROTECTED ENCOUNTER (ETERNAL SLEEP) ==========
-      else {
+      } else {
         setGameStatus('lost');
         setDeathCause('crystal_sleep');
         setMessage("The crystals' song grows impossibly beautiful, weaving through your mind like silk. /nYour eyelids become too heavy to keep open. /n/nAs you sink to the floor, the last thing you remember is the perfect harmony of crystal voices lulling you into an eternal slumber. /n/nGame over!");
@@ -10097,11 +9332,9 @@ useEffect(() => {
     }
   }, 1000);
   
-  // ========== CLEANUP AND ROOM EXIT HANDLING ==========
   return () => {
     clearInterval(checkInterval);
     
-    // Reset crystal timer when leaving room
     if (inCrystalRoom && currentPosition !== currentRoom) {
       console.log(`Player left crystal room ${currentRoom} - resetting sleep timer`);
       setSpecialRooms(prev => ({
@@ -10119,6 +9352,7 @@ useEffect(() => {
   // These are the only essential dependencies
   // Everything else can be accessed inside the effect
 ]);
+
 
 // ==================== AUTO-GAME START SYSTEM ====================
 /**
@@ -10138,13 +9372,15 @@ useEffect(() => {
  * 
  * @effects Triggers startGameFromContext function
  */
-useEffect(() => {
-  if (!showIntro && currentPosition === null) {
-    startGameFromContext();
-  }
-}, [showIntro, currentPosition]);
+  useEffect(() => {
+    if (!showIntro && currentPosition === null) {
+      startGameFromContext();
+    }
+  }, [showIntro, currentPosition]);
 
-// ==================== MASTER GAME INITIALIZATION SYSTEM ====================
+
+
+  // ==================== MASTER GAME INITIALIZATION SYSTEM ====================
 /**
  * Comprehensive game world initialization and setup orchestrator
  * 
@@ -10193,7 +9429,7 @@ useEffect(() => {
  * 
  * @effects Multiple state setters for comprehensive world initialization
  */
-useEffect(() => {
+  useEffect(() => {
   console.log("=== INITIALIZING GAME DATA ===");
   
   // ========== STEP 1: POSITION GENERATION ==========
@@ -10218,7 +9454,8 @@ useEffect(() => {
   
   // ========== STEP 6: GIFT SHOP INITIALIZATION ==========
   initializeGiftShop();
-  
+
+
   // ========== STEP 7: MAP FRAGMENT DEBUG LOGGING ==========
   console.log("=== MAP FRAGMENT INFO ===");
   console.log("Map fragment purpose:", itemTypes.old_map.purpose);
@@ -10234,8 +9471,7 @@ useEffect(() => {
       console.log(`FOUND LANTERN in room ${i} - description: ${initialRoomDesc[i]?.text}`);
     }
   }
-  
-  // ========== COMMENTED: ADVANCED TREASURE SYSTEM ==========
+     //outside settimeout
   /*    setTimeout(() => {
     console.log("=== CHECKING FOR GIFT SHOP (DELAYED) ===");
     // Need to check if treasures have been initialized
@@ -10263,10 +9499,8 @@ useEffect(() => {
     }, 100);
   }, 100); */
   
-  console.log("=== GAME INITIALIZATION COMPLETE ===");
-}, []);
-
-
+      console.log("=== GAME INITIALIZATION COMPLETE ===");
+  }, []);
 
   // Add a ref to track if enhanced items have been added
   const enhancedItemsAddedRef = useRef(false);
@@ -10275,6 +9509,8 @@ useEffect(() => {
 const giftShopCheckedRef = useRef(false);
 
  
+
+
 // ==================== ENHANCED ROOM ITEMS INTEGRATION SYSTEM ====================
 /**
  * Sophisticated post-initialization enhancement system for room item placement
@@ -10334,7 +9570,7 @@ useEffect(() => {
       console.log("Room descriptions are ready, checking enhanced texts...");
       console.log("Total rooms in map:", Object.keys(roomDescriptionMap).length);
       
-      // ========== ENHANCED TEXT VALIDATION ==========
+      // Debug: Check how many rooms have enhancedText
       let enhancedCount = 0;
       for (let i = 1; i <= 30; i++) {
         if (roomDescriptionMap[i]?.enhancedText) {
@@ -10344,7 +9580,6 @@ useEffect(() => {
       }
       console.log(`Total rooms with enhanced text: ${enhancedCount}`);
       
-      // ========== ENHANCED ROOM SETUP ==========
       // Ensure we have enough enhanced texts
       ensureEnhancedTextsExist();
       
@@ -10355,13 +9590,13 @@ useEffect(() => {
       enhancedItemsAddedRef.current = true;
       console.log("Enhanced items added, will not run again");
       
-      // ========== GIFT SHOP VERIFICATION ==========
+      // ADD GIFT SHOP CHECK HERE
       if (!giftShopCheckedRef.current && treasurePieces) {
         console.log("=== ENSURING GIFT SHOP EXISTS (DELAYED CHECK) ===");
         const giftShopId = ensureGiftShopExists();
         giftShopCheckedRef.current = true;
         
-        // ========== FINAL ENTITY POSITION LOGGING ==========
+        // Log final positions including gift shop
         console.log("=== FINAL GAME ENTITY POSITIONS ===");
         console.log("Wumpus:", positions.wumpusPosition);
         console.log("Pit 1:", positions.pitPosition1);
@@ -10375,6 +9610,8 @@ useEffect(() => {
     return () => clearTimeout(timer);
   }
 }, [roomDescriptionMap, positions, treasurePieces]); // ADD treasurePieces to dependencies
+
+
 
 // ==================== NIGHT CRAWLER THREAT & TORCH MANAGEMENT SYSTEM ====================
 /**
@@ -10434,10 +9671,9 @@ useEffect(() => {
  * 
  * @effects setNightCrawlerWarning, setMessage, setTorchLevel, setGameStatus, setDeathCause, playNightCrawlerSound, stopNightCrawlerSound
  */
-useEffect(() => {
+ useEffect(() => {
   if (gameStatus !== 'playing' || !currentPosition || !roomEntryTime) return;
   
-  // ========== FLOATING SPELL IMMUNITY ==========
   if (floatingActive && floatingMovesLeft > 0) {
     return;
   }
@@ -10462,70 +9698,70 @@ useEffect(() => {
     
     const timeInRoom = (Date.now() - roomEntryTime) / 1000; // in seconds
     
-    // ========== UNIVERSAL TORCH DRAIN SYSTEM ==========
+   // ========== UNIVERSAL TORCH DRAIN SYSTEM ==========
     // TORCH DRAIN - happens in ALL rooms (moved outside safe room check)
     if (timeInRoom > 60 && Math.floor(timeInRoom) % 60 === 0) { // Every minute after the first
-      setTorchLevel(prev => {
-        const newLevel = Math.max(0, prev - 5); // Extra 5% torch drain
-        console.log("Extra torch drain from staying in same room too long - new level:", newLevel);
-        
-        // ========== TORCH DEATH CHECK ==========
-        if (newLevel === 0) {
-          // Check if player has active lantern
-          const hasActiveLantern = inventory.some(item => 
-            (item.originalId || item.id) === 'lantern' && item.isActive
-          );
+  setTorchLevel(prev => {
+    const newLevel = Math.max(0, prev - 45); // Extra 5% torch drain
+    console.log("Extra torch drain from staying in same room too long - new level:", newLevel);
+    
+    // CHECK FOR TORCH DEATH HERE
+    if (newLevel === 0) {
+      // Check if player has active lantern
+      const hasActiveLantern = inventory.some(item => 
+        (item.originalId || item.id) === 'lantern' && item.isActive
+      );
+      
+      if (!hasActiveLantern) {
+        // Schedule death for next tick to avoid state update during render
+        setTimeout(() => {
+          setGameStatus('lost');
           
-          if (!hasActiveLantern) {
-            // Schedule death for next tick to avoid state update during render
-            setTimeout(() => {
-              setGameStatus('lost');
-              
-              // ========== LOCATION-SPECIFIC TORCH DEATH ==========
-              if (currentPosition === giftShopRoom) {
-                setDeathCause('torch_darkness');
-                setMessage("Your torch flickers out in the gift shop. In the sudden darkness, you hear Throk's disappointed sigh. 'No light, no sight, no customer rights! To My Delight!' he chants ominously. The last thing you feel is surprisingly well-maintained orcish dental work. Turns out the 'Adventurer Special' on the menu wasn't referring to a discount. Game over!");
-              } else {
-                // Normal darkness death
-                setDeathCause('torch_darkness');
-                setMessage("Your torch has gone completely out. In the total darkness, you stumble and fall, unable to find your way. The darkness claims another victim. Game over!");
-              }
-            }, 0);
+          // Special death for gift shop
+          if (currentPosition === giftShopRoom) {
+            //setDeathCause('gift_shop_darkness');
+              setDeathCause('torch_darkness');
+            setMessage("Your torch flickers out in the gift shop. In the sudden darkness, you hear Throk's disappointed sigh. 'No light, no sight, no customer rights! To My Delight!' he chants ominously. The last thing you feel is surprisingly well-maintained orcish dental work. Turns out the 'Adventurer Special' on the menu wasn't referring to a discount. Game over!");
           } else {
-            // ========== LANTERN BACKUP SYSTEM ==========
-            setTimeout(() => {
-              if (currentPosition === giftShopRoom) {
-                setMessage("Your torch has gone out, but your lantern continues to light the way. Throk looks disappointed and puts away his dinner bib.");
-              } else {
-                setMessage("Your torch has gone out, but your lantern continues to light the way.");
-              }
-            }, 0);
+            // Normal darkness death
+            setDeathCause('torch_darkness');
+            setMessage("Your torch has gone completely out. In the total darkness, you stumble and fall, unable to find your way. The darkness claims another victim. Game over!");
           }
-        }
-        
-        return newLevel;
-      });
+        }, 0);
+      } else {
+        // Player has active lantern, just show a warning
+        setTimeout(() => {
+          if (currentPosition === giftShopRoom) {
+            setMessage("Your torch has gone out, but your lantern continues to light the way. Throk looks disappointed and puts away his dinner bib.");
+          } else {
+            setMessage("Your torch has gone out, but your lantern continues to light the way.");
+          }
+        }, 0);
+      }
     }
     
-    // ========== NIGHT CRAWLER THREAT SYSTEM ==========
+    return newLevel;
+  });
+}
+    
     // NIGHT CRAWLER CHECKS - only for non-safe rooms
     if (!isSafeRoom && !nightCrawlerProtection) {
-      // ========== WARNING PHASE (40 SECONDS) ==========
+      // Warning at 90 seconds (1.5 minutes)
       if (timeInRoom > 40 && !nightCrawlerWarning) {
         setNightCrawlerWarning(true);
         setMessage(prev => `${prev} \n\nYou hear a distant scratching sound. Something seems to be moving through the cave walls toward you.`);
       
-        // START PLAYING THE SOUND AT LOW VOLUME
+              // START PLAYING THE SOUND AT LOW VOLUME
         playNightCrawlerSound(0.3);
       }
       
-      // ========== ATTACK PHASE (75 SECONDS) ==========
+      // Death at 120 seconds (2 minutes)
       if (timeInRoom > 75) {
         // Kill the player
         playNightCrawlerSound(0.8);
         setGameStatus('lost');
         setDeathCause('night_crawlers');
-        setMessage("The scratching crescendos into what sounds like aggressive interior redecorating. Pale, segmented critics of your life choices burst through the walls—thousands of them, like the world's worst surprise party. They're very bitey and have zero respect for personal space. \nAs they enthusiastically drag you into their wall apartments, you realize you should've left a better Yelp review. \nGame over!");
+         setMessage("The scratching crescendos into what sounds like aggressive interior redecorating. Pale, segmented critics of your life choices burst through the walls—thousands of them, like the world's worst surprise party. They're very bitey and have zero respect for personal space. \nAs they enthusiastically drag you into their wall apartments, you realize you should've left a better Yelp review. \nGame over!");
         
         // Clear the interval
         clearInterval(intervalId);
@@ -10535,13 +9771,16 @@ useEffect(() => {
     }
   }, 1000); // Check every second
   
-  // ========== CLEANUP AND AUDIO MANAGEMENT ==========
+  // Clean up interval on room change or game end
   return () => {
-    console.log("Night crawler cleanup - stopping sound");
-    clearInterval(intervalId);
-    stopNightCrawlerSound();
-  };
+  console.log("Night crawler cleanup - stopping sound");
+  clearInterval(intervalId);
+  stopNightCrawlerSound();
+  
+};
 }, [gameStatus, currentPosition, roomEntryTime, nightCrawlerWarning, nightCrawlerProtection, inventory]); // Added inventory to dependencies
+
+
 
 // ==================== WIZARD ROOM DEATH TIMER SYSTEM ====================
 /**
@@ -10586,7 +9825,7 @@ useEffect(() => {
  */
 useEffect(() => {
   if (gameStatus !== 'playing' || currentPosition !== 32) {
-    // ========== ROOM EXIT CLEANUP ==========
+    // Reset wizard room states when leaving
     if (currentPosition !== 32) {
       setWizardRoomEntryTime(null);
       setWizardRoomWarning(false);
@@ -10594,27 +9833,29 @@ useEffect(() => {
     return;
   }
 
-  // ========== TIMER INITIALIZATION ==========
+  // Set entry time when entering wizard room
   if (!wizardRoomEntryTime) {
     setWizardRoomEntryTime(Date.now());
     console.log("Entered wizard room - death timer started");
   }
 
-  // ========== WIZARD ROOM DEATH TIMER ==========
+   // ========== WIZARD ROOM DEATH TIMER ==========
   const intervalId = setInterval(() => {
     const timeInRoom = (Date.now() - wizardRoomEntryTime) / 1000; // in seconds
     
-    // ========== DEATH THRESHOLD (60 SECONDS) ==========
+    
+    // Death at 3 minutes (180 seconds)
     if (timeInRoom > 60) {
       setGameStatus('lost');
       
-      // ========== PRE-LIBERATION DEATH SCENARIO ==========
       if (!window.WIZARD_FREED) {
+        // Death before freeing wizard - trapped forever
+        
         setDeathCause('wizard_room_trapped');
         setMessage("The magical prison that held the wizard now claims you. Your legs turn to stone, then your torso, until you're just another statue in this cursed chamber. The crystal orb falls uselessly from your frozen hands. Over the coming weeks, you slowly starve, unable to move, unable to scream, unable to die quickly. Just another decoration in the wizard's eternal prison. Game over!");
-      } 
-      // ========== POST-LIBERATION DEATH SCENARIO ==========
-      else {
+      } else {
+        // Death after freeing wizard - absorbed by cave
+    
         setDeathCause('wizard_room_absorbed');
         setMessage("The cave's consciousness floods into your mind like a tsunami of ancient malice. Your thoughts dissolve, replaced by echoes of a thousand trapped souls. As your body crumbles to dust, your voice joins the eternal chorus: 'Welcome, adventurer... stay a while... stay forever...' You are now part of the cave's sarcastic commentary for all eternity. Game over!");
       }
@@ -10623,7 +9864,7 @@ useEffect(() => {
       clearInterval(intervalId);
     }
     
-    // ========== ENHANCED TORCH DRAIN IN WIZARD ROOM ==========
+    // Extra torch drain in wizard room
     if (timeInRoom > 60 && Math.floor(timeInRoom) % 30 === 0) { // Every 30 seconds after first minute
       setTorchLevel(prev => Math.max(0, prev - 10)); // Heavy torch drain
       console.log("Heavy torch drain in wizard room");
@@ -10633,7 +9874,6 @@ useEffect(() => {
   // Cleanup
   return () => clearInterval(intervalId);
 }, [gameStatus, currentPosition, wizardRoomEntryTime, wizardRoomWarning]);
-
 
 
 
@@ -10682,7 +9922,10 @@ useEffect(() => {
   };
 }, []); // Empty dependency array means this runs once when component mounts
 
-// ==================== AUDIO SYSTEM INITIALIZATION ====================
+
+
+
+ // ==================== AUDIO SYSTEM INITIALIZATION ====================
 /**
  * Master audio system initialization and cleanup manager
  * 
@@ -10709,7 +9952,7 @@ useEffect(() => {
  * 
  * @effects Audio system initialization and cleanup
  */
-useEffect(() => {
+  useEffect(() => {
     // We'll start the music on first user interaction instead
     
     // Clean up all sounds when the component unmounts
@@ -10718,7 +9961,7 @@ useEffect(() => {
     };
   }, [cleanupSounds]);
 
-// ==================== DYNAMIC SPECIAL ROOM MUSIC SYSTEM ====================
+ // ==================== DYNAMIC SPECIAL ROOM MUSIC SYSTEM ====================
 /**
  * Sophisticated room-based music transition and management system
  * 
@@ -10757,7 +10000,7 @@ useEffect(() => {
  * 
  * @effects Music playback control, timeout management, audio transitions
  */
-useEffect(() => {
+  useEffect(() => {
   console.log(`Room music change - Previous: ${previousRoomSpecial.current}, Current: ${roomSpecial}`);
   
   // ========== STOP PREVIOUS SPECIAL MUSIC ==========
@@ -10773,7 +10016,6 @@ useEffect(() => {
     clearTimeout(window.specialMusicTimeout);
   }
   
-  // ========== ENTERING SPECIAL ROOM ==========
   // If entering a special room
   if (roomSpecial && roomSpecial !== previousRoomSpecial.current) {
     // First stop background music completely
@@ -10784,7 +10026,6 @@ useEffect(() => {
       playSpecialRoomMusic(roomSpecial);
     }, 100);
   }
-  // ========== LEAVING SPECIAL ROOM ==========
   // If leaving a special room (going to a non-special room)
   else if (!roomSpecial && previousRoomSpecial.current) {
     // Stop special music first (already done above)
@@ -10795,17 +10036,18 @@ useEffect(() => {
     }, 100);
   }
   
-  // ========== STATE UPDATE ==========
   // Update previous room type for next comparison
   previousRoomSpecial.current = roomSpecial;
   
-  // ========== CLEANUP FUNCTION ==========
+  // Cleanup function
   return () => {
     if (window.specialMusicTimeout) {
       clearTimeout(window.specialMusicTimeout);
     }
   };
 }, [roomSpecial, playSpecialRoomMusic, resumeBackgroundMusic, playBackgroundMusic]);
+  
+
 
 // ==================== MESSAGE-TRIGGERED SOUND EFFECTS SYSTEM ====================
 /**
@@ -10839,20 +10081,21 @@ useEffect(() => {
  * 
  * @effects Triggers playDistantWumpusSound and potentially other sound effects
  */
-useEffect(() => {
-    // ========== WUMPUS MOVEMENT SOUND ==========
+  useEffect(() => {
+    // Play druika movement growl when that message appears
     if (message.includes('low growling sound as something moves')) {
       playDistantWumpusSound();
     }
     
-    // ========== BAT MOVEMENT SOUND (PLACEHOLDER) ==========
     // Could add other message-based sound triggers here
     if (message.includes('distant flapping as the bat moves')) {
       // Optionally play a bat movement sound here if you have one
     }
   }, [message, playDistantWumpusSound]);
+  
 
-// ==================== AMBIENT CREATURE PROXIMITY AUDIO SYSTEM ====================
+
+ // ==================== AMBIENT CREATURE PROXIMITY AUDIO SYSTEM ====================
 /**
  * Advanced proximity-based ambient audio system with creature detection
  * 
@@ -10905,6 +10148,7 @@ useEffect(() => {
  */
 useEffect(() => {
     // ========== WUMPUS PROXIMITY DETECTION ==========
+    // Check for wumpus perception
     const hasWumpusPerception = perceptions.some(p => 
       p.includes('smell something terrible'));
     
@@ -10916,7 +10160,7 @@ useEffect(() => {
     // Update wumpus proximity state
     setNearWumpus(hasWumpusPerception);
     
-    // ========== PIT PROXIMITY DETECTION ==========
+    // Check for pit perception and control looping wind sound
     const hasPitPerception = perceptions.some(p => 
       p.includes('feel a draft'));
     
@@ -10926,7 +10170,7 @@ useEffect(() => {
     // Update pit proximity state
     setNearPit(hasPitPerception);
     
-    // ========== BAT PROXIMITY DETECTION ==========
+    // Check for bat perception and control looping flap sound
     const hasBatPerception = perceptions.some(p => 
       p.includes('hear wings flapping'));
     
@@ -10936,7 +10180,6 @@ useEffect(() => {
     // Update bat proximity state
     setNearBat(hasBatPerception);
     
-    // ========== CLEANUP FUNCTION ==========
     // Cleanup function to stop any looping sounds when component unmounts
     return () => {
       if (gameStatus !== 'playing') {
@@ -10954,8 +10197,8 @@ useEffect(() => {
     playPitWindSound,
     playBatFlapSound
   ]);
-
-// ==================== GAME END AUDIO CLEANUP SYSTEM ====================
+  
+ // ==================== GAME END AUDIO CLEANUP SYSTEM ====================
 /**
  * Final audio cleanup system for game state transitions
  * 
@@ -10983,15 +10226,16 @@ useEffect(() => {
  * 
  * @effects Stops playPitWindSound and playBatFlapSound when game ends
  */
-useEffect(() => {
+  useEffect(() => {
     if (gameStatus !== 'playing') {
       playPitWindSound(false);
       playBatFlapSound(false);
     }
   }, [gameStatus, playPitWindSound, playBatFlapSound]);
+ 
+  
 
-
-// ==================== COMPREHENSIVE GAME STATE AUDIO ORCHESTRATION SYSTEM ====================
+  // ==================== COMPREHENSIVE GAME STATE AUDIO ORCHESTRATION SYSTEM ====================
 /**
  * Master audio control system for victory and death sequences with dynamic sound layering
  * 
@@ -11066,7 +10310,7 @@ useEffect(() => {
  * @effects Complex audio orchestration, state flag management, event listener setup/cleanup
  */
 useEffect(() => {
- // ========== VICTORY AUDIO SEQUENCE ==========
+   // ========== VICTORY AUDIO SEQUENCE ==========
  if (gameStatus === 'won') {
   // Stop background music
   playBackgroundMusic(false);
@@ -11119,14 +10363,14 @@ useEffect(() => {
   // Set flag to avoid replaying
   deathSoundPlayed.current = true;
   
-  // ========== SHARED LOSE MUSIC STARTER FUNCTION ==========
+  // Function to start lose music after lose sound
   const startLoseMusic = () => {
     console.log("Lose sound finished, starting lose music");
      stopNightCrawlerSound();
     playLoseMusicEnding(true);
   };
   
-  // ========== WUMPUS DEATH SEQUENCE ==========
+   // ========== WUMPUS DEATH SEQUENCE ==========
   if (deathCause === 'wumpus') {
     const druikaSound = new Audio(require('../sounds/Dragon_Growl_00.mp3'));
     
@@ -11150,12 +10394,11 @@ useEffect(() => {
       }
     });
   }
-
  // ========== SAND CREATURE DEATH SEQUENCE ==========
  else if (deathCause === 'sand_creature') {
     const wraithSound = new Audio(require('../sounds/DL_ DEMON_GROWL_4.ogg'));
     
-    // Play sand creature sound and then lose jingle after it completes
+    // Play wumpus sound and then lose jingle after it completes
     wraithSound.addEventListener('ended', () => {
       const loseSound = playLoseSound();
       loseSoundPlayed.current = true;
@@ -11167,8 +10410,8 @@ useEffect(() => {
     });
     
     wraithSound.play().catch(error => {
-      console.error('Error playing sand creature sound:', error);
-      // If sand creature sound fails, still play lose sound
+      console.error('Error playing wumpus sound:', error);
+      // If wumpus sound fails, still play lose sound
       const loseSound = playLoseSound();
       if (loseSound) {
         loseSound.addEventListener('ended', startLoseMusic);
@@ -11176,11 +10419,38 @@ useEffect(() => {
     });
   }
 
+
+/*   Think I commnented this out because it I mow have it  with the magical catashophe one
+ else if (deathCause === 'vortex_trap') {
+    const vortex_trapSound = new Audio(require('../hooks/131100__northern87__time-distortion_northern87.ogg'));
+    
+    // Play wumpus sound and then lose jingle after it completes
+    vortex_trapSound.addEventListener('ended', () => {
+      const loseSound = playLoseSound();
+      loseSoundPlayed.current = true;
+      
+      // When lose sound ends, start lose music
+      if (loseSound) {
+        loseSound.addEventListener('ended', startLoseMusic);
+      }
+    });
+    
+   vortex_trapSound.play().catch(error => {
+      console.error('Error playing vortex_trap sound:', error);
+      // If wumpus sound fails, still play lose sound
+      const loseSound = playLoseSound();
+      if (loseSound) {
+        loseSound.addEventListener('ended', startLoseMusic);
+      }
+    });
+
+  }
+*/
  // ========== MAGICAL/VORTEX DEATH SEQUENCE ==========
  else if (deathCause === 'magical_catastrophe' || deathCause === 'vortex_trap') {
     const TimeVortexSound = new Audio(require('../sounds/131100__northern87__time-distortion_northern87.ogg'));
     
-    // Play time vortex sound and then lose jingle after it completes
+    // Play wumpus sound and then lose jingle after it completes
     TimeVortexSound.addEventListener('ended', () => {
       const loseSound = playLoseSound();
       loseSoundPlayed.current = true;
@@ -11193,14 +10463,14 @@ useEffect(() => {
     
     TimeVortexSound.play().catch(error => {
       console.error('Error playing TimeVortexSound sound:', error);
-      // If time vortex sound fails, still play lose sound
+      // If wumpus sound fails, still play lose sound
       const loseSound = playLoseSound();
       if (loseSound) {
         loseSound.addEventListener('ended', startLoseMusic);
       }
     });
-  }
 
+  }
   // ========== PIT DEATH SEQUENCE (ENHANCED CLEANUP) ==========
   else if (deathCause === 'pit1' || deathCause === 'pit2') {
   console.log("Pit death detected - playing pit sound");
@@ -11236,9 +10506,8 @@ useEffect(() => {
           loseSound.addEventListener('ended', startLoseMusic);
         }
       });
-  }, 100); // Delay ensures cleanup completion
+  }, 100); // <-- This is where the closing bracket and delay go
 }
-
 // ========== NIGHT CRAWLER DEATH SEQUENCE (CONCURRENT AUDIO) ==========
 else if (deathCause === 'night_crawlers') {
   // Let the night crawler sound continue during lose sound
@@ -11251,7 +10520,7 @@ else if (deathCause === 'night_crawlers') {
   }
 }
 
-  // ========== DEFAULT DEATH SEQUENCE ==========
+  // If no specific death cause, just play lose sound
   else {
     const loseSound = playLoseSound();
     loseSoundPlayed.current = true;
@@ -11281,6 +10550,7 @@ else if (deathCause === 'night_crawlers') {
     playSpecialRoomMusic,
     playVictoryMusicEnding
   ]);
+
 
 
 
@@ -11318,7 +10588,8 @@ else if (deathCause === 'night_crawlers') {
  * 
  * @effects Triggers initializeShiftingRoom function, manages initialization timing
  */
-useEffect(() => {
+  // once treasures exist, initialize the shifting-room exactly one time
+  useEffect(() => {
     // Only attempt shifting room init if treasures exist and shifting room doesn't
     if (treasurePieces && treasurePieces.length > 0 && !shiftingRoomId) {
       console.log(`Found ${treasurePieces.length} treasures - initializing shifting room`);
@@ -11331,6 +10602,8 @@ useEffect(() => {
       return () => clearTimeout(timer);
     }
   }, [treasurePieces, shiftingRoomId]);
+  
+
 
 // ==================== GOLDEN COMPASS PLACEMENT SYSTEM ====================
 /**
@@ -11377,13 +10650,14 @@ useEffect(() => {
 const placeGoldenCompass = (forcePlacement = false) => {
   console.log("Setting up golden compass placement...");
   
-  // ========== ROOM VALIDATION HELPER FUNCTIONS ==========
+  // Helper function to check if a room has a backpack description
   const hasBackpackDescription = (roomId) => {
     const roomDesc = roomDescriptionMap[roomId]?.text || '';
     return roomDesc.toLowerCase().includes('backpack with half-eaten rations') &&
            roomDesc.toLowerCase().includes('map that simply says');
   };
   
+  // Helper function to check if a room is the pool room
   const isPoolRoom = (roomId) => {
     const roomDesc = roomDescriptionMap[roomId];
     return roomDesc?.hasPoolTreasures === true || 
@@ -11392,7 +10666,7 @@ const placeGoldenCompass = (forcePlacement = false) => {
            roomDesc?.enhancedText?.includes('deceptively clear pool');
   };
   
-  // ========== PRIMARY ROOM SELECTION ==========
+  // Find rooms that are not occupied by hazards, treasures, backpack, or pool
   const availableRooms = [];
   for (let i = 1; i <= 30; i++) {
     if (
@@ -11411,9 +10685,9 @@ const placeGoldenCompass = (forcePlacement = false) => {
     }
   }
   
+  // Log detailed info about available rooms
   console.log(`Found ${availableRooms.length} available rooms for golden compass placement (excluding backpack and pool rooms)`);
   
-  // ========== FALLBACK SYSTEM ==========
   if (availableRooms.length === 0) {
     console.log("No available rooms for golden compass placement - trying alternative approach");
     
@@ -11448,11 +10722,11 @@ const placeGoldenCompass = (forcePlacement = false) => {
     return;
   }
   
-  // ========== RANDOM SELECTION AND PLACEMENT ==========
+  // Pick a random room from available ones
   const compassRoom = availableRooms[Math.floor(Math.random() * availableRooms.length)];
   console.log(`Golden compass will be placed in room ${compassRoom}`);
   
-  // ========== CRITICAL SAFETY VALIDATION ==========
+  // Triple check to make absolutely sure we're not placing in backpack or pool room
   if (hasBackpackDescription(compassRoom)) {
     console.error("CRITICAL ERROR: About to place golden compass in backpack room despite filters!");
     return;
@@ -11463,7 +10737,7 @@ const placeGoldenCompass = (forcePlacement = false) => {
     return;
   }
   
-  // ========== ROOM DESCRIPTION UPDATE ==========
+  // Update the room description to mention the compass
   setRoomDescriptionMap(prev => ({
     ...prev,
     [compassRoom]: {
@@ -11475,6 +10749,7 @@ const placeGoldenCompass = (forcePlacement = false) => {
     }
   }));
 };
+
 
 // ==================== ENHANCED TEXT GENERATION SYSTEM ====================
 /**
@@ -11521,7 +10796,7 @@ const placeGoldenCompass = (forcePlacement = false) => {
 const ensureEnhancedTextsExist = () => {
   console.log("Ensuring enhanced texts exist for enough rooms...");
   
-  // ========== CURRENT STATE AUDIT ==========
+  // Count how many rooms have enhanced text
   let enhancedCount = 0;
   for (let i = 1; i <= 30; i++) {
     if (roomDescriptionMap[i]?.enhancedText) {
@@ -11531,11 +10806,11 @@ const ensureEnhancedTextsExist = () => {
   
   console.log(`Currently ${enhancedCount} rooms have enhanced text`);
   
-  // ========== ENHANCEMENT NEED ASSESSMENT ==========
+  // If we need more enhanced texts, add them to random safe rooms
   if (enhancedCount < 5) {
     const roomsToEnhance = [];
     
-    // ========== CANDIDATE ROOM IDENTIFICATION ==========
+    // Find rooms that could have enhanced text added
     for (let i = 1; i <= 30; i++) {
       if (!roomDescriptionMap[i]?.enhancedText &&
           roomDescriptionMap[i]?.text &&
@@ -11551,14 +10826,15 @@ const ensureEnhancedTextsExist = () => {
     
     console.log(`Found ${roomsToEnhance.length} rooms that could have enhanced text added`);
     
-    // ========== RANDOM SELECTION AND ENHANCEMENT ==========
+    // Shuffle and take up to 5 rooms
     const shuffled = [...roomsToEnhance].sort(() => Math.random() - 0.5);
     const toEnhance = shuffled.slice(0, Math.min(5 - enhancedCount, shuffled.length));
     
-    // ========== MOOD-BASED TEXT GENERATION ==========
+    // Add simple enhanced text to these rooms
     toEnhance.forEach(roomId => {
       const room = roomDescriptionMap[roomId];
       if (room) {
+        // Create enhanced text based on the room's mood or content
         let enhancedAddition = "";
         
         if (room.mood === 'mysterious') {
@@ -11571,7 +10847,6 @@ const ensureEnhancedTextsExist = () => {
           enhancedAddition = " The brighter light of your lantern reveals subtle details in the cave formations.";
         }
         
-        // ========== STATE UPDATE ==========
         setRoomDescriptionMap(prev => ({
           ...prev,
           [roomId]: {
@@ -11585,6 +10860,9 @@ const ensureEnhancedTextsExist = () => {
     });
   }
 };
+
+
+
 
 // ==================== ENHANCED ROOM BONUS ITEMS SYSTEM ====================
 /**
@@ -11635,10 +10913,11 @@ const ensureEnhancedTextsExist = () => {
  * 
  * @effects Updates roomDescriptionMap with enhanced item descriptions and flags
  */
+
 const addEnhancedRoomItems = () => {
   console.log("Adding bonus items to enhanced room descriptions...");
   
-  // ========== DUPLICATE PREVENTION CHECK ==========
+  // Check if we've already added enhanced items
   let itemsAlreadyAdded = false;
   for (let i = 1; i <= 30; i++) {
     if (roomDescriptionMap[i]?.enhancedHasItem) {
@@ -11653,16 +10932,16 @@ const addEnhancedRoomItems = () => {
     return;
   }
   
-  // ========== DEBUG STATE ANALYSIS ==========
+  // Debug: Log the current state of roomDescriptionMap
   console.log("Current roomDescriptionMap:", roomDescriptionMap);
   
-  // ========== ELIGIBLE ROOM IDENTIFICATION ==========
+  // Find rooms that have enhanced text but no existing interactive items
   const eligibleRooms = [];
   for (let i = 1; i <= 30; i++) {
     const roomInfo = roomDescriptionMap[i];
     const roomText = roomInfo?.text || '';
     
-    // ========== DETAILED ROOM DEBUG LOGGING ==========
+    // Debug log for each room
     if (roomInfo) {
       console.log(`Room ${i}:`, {
         hasEnhancedText: !!roomInfo.enhancedText,
@@ -11673,7 +10952,6 @@ const addEnhancedRoomItems = () => {
       });
     }
     
-    // ========== ELIGIBILITY CRITERIA ==========
     if (roomInfo && 
         roomInfo.enhancedText && 
         !roomInfo.enhancedHasItem && // Check if it already has an enhanced item
@@ -11693,7 +10971,7 @@ const addEnhancedRoomItems = () => {
   
   console.log(`Found ${eligibleRooms.length} eligible rooms for enhanced items:`, eligibleRooms);
   
-  // ========== DIAGNOSTIC LOGGING FOR EMPTY RESULTS ==========
+  // If no eligible rooms, log why
   if (eligibleRooms.length === 0) {
     console.log("No eligible rooms found. Checking why:");
     console.log("Positions:", positions);
@@ -11702,22 +10980,23 @@ const addEnhancedRoomItems = () => {
     ));
   }
   
-  // ========== RANDOM ROOM SHUFFLING ==========
+  // Rest of the function remains the same...
+  // Shuffle the eligible rooms
   const shuffledRooms = [...eligibleRooms].sort(() => Math.random() - 0.5);
   
-  // ========== SINGLE GOLD COIN PLACEMENT (2 ROOMS) ==========
+  // Add single gold coins to 2 different rooms using the existing gold_coins item
   if (shuffledRooms.length >= 2) {
     const goldRoom1 = shuffledRooms[0];
     const goldRoom2 = shuffledRooms[1];
     
-    // Add gold coin to first room's enhanced text
+    // Add gold coin to first room's enhanced text - using single_gold_coin
     setRoomDescriptionMap(prev => ({
       ...prev,
       [goldRoom1]: {
         ...prev[goldRoom1],
         enhancedText: prev[goldRoom1].enhancedText + " In a crevice illuminated by your lantern's stronger beam, you notice a single <span class='interactive-item' data-item='single_gold_coin'>ancient gold coin</span> that your torch missed.",
         enhancedHasItem: true,
-        enhancedItemId: 'single_gold_coin',
+        enhancedItemId: 'single_gold_coin', // Changed from 'gold_coins'
         enhancedItemSentence: " In a crevice illuminated by your lantern's stronger beam, you notice a single <span class='interactive-item' data-item='single_gold_coin'>ancient gold coin</span> that your torch missed."
       }
     }));
@@ -11729,7 +11008,7 @@ const addEnhancedRoomItems = () => {
         ...prev[goldRoom2],
         enhancedText: prev[goldRoom2].enhancedText + " Your lantern reveals a <span class='interactive-item' data-item='single_gold_coin'>tarnished gold coin</span> tucked behind a small rock formation.",
         enhancedHasItem: true,
-        enhancedItemId: 'single_gold_coin',
+        enhancedItemId: 'single_gold_coin', // Changed from 'gold_coins'
         enhancedItemSentence: " Your lantern reveals a <span class='interactive-item' data-item='single_gold_coin'>tarnished gold coin</span> tucked behind a small rock formation."
       }
     }));
@@ -11739,7 +11018,7 @@ const addEnhancedRoomItems = () => {
     console.log(`Not enough eligible rooms for gold coins (need 2, have ${shuffledRooms.length})`);
   }
   
-  // ========== LOOSE ROCKS PLACEMENT (1 ROOM) ==========
+  // Add 1 loose rock to a different room
   if (shuffledRooms.length >= 3) {
     const rockRoom = shuffledRooms[2];
     
@@ -11751,6 +11030,7 @@ const addEnhancedRoomItems = () => {
         enhancedHasItem: true,
         enhancedItemId: 'loose_rocks',
          enhancedItemSentence: " Near the wall, your lantern illuminates a pile of <span class='interactive-item' data-item='loose_rocks'>loose rocks</span> that seem perfect for throwing."
+      
       }
     }));
     
@@ -11762,6 +11042,7 @@ const addEnhancedRoomItems = () => {
 
 
 
+
 // ==================== BACKPACK ROOM VALIDATION HELPER ====================
 /**
  * Helper function to identify rooms containing the backpack narrative element
@@ -11769,33 +11050,13 @@ const addEnhancedRoomItems = () => {
  * This utility function provides a standardized way to detect rooms that contain
  * the backpack with half-eaten rations and the warning map. It's used throughout
  * the codebase to prevent item placement conflicts and maintain narrative consistency.
- * 
- * Detection Criteria:
- * - **Backpack Presence**: Room text must contain "backpack with half-eaten rations"
- * - **Warning Map**: Room text must contain the specific "RUN!" map message
- * - **Case Sensitive**: Uses exact string matching for reliable detection
- * 
- * Technical Features:
- * - **Flexible Room Description Source**: Accepts roomDescMap parameter for versatility
- * - **Safe Text Access**: Uses optional chaining and fallback for robust text retrieval
- * - **Precise Matching**: Requires both elements to be present for positive identification
- * - **Reusable Design**: Can be called with different room description maps
- * 
- * Usage Context:
- * - **Item Placement**: Prevents placing items in story-critical rooms
- * - **Room Validation**: Ensures narrative elements remain undisturbed
- * - **Conflict Prevention**: Avoids overlapping interactive elements
- * - **Consistency Checking**: Maintains story integrity across game systems
- * 
- * @param {number} roomId - The room number to check for backpack content
- * @param {Object} roomDescMap - The room description map to search within
- * @returns {boolean} True if room contains backpack narrative elements
- */
+ **/
 const hasBackpackDescription = (roomId, roomDescMap) => {
   const roomDesc = roomDescMap[roomId]?.text || '';
   return roomDesc.includes('backpack with half-eaten rations') && 
          roomDesc.includes('map that simply says \'RUN!\'');
 };
+
 
 // ==================== REALITY STABILIZER PLACEMENT SYSTEM ====================
 /**
@@ -11876,30 +11137,28 @@ const placeRealityStabilizer = (availableRooms) => {
       }
     }
     
-    // ========== CRITICAL ERROR HANDLING ==========
     if (availableRooms.length === 0) {
       console.error("CRITICAL ERROR: No rooms available for Reality Anchor!");
       return;
     }
   }
   
-  // ========== DISTANCE OPTIMIZATION ALGORITHM ==========
+  // Find the optimal room - as far from shifting room as possible
   let bestRoom = availableRooms[0];
   let maxDistance = 0;
   
   if (shiftingRoomId) {
     availableRooms.forEach(room => {
-      // ========== DIRECT DISTANCE CALCULATION ==========
+      // Calculate distance to shifting room
       const directDistance = Math.abs(room - shiftingRoomId); // Simple distance metric
       
-      // ========== PATH-BASED DISTANCE CALCULATION ==========
+      // Try to find path through room connections if available
       let pathDistance = 0;
       if (roomConnections) {
         const path = findShortestPath(room, shiftingRoomId, roomConnections);
         pathDistance = path ? path.distance : 0;
       }
       
-      // ========== MAXIMUM DISTANCE SELECTION ==========
       // Use whichever distance is greater
       const distance = Math.max(directDistance, pathDistance);
       
@@ -11909,16 +11168,14 @@ const placeRealityStabilizer = (availableRooms) => {
       }
     });
   } else {
-    // ========== RANDOM FALLBACK PLACEMENT ==========
     // If shifting room not set yet, pick random room
     bestRoom = availableRooms[Math.floor(Math.random() * availableRooms.length)];
     console.log("Shifting room not set yet - using random room for Reality Anchor");
   }
   
-  // ========== ITEM PLACEMENT EXECUTION ==========
+  // Place the stabilizer in the chosen room
   placeItem('reality_stabilizer', bestRoom);
   
-  // ========== SUCCESS LOGGING ==========
   console.log(`Reality Anchor placed in room ${bestRoom}`);
   if (maxDistance > 0) {
     console.log(`Distance from shifting room: ${maxDistance} moves`);
@@ -11927,7 +11184,10 @@ const placeRealityStabilizer = (availableRooms) => {
   return bestRoom;
 };
 
-// ==================== COMPREHENSIVE CONTEXT VALUE EXPORT SYSTEM ====================
+
+
+
+ // ==================== COMPREHENSIVE CONTEXT VALUE EXPORT SYSTEM ====================
 /**
  * Master context value object containing all game state and functions
  * 

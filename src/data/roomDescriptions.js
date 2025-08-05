@@ -1,4 +1,57 @@
-// Updated room descriptions with whimsical dark humor
+// ==================== ROOMDESCRIPTIONS.JS - ATMOSPHERIC CONTENT SYSTEM ====================
+/**
+ * Comprehensive room content and atmospheric mood management system
+ * 
+ * This sophisticated content system provides the rich atmospheric foundation
+ * for the cave exploration experience. It combines detailed environmental
+ * storytelling with interactive game mechanics, dynamic content states, and
+ * mood-driven visual theming to create an immersive world that responds to
+ * player actions and equipment states.
+ * 
+ * Core Features:
+ * - **33 Unique Room Descriptions**: Rich environmental storytelling content
+ * - **Interactive HTML Integration**: Embedded clickable elements and items  
+ * - **Dynamic Content States**: Before/after collection text variations
+ * - **Lantern-Enhanced Descriptions**: Equipment-responsive content expansion
+ * - **Mood-Based Theming**: 25+ atmospheric classifications for visual styling
+ * - **Whimsical Dark Humor**: Consistent narrative voice with personality
+ * 
+ * Technical Architecture:
+ * - **Object-Based Structure**: Organized room data with multiple properties
+ * - **HTML Content Integration**: Interactive elements with data attributes
+ * - **State Management**: Multiple text states for dynamic content
+ * - **Keyword Classification**: Search and categorization systems
+ * - **Mood Styling**: CSS integration for atmospheric visual theming
+ * 
+ * @fileoverview Atmospheric room content and mood management system
+ */
+
+// ==================== COMPREHENSIVE ROOM DESCRIPTIONS COLLECTION ====================
+/**
+ * Master collection of 33 unique room descriptions with rich atmospheric content
+ * 
+ * This extensive array provides the foundation for environmental storytelling,
+ * combining detailed descriptions with interactive elements, mood classifications,
+ * and dynamic content states. Each room entry demonstrates sophisticated content
+ * design with multiple layers of information and player interaction possibilities.
+ * 
+ * Content Categories:
+ * - **Environmental Descriptions**: Rich atmospheric writing with dark humor
+ * - **Interactive Elements**: Embedded HTML with clickable game items
+ * - **Mood Classifications**: Atmospheric theming for visual and audio cues
+ * - **Dynamic States**: Content that changes based on player actions
+ * - **Enhanced Content**: Lantern-responsive expanded descriptions
+ * - **Sensory Details**: Sound, perception, and environmental cues
+ * 
+ * Technical Features:
+ * - **HTML Integration**: Interactive spans with data attributes for game mechanics
+ * - **State Variations**: textAfterCollection for post-interaction content
+ * - **Enhancement System**: enhancedText for lantern-responsive expansions
+ * - **Keyword Systems**: Classification arrays for search and categorization
+ * - **Special Properties**: Flags for unique room behaviors and mechanics
+ * 
+ * @constant {Array<Object>} roomDescriptions - Collection of 33 room content objects
+ */
 const roomDescriptions = [
    {
     text: "You enter a small, damp chamber where glittering minerals wink at you like the eyes of a thousand tiny critics. Among them, you spot unusual <span class='interactive-item' data-item='cave_salt'>salt-like crystals</span> with a subtle blue glow—nature's nightlight, apparently.",

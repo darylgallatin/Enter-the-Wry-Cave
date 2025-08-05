@@ -1,57 +1,64 @@
 
-/* Import Google Fonts */
+/* ==================== EXTERNAL FONT IMPORTS ==================== */
+/* Import medieval/fantasy themed fonts for atmospheric game styling */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=MedievalSharp&family=Uncial+Antiqua&family=Metamorphous&display=swap');
 
+/* ==================== DEATH SCENE STYLING SYSTEM ==================== */
 
-
-/* Base lost game message */
+/* ========== BASE DEATH MESSAGE FOUNDATION ========== */
+/* Core styling for all game over messages with consistent theming */
 .game-message.lost {
-
-  letter-spacing: normal !important;; 
-  
-  text-transform: none !important;;
+  letter-spacing: normal !important;
+  text-transform: none !important;
   color: #FFCDD2;
   font-weight: bold;
   font-size: 1.2rem;
   padding: 20px;
   border-radius: 8px;
-  margin: 0px 50px ;
+  margin: 0px 50px;
 }
 
+/* ========== TEMPERATURE DEATH SCENES ========== */
+
+/* Cold Death Scene - Freezing/hypothermia themed death */
 .game-message.lost.cold {
   background-color: rgba(0, 32, 139, 0.3);
   font-family: 'MedievalSharp', cursive;
-   background: url('../images/frozendeath.png'), linear-gradient(to bottom, #1a1a1a, #000000);
-   min-height: 750px;
-  color: #b97c82;
+  /* Layered background: death image over dark gradient for atmosphere */
+  background: url('../images/frozendeath.png'), linear-gradient(to bottom, #1a1a1a, #000000);
+  min-height: 750px; /* Full scene height for immersion */
+  color: #b97c82; /* Muted red suggesting cold-affected skin */
   font-weight: bold;
   font-size: 2.1rem;
   padding: 20px;
   border-radius: 8px;
-  margin: 0px 50px ;
+  margin: 0px 50px;
 }
 
-
-
+/* Heat Death Scene - Fire/overheating themed death */
 .game-message.lost.heat {
   background-color: rgba(0, 32, 139, 0.3);
-  font-family: 'MedievalSharp', cursive; /* Fallback to serif if not available */
-   background: url('../images/cooked.png'), linear-gradient(to bottom, #1a1a1a, #000000);
-   min-height: 750px;
-  color: #b97c82;
+  font-family: 'MedievalSharp', cursive;
+  /* Layered background: cooking/burning image over dark gradient */
+  background: url('../images/cooked.png'), linear-gradient(to bottom, #1a1a1a, #000000);
+  min-height: 750px; /* Full scene height for immersion */
+  color: #b97c82; /* Consistent with cold death for visual unity */
   font-weight: bold;
-  font-size: 1.9rem;
+  font-size: 1.9rem; /* Slightly smaller than cold for visual balance */
   padding: 20px;
   border-radius: 8px;
-  margin: 0px 50px ;
+  margin: 0px 50px;
 }
 
+/* ==================== GOBLIN SHRINE INTERACTIVE SCENE ==================== */
 
-/* Goblin Shrine Display */
+/* ========== MAIN SHRINE CONTAINER ========== */
+/* Mystical trading post with layered background and atmospheric effects */
 .goblin-shrine-display {
   text-align: center;
   padding: 20px;
   margin: 15px 0;
+  /* Layered mystical background: shrine image over purple gradient */
   background: url('../images/goblin_shrine.png'), 
               linear-gradient(135deg, #2d1b69, #1a0e40);
   background-size: cover;
@@ -59,25 +66,29 @@
   background-position: center;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
-  color: #c9b037;
-  border: 3px solid #564a7c;
+  color: #c9b037; /* Golden text for mystical atmosphere */
+  border: 3px solid #564a7c; /* Purple border matching gradient */
   min-height: 500px;
-  position: relative;
-  overflow: hidden;
+  position: relative; /* For absolute positioned pseudo-elements */
+  overflow: hidden; /* Contain animated effects */
 }
 
-/* Animated title */
+/* ========== SHRINE TYPOGRAPHY SYSTEM ========== */
+
+/* Main shrine title with animated mystical glow effect */
 .shrine-title {
   font-family: 'MedievalSharp', cursive;
   font-size: 2rem;
-  color: #ffd700;
+  color: #ffd700; /* Bright gold */
   margin-bottom: 10px;
+  /* Multi-layer text shadow for depth and glow */
   text-shadow: 
     2px 2px 4px rgba(0, 0, 0, 0.8),
     0 0 20px rgba(138, 43, 226, 0.5);
   animation: mystical-glow 3s ease-in-out infinite;
 }
 
+/* Mystical glow animation - pulsing magical energy effect */
 @keyframes mystical-glow {
   0%, 100% { 
     text-shadow: 
@@ -85,6 +96,7 @@
       0 0 20px rgba(138, 43, 226, 0.5);
   }
   50% { 
+    /* Intensified glow at animation peak */
     text-shadow: 
       2px 2px 4px rgba(0, 0, 0, 0.8),
       0 0 30px rgba(138, 43, 226, 0.8),
@@ -92,63 +104,76 @@
   }
 }
 
+/* Shrine subtitle with ancient script styling */
 .shrine-subtitle {
   font-family: 'Uncial Antiqua', cursive;
   font-size: 1.4rem;
-  color: #9d7cff;
+  color: #9d7cff; /* Light purple for contrast */
   margin-bottom: 20px;
   font-style: italic;
 }
 
-/* Offering area */
+/* ========== OFFERING CIRCLE SYSTEM ========== */
+
+/* Central offering area - circular mystical altar */
 .offering-area {
   margin: 30px auto;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent dark circle */
+  border-radius: 50%; /* Perfect circle */
   width: 300px;
   height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  /* Inset shadow creates depth, outer glow adds mystical effect */
   box-shadow: 
     inset 0 0 50px rgba(138, 43, 226, 0.3),
     0 0 30px rgba(138, 43, 226, 0.5);
 }
 
-/* Arranged offerings */
+/* ========== ANIMATED OFFERING ITEMS ========== */
+
+/* Grid layout for arranged offerings with floating animation */
 .offering-items {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* 3x3 grid for balanced arrangement */
   gap: 20px;
   animation: float-offerings 4s ease-in-out infinite;
 }
 
+/* Individual offering item with enhanced visual effects */
 .offering-item {
   font-size: 2.5rem;
-  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6));
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); /* Golden glow effect */
   animation: individual-float 3s ease-in-out infinite;
+  /* CSS custom property for staggered animation delays */
   animation-delay: calc(var(--item-index, 0) * 0.2s);
 }
 
+/* Gentle floating motion for entire offering collection */
 @keyframes float-offerings {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
 }
 
+/* Individual item animation with rotation and scaling effects */
 @keyframes individual-float {
   0%, 100% { 
     transform: rotate(0deg) scale(1); 
     filter: brightness(1);
   }
   50% { 
+    /* Peak animation: slight rotation, scaling, and brightness increase */
     transform: rotate(5deg) scale(1.1); 
     filter: brightness(1.3);
   }
 }
 
-/* Candle/mystical light effects */
+/* ========== ATMOSPHERIC LIGHTING EFFECTS ========== */
+
+/* Mystical bottom lighting using pseudo-element */
 .goblin-shrine-display::before {
   content: '';
   position: absolute;
@@ -156,61 +181,72 @@
   left: 10%;
   width: 80%;
   height: 100px;
+  /* Radial gradient simulates mystical light emanating upward */
   background: radial-gradient(ellipse at center bottom, 
     rgba(138, 43, 226, 0.4) 0%, 
     transparent 70%);
   animation: flicker-light 2s ease-in-out infinite;
 }
 
+/* Flickering candlelight effect animation */
 @keyframes flicker-light {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
 }
 
-/* Message area */
+/* ========== SHRINE MESSAGE AREA ========== */
+
+/* Styled message container with mystical border */
 .shrine-message-area {
   margin-top: 20px;
   padding: 15px;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent dark background */
   border-radius: 8px;
-  border: 1px solid rgba(157, 124, 255, 0.4);
+  border: 1px solid rgba(157, 124, 255, 0.4); /* Subtle purple border */
 }
 
+/* ==================== TRANQUIL POOL IMMERSIVE SCENE ==================== */
 
-
-/* Tranquil Pool Display - add to scenes.css */
+/* ========== MAIN POOL CONTAINER ========== */
+/* Underwater/cave pool scene with complex layered visual effects */
 .tranquil-pool-display {
   text-align: center;
   padding: 20px;
   margin: 15px 0;
-   background: url('../images/tranquil_pool_caveroom.png'), 
+  /* Layered background: pool image over mystical gradient */
+  background: url('../images/tranquil_pool_caveroom.png'), 
               linear-gradient(135deg, #2d1b69, #1a0e40);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   border-radius: 10px;
   min-height: 600px;
-  position: relative;
-  overflow: hidden;
-  background-color: #001a33; /* Deep water blue background */
+  position: relative; /* For complex layered effects */
+  overflow: hidden; /* Contain animated pseudo-elements */
+  background-color: #001a33; /* Deep water blue fallback */
 }
 
-/* Background image */
+/* ========== POOL BACKGROUND IMAGE SYSTEM ========== */
+
+/* Responsive background image with proper layering */
 .tranquil-pool-display .tranquil-pool-background {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  z-index: 0;
+  object-fit: contain; /* Maintain aspect ratio */
+  z-index: 0; /* Behind all other content */
 }
 
-/* Game message styling */
+/* ========== WATER-THEMED MESSAGE STYLING ========== */
+
+/* Enhanced text styling for underwater atmosphere */
 .tranquil-pool-display .game-message {
   position: relative;
-  z-index: 1;
-  color: #b3d9ff; /* Light blue text for water theme */
+  z-index: 1; /* Above background effects */
+  color: #b3d9ff; /* Light blue for water theme */
+  /* Complex multi-layer text shadow for underwater effect */
   text-shadow: 
     2px 2px 4px rgba(0, 0, 0, 0.9),
     -1px -1px 4px rgba(0, 0, 0, 0.9),
@@ -226,7 +262,9 @@
   margin-right: auto;
 }
 
-/* Add a subtle water ripple effect */
+/* ========== WATER RIPPLE ANIMATION SYSTEM ========== */
+
+/* Animated water ripple effect using ::after pseudo-element */
 .tranquil-pool-display::after {
   content: '';
   position: absolute;
@@ -234,6 +272,7 @@
   left: 0;
   right: 0;
   bottom: 0;
+  /* Radial gradient creates ripple appearance */
   background: radial-gradient(
     circle at center,
     transparent 0%,
@@ -241,10 +280,11 @@
     transparent 100%
   );
   animation: water-ripple 4s ease-in-out infinite;
-  pointer-events: none;
+  pointer-events: none; /* Don't interfere with user interaction */
   z-index: 1;
 }
 
+/* Water ripple scaling animation */
 @keyframes water-ripple {
   0%, 100% {
     transform: scale(0.8);
@@ -256,7 +296,9 @@
   }
 }
 
-/* Bioluminescent glow effects */
+/* ========== BIOLUMINESCENT LIGHTING SYSTEM ========== */
+
+/* Complex multi-point bioluminescent glow effects using ::before */
 .tranquil-pool-display::before {
     content: '';
     position: absolute;
@@ -264,6 +306,7 @@
     left: 0;
     right: 0;
     bottom: 0;
+    /* Multiple radial gradients create scattered bioluminescent spots */
     background: 
         radial-gradient(circle at 20% 30%, rgba(0, 255, 200, 0.15) 0%, transparent 10%),
         radial-gradient(circle at 70% 40%, rgba(0, 200, 255, 0.12) 0%, transparent 8%),
@@ -273,10 +316,12 @@
     animation: bioluminescent-pulse 8s ease-in-out infinite;
     pointer-events: none;
     z-index: 1;
-    mix-blend-mode: screen;
+    mix-blend-mode: screen; /* Additive blending for realistic light mixing */
 }
 
-/* Multiple layered glow animations for variation */
+/* ========== LAYERED GLOW ANIMATION SYSTEM ========== */
+
+/* Container for multiple animated glow layers */
 .tranquil-pool-display .bio-glow-layer {
     position: absolute;
     top: 0;
@@ -287,25 +332,30 @@
     z-index: 1;
 }
 
+/* First glow layer - green-tinted bioluminescence */
 .tranquil-pool-display .bio-glow-layer:nth-child(1) {
     background: 
         radial-gradient(circle at 15% 10%, rgba(0, 255, 150, 0) 0%, rgba(0, 255, 150, 0.4) 10%, transparent 30%);
     animation: glow-drift-1 12s ease-in-out infinite;
 }
 
+/* Second glow layer - blue-tinted bioluminescence */
 .tranquil-pool-display .bio-glow-layer:nth-child(2) {
     background: 
         radial-gradient(circle at 80% 15%, rgba(100, 200, 255, 0) 0%, rgba(100, 200, 255, 0.35) 8%, transparent 25%);
     animation: glow-drift-2 15s ease-in-out infinite;
 }
 
+/* Third glow layer - cyan-tinted bioluminescence */
 .tranquil-pool-display .bio-glow-layer:nth-child(3) {
     background: 
         radial-gradient(circle at 410% 10%, rgba(0, 255, 200, 0) 0%, rgba(0, 255, 200, 0.3) 12%, transparent 35%);
     animation: glow-drift-3 10s ease-in-out infinite;
 }
 
-/* Subtle keyframes for main bioluminescent pulse */
+/* ========== BIOLUMINESCENT ANIMATION KEYFRAMES ========== */
+
+/* Main pulsing animation for bioluminescent effects */
 @keyframes bioluminescent-pulse {
     0%, 100% {
         opacity: 0.4;
@@ -325,7 +375,9 @@
     }
 }
 
-/* Individual glow animations for variety */
+/* Individual glow drift animations for organic movement */
+
+/* First drift pattern - gentle movement with scaling */
 @keyframes glow-drift-1 {
     0%, 100% {
         transform: translate(0, 0) scale(1);
@@ -341,6 +393,7 @@
     }
 }
 
+/* Second drift pattern - wider movement range */
 @keyframes glow-drift-2 {
     0%, 100% {
         transform: translate(0, 0) scale(1);
@@ -352,6 +405,7 @@
     }
 }
 
+/* Third drift pattern - complex multi-phase movement */
 @keyframes glow-drift-3 {
     0%, 100% {
         transform: translate(0, 0) scale(1);
@@ -367,23 +421,27 @@
     }
 }
 
-/* Flickering spot lights for extra variation */
+/* ========== FLICKERING SPOT LIGHT EFFECTS ========== */
+
+/* Additional flickering spots for enhanced realism */
 .tranquil-pool-display .flicker-spots {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    /* Multiple radial gradients for scattered flickering points */
     background: 
         radial-gradient(circle at 25% 45%, rgba(0, 255, 180, 0.4) 0%, transparent 10%),
         radial-gradient(circle at 65% 35%, rgba(50, 200, 255, 0.35) 0%, transparent 12%),
         radial-gradient(circle at 45% 75%, rgba(0, 255, 200, 0.3) 0%, transparent 15%);
-    animation: flicker 3s steps(4) infinite;
+    animation: flicker 3s steps(4) infinite; /* Stepped animation for irregular flickering */
     pointer-events: none;
     z-index: 1;
-    mix-blend-mode: screen;
+    mix-blend-mode: screen; /* Additive light blending */
 }
 
+/* Irregular flickering animation using steps for realistic effect */
 @keyframes flicker {
     0%, 100% { opacity: 0.2; }
     25% { opacity: 0.6; }
@@ -391,29 +449,34 @@
     75% { opacity: 0.5; }
 }
 
+/* ==================== WATER NIXIE CREATURE ENCOUNTER SCENES ==================== */
 
-/* Water Nixie Appearance Display */
+/* ========== NIXIE APPEARANCE SCENE ========== */
+/* Mystical water creature introduction with underwater atmosphere effects */
 .nixie-appearance-display {
   text-align: center;
   padding: 20px;
   margin: 15px 0;
   border-radius: 10px;
+  /* Layered background: nixie creature image over mystical water gradient */
   background: url('../images/water_nixie_tranquil_pool.png'),
               linear-gradient(135deg, #2d1b69, #1a0e40);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   min-height: 600px;
-  position: relative;
-  overflow: hidden;
-  background-color: #001a33;
+  position: relative; /* For layered lighting effects */
+  overflow: hidden; /* Contain animated pseudo-elements */
+  background-color: #001a33; /* Deep water blue fallback */
 }
 
-/* Game message styling - same as tranquil pool */
+/* ========== NIXIE ENCOUNTER MESSAGE STYLING ========== */
+/* Inherits tranquil pool water-themed text effects for consistency */
 .nixie-appearance-display .game-message {
   position: relative;
-  z-index: 1;
-  color: #b3d9ff;
+  z-index: 1; /* Above background effects */
+  color: #b3d9ff; /* Light blue for underwater theme */
+  /* Multi-layer text shadow for underwater light refraction effect */
   text-shadow: 
     2px 2px 4px rgba(0, 0, 0, 0.9),
     -1px -1px 4px rgba(0, 0, 0, 0.9),
@@ -429,7 +492,8 @@
   margin-right: auto;
 }
 
-/* Water ripple effect */
+/* ========== NIXIE SCENE WATER EFFECTS ========== */
+/* Animated water ripple effect matching tranquil pool atmosphere */
 .nixie-appearance-display::after {
   content: '';
   position: absolute;
@@ -437,6 +501,7 @@
   left: 0;
   right: 0;
   bottom: 0;
+  /* Radial gradient creates expanding ripple visual */
   background: radial-gradient(
     circle at center,
     transparent 0%,
@@ -444,11 +509,12 @@
     transparent 100%
   );
   animation: water-ripple 4s ease-in-out infinite;
-  pointer-events: none;
+  pointer-events: none; /* Don't block user interactions */
   z-index: 1;
 }
 
-/* Bioluminescent glow effects */
+/* ========== NIXIE BIOLUMINESCENT AURA ========== */
+/* Complex multi-point bioluminescent effects suggesting magical creature presence */
 .nixie-appearance-display::before {
   content: '';
   position: absolute;
@@ -456,6 +522,7 @@
   left: 0;
   right: 0;
   bottom: 0;
+  /* Multiple radial gradients create scattered mystical glow points */
   background: 
     radial-gradient(circle at 20% 30%, rgba(0, 255, 200, 0.15) 0%, transparent 10%),
     radial-gradient(circle at 70% 40%, rgba(0, 200, 255, 0.12) 0%, transparent 8%),
@@ -465,10 +532,11 @@
   animation: bioluminescent-pulse 8s ease-in-out infinite;
   pointer-events: none;
   z-index: 1;
-  mix-blend-mode: screen;
+  mix-blend-mode: screen; /* Additive light blending for realistic glow mixing */
 }
 
-/* Bio-glow layers */
+/* ========== LAYERED MYSTICAL GLOW SYSTEM ========== */
+/* Animated glow layers creating organic movement around the nixie */
 .nixie-appearance-display .bio-glow-layer {
   position: absolute;
   top: 0;
@@ -479,47 +547,56 @@
   z-index: 1;
 }
 
+/* First glow layer - green-tinted magical aura */
 .nixie-appearance-display .bio-glow-layer:nth-child(1) {
   background: 
     radial-gradient(circle at 15% 10%, rgba(0, 255, 150, 0) 0%, rgba(0, 255, 150, 0.4) 10%, transparent 30%);
   animation: glow-drift-1 12s ease-in-out infinite;
 }
 
+/* Second glow layer - blue-tinted water magic */
 .nixie-appearance-display .bio-glow-layer:nth-child(2) {
   background: 
     radial-gradient(circle at 80% 15%, rgba(100, 200, 255, 0) 0%, rgba(100, 200, 255, 0.35) 8%, transparent 25%);
   animation: glow-drift-2 15s ease-in-out infinite;
 }
 
+/* Third glow layer - cyan-tinted creature essence */
 .nixie-appearance-display .bio-glow-layer:nth-child(3) {
   background: 
     radial-gradient(circle at 40% 10%, rgba(0, 255, 200, 0) 0%, rgba(0, 255, 200, 0.3) 12%, transparent 35%);
   animation: glow-drift-3 10s ease-in-out infinite;
 }
 
-/* Flicker spots */
+/* ========== NIXIE MAGICAL FLICKERING EFFECTS ========== */
+/* Additional scattered light points suggesting active magical presence */
 .nixie-appearance-display .flicker-spots {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  /* Multiple small radial gradients for scattered magical sparkles */
   background: 
     radial-gradient(circle at 25% 45%, rgba(0, 255, 180, 0.4) 0%, transparent 10%),
     radial-gradient(circle at 65% 35%, rgba(50, 200, 255, 0.35) 0%, transparent 12%),
     radial-gradient(circle at 45% 75%, rgba(0, 255, 200, 0.3) 0%, transparent 15%);
-  animation: flicker 3s steps(4) infinite;
+  animation: flicker 3s steps(4) infinite; /* Stepped animation for irregular magical flickering */
   pointer-events: none;
   z-index: 1;
-  mix-blend-mode: screen;
+  mix-blend-mode: screen; /* Additive light blending */
 }
 
-/* Nixie Rage Death Display */
+/* ==================== NIXIE COMBAT DEATH SCENES ==================== */
+
+/* ========== NIXIE RAGE DEATH SCENE ========== */
+/* Violent death scene when nixie kills player - dramatic red/dark theme */
 .nixie-rage-death-display {
   text-align: center;
   padding: 20px;
   margin: 15px 0;
   border-radius: 10px;
+  /* Layered background: violent death image over dark red gradient */
   background: url('../images/Nixie_kills_player.png'),
               linear-gradient(135deg, #4a0000, #1a0000);
   background-size: cover;
@@ -528,34 +605,37 @@
   min-height: 600px;
   position: relative;
   overflow: hidden;
-
 }
 
+/* Death message styling with aggressive red theme */
 .nixie-rage-death-display .game-message {
   position: relative;
   z-index: 1;
-  color: #ff6b6b;
+  color: #ff6b6b; /* Bright red for danger/death theme */
+  /* Enhanced red glow text shadow for dramatic death effect */
   text-shadow: 
     2px 2px 4px rgba(0, 0, 0, 0.9),
     -1px -1px 4px rgba(0, 0, 0, 0.9),
-    0 0 20px rgba(255, 0, 0, 0.8);
+    0 0 20px rgba(255, 0, 0, 0.8); /* Strong red glow */
   font-size: 1.3rem;
   font-weight: bold;
   line-height: 1.6;
   padding: 20px 40px;
-  background: transparent !important;
-  background: rgba(0, 0, 0, 0.7);
+  background: transparent !important; /* Override any inherited backgrounds */
+  background: rgba(0, 0, 0, 0.7); /* Semi-transparent dark overlay for readability */
   border-radius: 10px;
   margin: 20px auto;
   max-width: 80%;
 }
 
-/* Nixie Death Scene Display (when player kills nixie) */
+/* ========== NIXIE DEATH SCENE (PLAYER VICTORY) ========== */
+/* Melancholic scene when player defeats the nixie - somber blue theme */
 .nixie-death-scene-display {
   text-align: center;
   padding: 20px;
   margin: 15px 0;
   border-radius: 10px;
+  /* Layered background: nixie death image over dark mystical gradient */
   background: url('../images/Nixie_death_scene.png'),
               linear-gradient(135deg, #1a0e40, #0a0520);
   background-size: cover;
@@ -564,149 +644,156 @@
   min-height: 600px;
   position: relative;
   overflow: hidden;
-  background-color: #0a0520;
+  background-color: #0a0520; /* Deep purple fallback for mystical death theme */
 }
 
+/* Victory message with somber blue theme reflecting creature's demise */
 .nixie-death-scene-display .game-message {
   position: relative;
   z-index: 1;
-  color: #a3c9ff;
+  color: #a3c9ff; /* Soft blue for melancholic victory theme */
+  /* Gentle blue glow text shadow for ethereal death scene */
   text-shadow: 
     2px 2px 4px rgba(0, 0, 0, 0.9),
     -1px -1px 4px rgba(0, 0, 0, 0.9),
-    0 0 15px rgba(100, 150, 255, 0.6);
+    0 0 15px rgba(100, 150, 255, 0.6); /* Soft blue mystical glow */
   font-size: 1.3rem;
   font-weight: bold;
   line-height: 1.6;
   padding: 20px 40px;
-    background: transparent !important;
+  background: transparent !important; /* Clean background for somber effect */
   border-radius: 10px;
   margin: 20px auto;
   max-width: 80%;
 }
 
+/* ==================== SPECIALIZED DEATH SCENE STYLING SYSTEM ==================== */
 
-
-
-
-/* Curse death container */
+/* ========== CURSE DEATH SCENE CONTAINER ========== */
+/* Container system for curse-themed death with censored content overlay */
 .curse-death-display {
   min-height: 600px;
   max-width: 950px;
   width: 100%;
   position: relative;
-  overflow: hidden;
-   margin: 0px 30px ;
+  overflow: hidden; /* Contain animated effects */
+  margin: 0px 30px;
 }
 
-/* Your existing curse styles but WITHOUT the margins */
+/* ========== CURSE DEATH MESSAGE STYLING ========== */
+/* Intense supernatural death scene with pulsing red glow effects */
 .curse-death-display .game-message.lost.curse {
   position: relative;
   font-family: 'MedievalSharp', cursive;
   text-transform: none !important;
+  /* Layered background: censored image over dark gradient for mature content handling */
   background: url('../images/censored.png'), linear-gradient(to bottom, #1a1a1a, #000000);
   background-size: cover;
   background-position: center;
   min-height: 600px;
-  color: #521803;
-  font-weight: 900;
+  color: #521803; /* Dark red-brown for ominous supernatural theme */
+  font-weight: 900; /* Extra bold for dramatic impact */
   font-size: 2.1rem;
-  word-spacing: 5px;
+  word-spacing: 5px; /* Increased spacing for dramatic effect */
   line-height: 1.6;
   padding: 40px;
   border-radius: 8px;
-  margin: 0; /* Remove the margin that was pushing it outside */
+  margin: 0; /* No margin to fit within container */
   overflow: hidden;
-    z-index: 9999; 
-    /* Text effects */
-    text-shadow: 
-        0 0 10px #ff0000,
-        0 0 20px #ff0000,
-        0 0 30px #ff0000;
-       
-  
-    animation: pulseGlow 2s ease-in-out infinite;
+  z-index: 9999;
+  /* Multi-layer red glow text shadow for supernatural horror effect */
+  text-shadow: 
+    0 0 10px #ff0000,
+    0 0 20px #ff0000,
+    0 0 30px #ff0000;
+  animation: pulseGlow 2s ease-in-out infinite;
 }
-/* Dark overlay - reduced opacity for better visibility */
+
+/* ========== CURSE OVERLAY SYSTEM ========== */
+/* Dark overlay for content moderation while maintaining atmospheric effect */
 .game-message.lost.curse::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.3); /* Reduced from 0.6 to 0.3 */
-    pointer-events: none;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3); /* Reduced opacity for visibility balance */
+  pointer-events: none; /* Don't block user interactions */
 }
 
-/* Ensure text appears above overlay */
+/* Ensure text renders above dark overlay */
 .game-message.lost.curse > * {
-    position: relative;
-    z-index: 1;
+  position: relative;
+  z-index: 1;
 }
 
-/* Pulsing glow animation */
+/* ========== SUPERNATURAL GLOW ANIMATION ========== */
+/* Complex pulsing red glow animation suggesting malevolent supernatural energy */
 @keyframes pulseGlow {
-    0% {
-        text-shadow: 
-            0 0 10px #ff0000,
-            0 0 20px #ff0000,
-            0 0 30px #ff0000,
-            0 0 40px #cc0000,
-            0 0 70px #cc0000,
-            0 0 80px #cc0000,
-            0 0 100px #cc0000,
-            0 0 150px #cc0000;
-    }
-    50% {
-        text-shadow: 
-            0 0 20px #ff0000,
-            0 0 30px #ff0000,
-            0 0 40px #ff0000,
-            0 0 50px #ff3333,
-            0 0 80px #ff3333,
-            0 0 90px #ff3333,
-            0 0 110px #ff3333,
-            0 0 160px #ff3333;
-    }
-    100% {
-        text-shadow: 
-            0 0 10px #ff0000,
-            0 0 20px #ff0000,
-            0 0 30px #ff0000,
-            0 0 40px #cc0000,
-            0 0 70px #cc0000,
-            0 0 80px #cc0000,
-            0 0 100px #cc0000,
-            0 0 150px #cc0000;
-    }
+  0% {
+    /* Base glow state - moderate red intensity */
+    text-shadow: 
+      0 0 10px #ff0000,
+      0 0 20px #ff0000,
+      0 0 30px #ff0000,
+      0 0 40px #cc0000,
+      0 0 70px #cc0000,
+      0 0 80px #cc0000,
+      0 0 100px #cc0000,
+      0 0 150px #cc0000;
+  }
+  50% {
+    /* Peak glow state - maximum red intensity with brighter highlights */
+    text-shadow: 
+      0 0 20px #ff0000,
+      0 0 30px #ff0000,
+      0 0 40px #ff0000,
+      0 0 50px #ff3333,
+      0 0 80px #ff3333,
+      0 0 90px #ff3333,
+      0 0 110px #ff3333,
+      0 0 160px #ff3333;
+  }
+  100% {
+    /* Return to base state for seamless loop */
+    text-shadow: 
+      0 0 10px #ff0000,
+      0 0 20px #ff0000,
+      0 0 30px #ff0000,
+      0 0 40px #cc0000,
+      0 0 70px #cc0000,
+      0 0 80px #cc0000,
+      0 0 100px #cc0000,
+      0 0 150px #cc0000;
+  }
 }
 
+/* ==================== CREATURE ATTACK DEATH SCENES ==================== */
 
-/* Night crawler death - creepy crawly theme */
+/* ========== NIGHT CRAWLER DEATH SCENE ========== */
+/* Creepy insectoid creature death with subtle shaking animation */
 .game-message.lost.night_crawlers {
-  font-family: 'MedievalSharp', cursive; /* Fallback to serif if not available */
-  font-size:1.8rem;
+  font-family: 'MedievalSharp', cursive;
+  font-size: 1.8rem;
   min-height: 700px;
-  color: #b20d0d;
+  color: #b20d0d; /* Deep red for creature attack theme */
+  /* Layered background: night crawler image over dark gradient */
   background: url('../images/nightcrawlers.png'), linear-gradient(to bottom, #1a1a1a, #000000);
-
-  animation: falling-death 3s ease-in;
- 
+  /* Multi-layer text shadow for horror atmosphere */
   text-shadow: 
     0 0 10px rgba(255, 0, 0, 0.5),
     2px 2px 4px rgba(0, 0, 0, 1);
-
-
   animation: crawler-death 2s ease-in-out;
 }
 
+/* Subtle trembling animation suggesting creature attack aftermath */
 @keyframes crawler-death {
   0% {
     transform: scale(1) rotate(0deg);
   }
   25% {
-    transform: scale(1.02) rotate(-1deg);
+    transform: scale(1.02) rotate(-1deg); /* Slight scale and rotation for unease */
   }
   50% {
     transform: scale(1.02) rotate(1deg);
@@ -715,51 +802,53 @@
     transform: scale(1.01) rotate(-0.5deg);
   }
   100% {
-    transform: scale(1) rotate(0deg);
+    transform: scale(1) rotate(0deg); /* Return to normal for loop */
   }
 }
 
-
-/* Wizard room trapped death - stone/prison theme */
+/* ========== WIZARD ROOM TRAP DEATH SCENE ========== */
+/* Petrification/stone prison death with grayscale transformation */
 .game-message.lost.wizard_room_trapped {
   font-family: 'MedievalSharp', cursive;
-  font-size: 2.6rem;
-  color: #9E9E9E;
- 
-
+  font-size: 2.6rem; /* Large text for dramatic stone prison effect */
+  color: #9E9E9E; /* Gray color suggesting stone transformation */
+  /* Multi-layer text shadow with purple mystical glow and red danger accent */
   text-shadow: 
-    0 0 165px rgba(138, 43, 226, 0.5),
-    2px 2px 4px rgb(209, 20, 20);
+    0 0 165px rgba(138, 43, 226, 0.5), /* Purple mystical aura */
+    2px 2px 4px rgb(209, 20, 20); /* Red danger accent */
   animation: turn-to-stone 3s ease-out;
 }
 
+/* Stone transformation animation - gradual loss of life and color */
 @keyframes turn-to-stone {
   0% {
-    filter: grayscale(0%) brightness(1);
+    filter: grayscale(0%) brightness(1); /* Normal living appearance */
   }
   100% {
-    filter: grayscale(100%) brightness(0.7);
+    filter: grayscale(100%) brightness(0.7); /* Complete stone transformation */
   }
 }
 
-/* Trinket trap death - Lovecraftian horror theme */
+/* ==================== LOVECRAFTIAN HORROR: TRINKET TRAP SYSTEM ==================== */
 
+/* ========== TRINKET TRAP CONTAINER ========== */
+/* Container for complex Lovecraftian horror death scene with multiple effects */
 .trinket-trap-display {
   min-height: 750px;
   width: 100%;
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* Contain complex animated pseudo-elements */
 }
 
-
-
-
- .game-message.lost.trinket_trap {
+/* ========== TRINKET TRAP DEATH MESSAGE ========== */
+/* Elaborate Lovecraftian horror death with void-falling animation */
+.game-message.lost.trinket_trap {
   min-height: 750px;
   width: 100%;
   position: relative;
   overflow: hidden;
   font-family: 'MedievalSharp', cursive;
+  /* Complex layered background: trap image over eldritch gradient */
   background: url('../images/trinkets_trapdoor.png'), 
               radial-gradient(circle at center bottom, 
                 rgba(0, 0, 0, 0.9) 0%, 
@@ -767,8 +856,7 @@
                 rgba(0, 0, 0, 1) 100%);
   background-size: cover;
   background-position: center;
-  min-height: 750px;
-  color: #9d4edd;
+  color: #9d4edd; /* Purple for eldritch/cosmic horror theme */
   font-weight: bold;
   font-size: 2rem;
   line-height: 1.6;
@@ -776,40 +864,41 @@
   border-radius: 8px;
   margin: 0;
   text-align: center;
-  
-  /* Eldritch glow effect */
+  /* Multi-layer eldritch glow effect with purple cosmic horror palette */
   text-shadow:
     0 0 10px #c77dff,
     0 0 20px #7209b7,
     0 0 30px #560bad,
     0 0 40px #3c096c,
     2px 2px 4px rgba(0, 0, 0, 1);
-  
-  /* Falling into void animation */
+  /* Dramatic falling into void animation */
   animation: fall-into-void 10s ease-in forwards;
 }
 
-/* Falling animation - text appears to be sucked down */
+/* ========== VOID FALLING ANIMATION ========== */
+/* Complex 3D transformation simulating being pulled into eldritch void */
 @keyframes fall-into-void {
   0% {
     transform: translateY(0) scale(1);
     opacity: 1;
   }
   30% {
-    transform: translateY(20px) scale(0.98);
+    transform: translateY(20px) scale(0.98); /* Initial movement */
     opacity: 1;
   }
   60% {
-    transform: translateY(100px) scale(0.9) rotateX(20deg);
+    transform: translateY(100px) scale(0.9) rotateX(20deg); /* 3D rotation begins */
     opacity: 0.8;
   }
   100% {
-    transform: translateY(300px) scale(0.7) rotateX(45deg);
+    transform: translateY(300px) scale(0.7) rotateX(45deg); /* Full void consumption */
     opacity: 0;
   }
 }
 
-/* Tentacle overlay effect */
+/* ========== ELDRITCH TENTACLE EFFECTS ========== */
+
+/* Rising tentacle darkness from below using ::before pseudo-element */
 .trinket-trap-display::before {
   content: '';
   position: absolute;
@@ -817,6 +906,7 @@
   left: -10%;
   width: 120%;
   height: 150%;
+  /* Radial gradient simulating tentacle darkness rising from void */
   background: 
     radial-gradient(ellipse at center bottom, 
       transparent 0%, 
@@ -826,16 +916,18 @@
   pointer-events: none;
 }
 
+/* Tentacle rising animation - darkness consuming from below */
 @keyframes tentacle-rise {
   0% {
-    transform: translateY(100%);
+    transform: translateY(100%); /* Start below viewport */
   }
   100% {
-    transform: translateY(0);
+    transform: translateY(0); /* Rise to full height */
   }
 }
 
-/* Multiple tentacle shadows */
+/* ========== MULTIPLE TENTACLE SHADOW SYSTEM ========== */
+/* Complex multi-tentacle shadow effects using ::after pseudo-element */
 .trinket-trap-display::after {
   content: '';
   position: absolute;
@@ -843,6 +935,7 @@
   left: 0;
   right: 0;
   bottom: 0;
+  /* Multiple radial gradients creating scattered tentacle shadows */
   background-image: 
     radial-gradient(ellipse at 20% 80%, rgba(60, 9, 108, 0.6) 0%, transparent 40%),
     radial-gradient(ellipse at 80% 90%, rgba(114, 9, 183, 0.5) 0%, transparent 35%),
@@ -853,12 +946,13 @@
   pointer-events: none;
 }
 
+/* Organic tentacle movement animation */
 @keyframes tentacle-writhe {
   0%, 100% {
     transform: translateY(0) scale(1);
   }
   25% {
-    transform: translateY(-10px) scale(1.05);
+    transform: translateY(-10px) scale(1.05); /* Undulating movement */
   }
   50% {
     transform: translateY(5px) scale(0.95);
@@ -868,19 +962,22 @@
   }
 }
 
-/* Glittering baubles effect - the trap that started it all */
+/* ========== DECEPTIVE TREASURE EFFECTS ========== */
+
+/* Falling sparkle effect - the glittering baubles that triggered the trap */
 .trinket-trap-display .sparkle {
   position: absolute;
   width: 4px;
   height: 4px;
-  background: #ffd700;
+  background: #ffd700; /* Gold sparkle color */
   border-radius: 50%;
-  box-shadow: 0 0 10px #ffd700;
+  box-shadow: 0 0 10px #ffd700; /* Golden glow */
   animation: sparkle-fall 3s ease-in forwards;
-  animation-delay: var(--sparkle-delay, 0s);
+  animation-delay: var(--sparkle-delay, 0s); /* CSS custom property for staggered timing */
   pointer-events: none;
 }
 
+/* Sparkle falling animation with drift effect */
 @keyframes sparkle-fall {
   0% {
     transform: translateY(0) translateX(0) scale(1);
@@ -892,11 +989,12 @@
   }
   100% {
     transform: translateY(800px) translateX(var(--drift, 40px)) scale(0.2);
-    opacity: 0;
+    opacity: 0; /* Fade as they fall into void */
   }
 }
 
-/* Maw opening effect */
+/* ========== ELDRITCH MAW OPENING EFFECT ========== */
+/* Expanding void maw that consumes the player */
 .maw-effect {
   position: absolute;
   bottom: 0;
@@ -905,6 +1003,7 @@
   width: 300px;
   height: 300px;
   border-radius: 50%;
+  /* Radial gradient creating void maw appearance */
   background: radial-gradient(circle at center, 
     rgba(0, 0, 0, 1) 0%, 
     rgba(60, 9, 108, 0.8) 30%, 
@@ -912,6 +1011,7 @@
   animation: maw-open 4s ease-out forwards;
 }
 
+/* Maw opening animation - expanding void portal */
 @keyframes maw-open {
   0% {
     transform: translateX(-50%) scale(0);
@@ -922,18 +1022,20 @@
     opacity: 1;
   }
   100% {
-    transform: translateX(-50%) scale(3);
+    transform: translateX(-50%) scale(3); /* Massive final scale */
     opacity: 0.8;
   }
 }
 
-/* Teeth effect around the edges */
+/* ========== ELDRITCH TEETH BORDER EFFECT ========== */
+/* Animated teeth border suggesting creature maw */
 .trinket-trap-display .teeth-border {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   height: 100px;
+  /* Repeating linear gradient creating teeth pattern */
   background: repeating-linear-gradient(
     90deg,
     #e0aaff 0px,
@@ -941,6 +1043,7 @@
     transparent 10px,
     transparent 20px
   );
+  /* Clip-path creates jagged teeth shape */
   clip-path: polygon(
     0% 100%, 5% 70%, 10% 100%, 15% 70%, 20% 100%, 
     25% 70%, 30% 100%, 35% 70%, 40% 100%, 45% 70%, 
@@ -951,16 +1054,19 @@
   opacity: 0.6;
 }
 
+/* Snapping teeth animation suggesting feeding motion */
 @keyframes teeth-snap {
   0%, 100% {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-10px); /* Upward snap motion */
   }
 }
+/* ==================== ELDRITCH HORROR ENHANCEMENT EFFECTS ==================== */
 
-/* Void pulse effect */
+/* ========== VOID PULSE ATMOSPHERIC EFFECT ========== */
+/* Pulsing void energy emanating from the trinket trap's eldritch source */
 .void-pulse {
   position: absolute;
   bottom: 20%;
@@ -969,6 +1075,7 @@
   width: 200px;
   height: 200px;
   border-radius: 50%;
+  /* Radial gradient creating pulsing void energy appearance */
   background: radial-gradient(circle at center, 
     transparent 0%, 
     rgba(114, 9, 183, 0.4) 50%, 
@@ -976,60 +1083,69 @@
   animation: void-pulse 2s ease-in-out infinite;
 }
 
+/* Void pulse animation - breathing eldritch energy effect */
 @keyframes void-pulse {
   0%, 100% {
     transform: translate(-50%, 50%) scale(1);
     opacity: 0.5;
   }
   50% {
-    transform: translate(-50%, 50%) scale(1.5);
-    opacity: 0.8;
+    transform: translate(-50%, 50%) scale(1.5); /* Expand at peak */
+    opacity: 0.8; /* Intensify at peak */
   }
 }
 
-/* Extra eldritch horror details */
+/* ========== ELDRITCH SYMBOL MANIFESTATION ========== */
+/* Ancient symbols appearing and fading during the trinket trap horror sequence */
 .trinket-trap-display .eldritch-symbols {
   position: absolute;
   top: 20px;
   left: 20px;
   right: 20px;
-  font-family: 'Uncial Antiqua', cursive;
+  font-family: 'Uncial Antiqua', cursive; /* Ancient script font */
   font-size: 3rem;
-  color: rgba(199, 125, 255, 0.3);
+  color: rgba(199, 125, 255, 0.3); /* Translucent purple for mystical effect */
   text-align: center;
   animation: symbol-fade 5s ease-in forwards;
 }
 
+/* Inverted eldritch symbols using CSS pseudo-element */
 .eldritch-symbols::before {
-  content: "◉ ⟁ ◈ ⟐ ◉";
+  content: "◉ ⟁ ◈ ⟐ ◉"; /* Unicode mystical symbols */
   display: block;
-  transform: rotate(180deg);
+  transform: rotate(180deg); /* Inverted for otherworldly effect */
 }
 
+/* Symbol manifestation and dissolution animation */
 @keyframes symbol-fade {
   0% {
     opacity: 0;
-    transform: scale(0.5);
+    transform: scale(0.5); /* Start small and invisible */
   }
   20% {
     opacity: 0.3;
-    transform: scale(1);
+    transform: scale(1); /* Manifest at normal size */
   }
   100% {
     opacity: 0;
-    transform: scale(1.2);
+    transform: scale(1.2); /* Grow larger as they fade into void */
   }
 }
-/* Wizard room absorbed death - mystical absorption theme */
+
+/* ==================== MYSTICAL ABSORPTION DEATH SCENE ==================== */
+
+/* ========== WIZARD ROOM ABSORPTION DEATH ========== */
+/* Mind/soul absorption death with reality distortion effects */
 .game-message.lost.wizard_room_absorbed {
-  font-family: 'Uncial Antiqua', cursive;
+  font-family: 'Uncial Antiqua', cursive; /* Ancient mystical font */
   font-size: 1.9rem;
-  color: #E1BEE7;
+  color: #E1BEE7; /* Light lavender for ethereal absorption theme */
+  /* Radial gradient suggesting mystical absorption vortex */
   background: radial-gradient(circle at center, 
     rgba(138, 43, 226, 0.6) 0%, 
     rgba(75, 0, 130, 0.8) 50%, 
     rgba(0, 0, 0, 0.9) 100%);
-  
+  /* Multi-layer mystical glow with purple cosmic theme */
   text-shadow: 
     0 0 20px rgba(138, 43, 226, 0.8),
     0 0 40px rgba(147, 112, 219, 0.6),
@@ -1037,56 +1153,63 @@
   animation: mind-absorb 4s ease-in-out;
 }
 
+/* Mind absorption animation with reality distortion effects */
 @keyframes mind-absorb {
   0%, 100% {
-    filter: blur(0px) hue-rotate(0deg);
+    filter: blur(0px) hue-rotate(0deg); /* Normal state */
   }
   25% {
-    filter: blur(1px) hue-rotate(180deg);
+    filter: blur(1px) hue-rotate(180deg); /* Reality begins to warp */
   }
   50% {
-    filter: blur(2px) hue-rotate(360deg);
+    filter: blur(2px) hue-rotate(360deg); /* Peak distortion - full reality shift */
   }
   75% {
-    filter: blur(1px) hue-rotate(180deg);
+    filter: blur(1px) hue-rotate(180deg); /* Distortion continues */
   }
 }
 
+/* ==================== CREATURE ENCOUNTER DEATH SCENES ==================== */
 
-/* Wumpus death video styling */
+/* ========== WUMPUS DEATH VIDEO DISPLAY ========== */
+/* Video-based death scene for dramatic Wumpus encounter finale */
 .wumpus-death-display {
   position: relative;
   min-height: 700px;
-  overflow: hidden;
-  
+  overflow: hidden; /* Contain video and prevent scrollbars */
 }
 
+/* Full-screen video background for immersive death scene */
 .wumpus-death-display .death-video-background {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  z-index: 0;
+  object-fit: cover; /* Maintain aspect ratio while filling container */
+  z-index: 0; /* Behind all text content */
 }
 
+/* Wumpus death message overlay styling */
 .wumpus-death-display .game-message {
   position: relative;
-  z-index: 1;
+  z-index: 1; /* Above video background */
   font-family: 'MedievalSharp', cursive;
   font-size: 1.8rem;
-  color: #d68888;
+  color: #d68888; /* Muted red for creature attack theme */
+  /* Dramatic red glow with strong contrast shadow */
   text-shadow:
     0 0 10px rgba(255, 0, 0, 0.8),
     2px 2px 4px rgba(0, 0, 0, 1);
   padding: 2rem;
-  background: transparent !important;
-  border: none !important;
+  background: transparent !important; /* No background to show video */
+  border: none !important; /* Clean overlay appearance */
 }
 
-/* Pit death - falling theme */
-/* Base pit death display */
+/* ==================== PIT TRAP DEATH SYSTEM ==================== */
+
+/* ========== BASE PIT DEATH CONTAINER ========== */
+/* Foundation styling for both pit death variations */
 .pit-death-display {
   min-height: 700px;
   padding: 20px;
@@ -1095,76 +1218,81 @@
   background-repeat: no-repeat;
   background-position: center;
   border-radius: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9); /* Deep shadow for pit depth */
   border: 2px solid #1a1a1a;
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* Contain falling animations */
 }
 
-/* Pit 1 Death */
+/* ========== PIT-SPECIFIC DEATH SCENES ========== */
+
+/* First pit death with straight falling animation */
 .pit-death-1 {
+  /* Layered background: pit 1 image over dark gradient */
   background: url('../images/Pit1_death.png'), linear-gradient(to bottom, #1a1a1a, #000000);
   animation: falling-death 3s ease-in;
 }
 
-/* Pit 2 Death */
+/* Second pit death with tumbling motion */
 .pit-death-2 {
+  /* Layered background: pit 2 image over brown-tinted gradient */
   background: url('../images/Pit2_death.png'), linear-gradient(to bottom, #2c1810, #000000);
   animation: tumbling-death 3s ease-in;
 }
 
-/* Falling animation for pit 1 */
+/* ========== PIT DEATH ANIMATIONS ========== */
+
+/* Straight falling animation for pit 1 - simple vertical descent */
 @keyframes falling-death {
   0% {
     transform: translateY(0) scale(1);
-    filter: brightness(1);
+    filter: brightness(1); /* Normal brightness */
   }
   50% {
-    transform: translateY(20px) scale(0.98);
-    filter: brightness(0.8);
+    transform: translateY(20px) scale(0.98); /* Slight compression from impact */
+    filter: brightness(0.8); /* Dimming as player falls */
   }
   100% {
-    transform: translateY(30px) scale(0.97);
-    filter: brightness(0.6);
+    transform: translateY(30px) scale(0.97); /* Final settled position */
+    filter: brightness(0.6); /* Dark final state */
   }
 }
 
-/* Tumbling animation for pit 2 */
+/* Tumbling animation for pit 2 - chaotic rotational falling */
 @keyframes tumbling-death {
   0% {
     transform: rotate(0deg) translateY(0);
     filter: brightness(1);
   }
   33% {
-    transform: rotate(10deg) translateY(10px);
+    transform: rotate(10deg) translateY(10px); /* Tumbling motion begins */
     filter: brightness(0.9);
   }
   66% {
-    transform: rotate(-10deg) translateY(20px);
+    transform: rotate(-10deg) translateY(20px); /* Continued tumbling */
     filter: brightness(0.7);
   }
   100% {
-    transform: rotate(5deg) translateY(30px);
+    transform: rotate(5deg) translateY(30px); /* Final tumbled position */
     filter: brightness(0.5);
   }
 }
 
-/* Content area for pit death messages */
+/* ========== PIT DEATH MESSAGE POSITIONING ========== */
+
+/* Content area for pit death messages with precise positioning */
 .pit-death-content {
-
-
   padding: 20px;
   position: absolute;
-  bottom: 20px;
+  bottom: 20px; /* Near bottom of pit display */
   left: 60px;
   right: 20px;
-  
 }
 
-/* Death message styling for pit deaths */
+/* Base message styling for all pit deaths */
 .pit-death-display .game-message {
-  
-  color: #FFE082;
+  color: #FFE082; /* Warm yellow for underground/earth theme */
+  /* Dual text shadow: black outline + red danger glow */
   text-shadow: 
     2px 2px 4px rgba(0, 0, 0, 1),
     0 0 10px rgba(139, 0, 0, 0.5);
@@ -1172,34 +1300,41 @@
   text-align: center;
 }
 
-/* Update the death cause specific styles for pit1 and pit2 */
+/* ========== PIT-SPECIFIC MESSAGE STYLING ========== */
+
+/* Pit 1 death message - dramatic and bold */
 .game-message.lost.pit1,
 p.game-message.lost.pit1,
 .pit-death-display .game-message.lost.pit1 {
   font-family: 'MedievalSharp', cursive !important;
-  font-size: 2.4rem !important;
-  color: #FFEB3B !important;
-    background: transparent !important;
+  font-size: 2.4rem !important; /* Large for dramatic impact */
+  color: #FFEB3B !important; /* Bright yellow for visibility */
+  background: transparent !important;
   border: none !important;
+  /* Enhanced shadow for dramatic pit 1 death */
   text-shadow: 
     0 0 10px rgba(255, 0, 0, 0.5),
     2px 2px 4px rgba(0, 0, 0, 1) !important;
 }
 
+/* Pit 2 death message - more refined and somber */
 .game-message.lost.pit2,
 p.game-message.lost.pit2,
 .pit-death-display .game-message.lost.pit2 {
-  font-family: 'Uncial Antiqua', cursive !important;
-  font-size: 1.5rem !important;
-  color: #FFC107 !important;
-    background: transparent !important;
+  font-family: 'Uncial Antiqua', cursive !important; /* Ancient script for mystical pit */
+  font-size: 1.5rem !important; /* Smaller, more refined */
+  color: #FFC107 !important; /* Amber for warmer pit theme */
+  background: transparent !important;
   border: none !important;
+  /* Stronger glow for deeper pit 2 death */
   text-shadow: 
     0 0 15px rgba(139, 0, 0, 0.6),
     2px 2px 6px rgba(0, 0, 0, 1) !important;
 }
 
-/* Optional: Add some environmental effects */
+/* ========== ENVIRONMENTAL DARKNESS EFFECT ========== */
+
+/* Creeping darkness overlay for all pit deaths using ::before pseudo-element */
 .pit-death-display::before {
   content: '';
   position: absolute;
@@ -1207,6 +1342,7 @@ p.game-message.lost.pit2,
   left: 0;
   right: 0;
   bottom: 0;
+  /* Gradient suggesting darkness creeping up from pit depths */
   background: linear-gradient(to bottom, 
     transparent 70%, 
     transparent 90%, 
@@ -1215,33 +1351,39 @@ p.game-message.lost.pit2,
   animation: darkness-creep 3s ease-out;
 }
 
+/* Darkness creeping animation - gradual environmental darkening */
 @keyframes darkness-creep {
   0% {
-    opacity: 0;
+    opacity: 0; /* No darkness initially */
   }
   100% {
-    opacity: 1;
+    opacity: 1; /* Full darkness effect */
   }
-}
 
-/* Sand creature death - enhanced with swirling sand */
+}
+/* ==================== ENVIRONMENTAL CREATURE DEATH SCENES ==================== */
+
+/* ========== SAND CREATURE BURIAL DEATH ========== */
+/* Complex sand burial death with multi-layered particle effects and environmental atmosphere */
 .game-message.lost.sand_creature {
-min-height: 700px;
-font-family: 'MedievalSharp', cursive;
-font-size: 1.7rem;
-color: #FFF8E1;
-background: linear-gradient(135deg,
-rgba(139, 90, 43, 0.8),
-rgba(110, 70, 30, 0.9));
-border: 2px solid #8D6E63;
-text-shadow:
-0 0 10px rgba(139, 90, 43, 0.8),
-2px 2px 4px rgba(0, 0, 0, 1);
-background: url('../images/sandwraith.png'), linear-gradient(to bottom, #1a1a1a, #000000);
+  min-height: 700px;
+  font-family: 'MedievalSharp', cursive;
+  font-size: 1.7rem;
+  color: #FFF8E1; /* Warm cream for desert/sand theme */
+  /* Dual background system: sand creature image over gradient for atmosphere */
+  background: url('../images/sandwraith.png'), linear-gradient(to bottom, #1a1a1a, #000000);
+  /* Desert-themed styling with sand colors */
+  border: 2px solid #8D6E63; /* Brown border for earth/sand theme */
+  /* Multi-layer text shadow for desert heat shimmer effect */
+  text-shadow:
+    0 0 10px rgba(139, 90, 43, 0.8),
+    2px 2px 4px rgba(0, 0, 0, 1);
   animation: sand-burial 4s ease-in-out;
 }
 
-/* Multiple layers of swirling sand particles */
+/* ========== MULTI-LAYERED SAND PARTICLE SYSTEM ========== */
+
+/* First layer of swirling sand particles using ::before pseudo-element */
 .game-message.lost.sand_creature::before {
   content: '';
   position: absolute;
@@ -1249,6 +1391,7 @@ background: url('../images/sandwraith.png'), linear-gradient(to bottom, #1a1a1a,
   left: 0;
   right: 0;
   bottom: 0;
+  /* Multiple radial gradients creating scattered sand particles */
   background-image: 
     radial-gradient(circle at 10% 20%, #D4A574 0%, transparent 2%),
     radial-gradient(circle at 30% 40%, #C19A6B 0%, transparent 1.5%),
@@ -1257,12 +1400,12 @@ background: url('../images/sandwraith.png'), linear-gradient(to bottom, #1a1a1a,
     radial-gradient(circle at 20% 80%, #BC9A6A 0%, transparent 1.5%),
     radial-gradient(circle at 70% 10%, #D4A574 0%, transparent 2%),
     radial-gradient(circle at 40% 70%, #C8B88B 0%, transparent 1%);
-  background-size: 15% 15%;
+  background-size: 15% 15%; /* Small particle size for realistic sand effect */
   animation: sand-swirl-1 8s linear infinite;
   pointer-events: none;
 }
 
-/* Second layer of sand for depth */
+/* Second layer of sand particles for depth using ::after pseudo-element */
 .game-message.lost.sand_creature::after {
   content: '';
   position: absolute;
@@ -1270,122 +1413,130 @@ background: url('../images/sandwraith.png'), linear-gradient(to bottom, #1a1a1a,
   left: 0;
   right: 0;
   bottom: 0;
+  /* Additional sand particles with different colors for depth */
   background-image: 
     radial-gradient(circle at 25% 15%, #8B7355 0%, transparent 1.5%),
     radial-gradient(circle at 45% 55%, #A0826D 0%, transparent 2%),
     radial-gradient(circle at 75% 35%, #BC9A6A 0%, transparent 1%),
     radial-gradient(circle at 15% 65%, #D2B48C 0%, transparent 1.5%),
     radial-gradient(circle at 85% 85%, #C8B88B 0%, transparent 2%);
-  background-size: 20% 20%;
-  animation: sand-swirl-2 12s linear infinite reverse;
+  background-size: 20% 20%; /* Slightly larger for layered depth effect */
+  animation: sand-swirl-2 12s linear infinite reverse; /* Reverse direction for realism */
   pointer-events: none;
-  opacity: 0.7;
+  opacity: 0.7; /* Semi-transparent for layering effect */
 }
 
-/* Sand burial main animation */
+/* ========== SAND BURIAL ANIMATION SYSTEM ========== */
+
+/* Main sand burial animation with progressive environmental effects */
 @keyframes sand-burial {
   0% {
     transform: translateY(0) scale(1);
-    filter: brightness(1) contrast(1);
+    filter: brightness(1) contrast(1); /* Normal visibility */
   }
   20% {
-    transform: translateY(-10px) scale(1.02);
+    transform: translateY(-10px) scale(1.02); /* Initial struggle movement */
     filter: brightness(1.1) contrast(1.1);
   }
   40% {
-    transform: translateY(5px) scale(0.98);
-    filter: brightness(0.9) contrast(1.2) blur(1px);
+    transform: translateY(5px) scale(0.98); /* Being pulled down */
+    filter: brightness(0.9) contrast(1.2) blur(1px); /* Vision beginning to blur */
   }
   60% {
-    transform: translateY(15px) scale(0.97);
-    filter: brightness(0.7) contrast(1.3) sepia(0.3);
+    transform: translateY(15px) scale(0.97); /* Further burial */
+    filter: brightness(0.7) contrast(1.3) sepia(0.3); /* Sand coloring begins */
   }
   80% {
-    transform: translateY(25px) scale(0.95);
-    filter: brightness(0.5) contrast(1.4) sepia(0.5) blur(2px);
+    transform: translateY(25px) scale(0.95); /* Nearly buried */
+    filter: brightness(0.5) contrast(1.4) sepia(0.5) blur(2px); /* Heavy sand effect */
   }
   100% {
-    transform: translateY(40px) scale(0.93);
-    filter: brightness(0.3) contrast(1.5) sepia(0.7) blur(3px);
+    transform: translateY(40px) scale(0.93); /* Completely buried */
+    filter: brightness(0.3) contrast(1.5) sepia(0.7) blur(3px); /* Total burial effect */
   }
 }
 
-/* First sand swirl pattern */
+/* ========== SAND SWIRL ANIMATION PATTERNS ========== */
+
+/* First sand swirl pattern - circular rotation with drift */
 @keyframes sand-swirl-1 {
   0% {
     transform: rotate(0deg) translateX(0) translateY(0);
   }
   25% {
-    transform: rotate(90deg) translateX(-30px) translateY(20px);
+    transform: rotate(90deg) translateX(-30px) translateY(20px); /* Quarter rotation with drift */
   }
   50% {
-    transform: rotate(180deg) translateX(20px) translateY(-10px);
+    transform: rotate(180deg) translateX(20px) translateY(-10px); /* Half rotation */
   }
   75% {
-    transform: rotate(270deg) translateX(-10px) translateY(30px);
+    transform: rotate(270deg) translateX(-10px) translateY(30px); /* Three-quarter rotation */
   }
   100% {
-    transform: rotate(360deg) translateX(0) translateY(0);
+    transform: rotate(360deg) translateX(0) translateY(0); /* Full rotation return */
   }
 }
 
-/* Second sand swirl pattern */
+/* Second sand swirl pattern - scaling with horizontal movement */
 @keyframes sand-swirl-2 {
   0% {
     transform: scale(1) translateX(0);
   }
   33% {
-    transform: scale(1.2) translateX(40px);
+    transform: scale(1.2) translateX(40px); /* Expand and drift right */
   }
   66% {
-    transform: scale(0.8) translateX(-40px);
+    transform: scale(0.8) translateX(-40px); /* Compress and drift left */
   }
   100% {
-    transform: scale(1) translateX(0);
+    transform: scale(1) translateX(0); /* Return to normal */
   }
 }
 
-/* Sand storm overlay effect */
+/* Enhanced sand storm visual effects - inset shadows for depth */
 .game-message.lost.sand_creature {
   box-shadow: 
-    inset 0 0 100px rgba(139, 90, 43, 0.4),
-    inset 0 0 50px rgba(110, 70, 30, 0.6);
+    inset 0 0 100px rgba(139, 90, 43, 0.4), /* Inner sand glow */
+    inset 0 0 50px rgba(110, 70, 30, 0.6); /* Deeper inner shadow */
 }
 
-/* Text effects for sand death */
+/* Enhanced text burial effects */
 .game-message.lost.sand_creature {
+  /* Multi-layer text shadow with sand glow effects */
   text-shadow:
     0 0 20px rgba(139, 90, 43, 0.8),
     2px 2px 4px rgba(0, 0, 0, 1),
-    0 0 40px rgba(194, 154, 108, 0.6);
+    0 0 40px rgba(194, 154, 108, 0.6); /* Extended sandy glow */
   animation: text-sand-burial 4s ease-in-out;
 }
 
+/* Text-specific burial animation */
 @keyframes text-sand-burial {
   0% {
     opacity: 0;
-    transform: translateY(-30px);
+    transform: translateY(-30px); /* Start above normal position */
   }
   10% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0); /* Normal position */
   }
   50% {
-    transform: translateY(5px) scaleY(0.98);
+    transform: translateY(5px) scaleY(0.98); /* Slight compression */
   }
   100% {
-    transform: translateY(20px) scaleY(0.95);
-    opacity: 0.7;
+    transform: translateY(20px) scaleY(0.95); /* Final buried position */
+    opacity: 0.7; /* Partially obscured by sand */
   }
 }
 
-/* Additional sand dust cloud effect */
+/* Additional sand dust cloud effect class for enhanced realism */
 .game-message.lost.sand_creature .sand-cloud {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   height: 200px;
+  /* Gradient creating rising dust cloud effect */
   background: linear-gradient(to top, 
     rgba(139, 90, 43, 0.8) 0%, 
     rgba(194, 154, 108, 0.4) 50%, 
@@ -1393,200 +1544,59 @@ background: url('../images/sandwraith.png'), linear-gradient(to bottom, #1a1a1a,
   animation: dust-rise 4s ease-out;
 }
 
+/* Rising dust cloud animation */
 @keyframes dust-rise {
   0% {
-    transform: translateY(100%);
+    transform: translateY(100%); /* Start below viewport */
     opacity: 0;
   }
   50% {
-    transform: translateY(0);
+    transform: translateY(0); /* Rise to normal position */
     opacity: 1;
   }
   100% {
-    transform: translateY(-20%);
-    opacity: 0.6;
+    transform: translateY(-20%); /* Continue rising above */
+    opacity: 0.6; /* Fade as it disperses */
   }
 }
-/* Fungi creature death - luminescent horror theme */
-.game-message.lost.fungi_attack {
-  min-height: 700px;
-  font-family: 'MedievalSharp', cursive;
-  font-size: 1.8rem;
-  color: #C8E6C9;
-  background: url('../images/fungideath.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  border: 2px solid #4CAF50;
-  position: relative;
-  overflow: hidden;
-  animation: fungi-takeover 5s ease-in-out;
-}
+/* ==================== FUNGI CREATURE BIOLUMINESCENT DEATH SYSTEM ==================== */
 
-/* Luminescent fungi glow effect */
-.game-message.lost.fungi_attack::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 30%, rgba(0, 255, 127, 0.3) 0%, transparent 40%),
-    radial-gradient(circle at 80% 20%, rgba(64, 255, 255, 0.25) 0%, transparent 35%),
-    radial-gradient(circle at 10% 80%, rgba(0, 255, 200, 0.3) 0%, transparent 45%),
-    radial-gradient(circle at 70% 70%, rgba(127, 255, 212, 0.25) 0%, transparent 40%),
-    radial-gradient(circle at 50% 50%, rgba(0, 255, 127, 0.2) 0%, transparent 50%);
-  animation: bioluminescence-pulse 3s ease-in-out infinite;
-  pointer-events: none;
-  mix-blend-mode: screen;
-}
-
-/* Spore particles floating effect */
-.game-message.lost.fungi_attack::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(circle at 15% 20%, rgba(127, 255, 212, 0.8) 0%, transparent 2%),
-    radial-gradient(circle at 40% 40%, rgba(0, 255, 127, 0.6) 0%, transparent 1.5%),
-    radial-gradient(circle at 70% 25%, rgba(64, 255, 255, 0.7) 0%, transparent 1%),
-    radial-gradient(circle at 25% 70%, rgba(127, 255, 212, 0.6) 0%, transparent 1.5%),
-    radial-gradient(circle at 85% 60%, rgba(0, 255, 200, 0.8) 0%, transparent 2%),
-    radial-gradient(circle at 60% 85%, rgba(0, 255, 127, 0.7) 0%, transparent 1%);
-  background-size: 100% 100%;
-  animation: spore-float 10s linear infinite;
-  pointer-events: none;
-  opacity: 0;
-  animation: spore-release 5s ease-out forwards;
-}
-
-/* Main fungi takeover animation */
-@keyframes fungi-takeover {
-  0% {
-    filter: brightness(1) contrast(1) hue-rotate(0deg);
-    transform: scale(1);
-  }
-  20% {
-    filter: brightness(1.3) contrast(1.2) hue-rotate(-10deg);
-    transform: scale(1.02);
-  }
-  40% {
-    filter: brightness(1.1) contrast(1.3) hue-rotate(10deg) blur(1px);
-    transform: scale(0.98);
-  }
-  60% {
-    filter: brightness(0.9) contrast(1.4) hue-rotate(20deg) blur(2px) saturate(1.5);
-    transform: scale(0.97);
-  }
-  80% {
-    filter: brightness(0.6) contrast(1.5) hue-rotate(30deg) blur(3px) saturate(2);
-    transform: scale(0.95);
-  }
-  100% {
-    filter: brightness(0.3) contrast(1.6) hue-rotate(40deg) blur(4px) saturate(2.5);
-    transform: scale(0.93);
-  }
-}
-
-/* Bioluminescent pulsing */
-@keyframes bioluminescence-pulse {
-  0%, 100% {
-    opacity: 0.5;
-    filter: blur(20px);
-  }
-  33% {
-    opacity: 0.8;
-    filter: blur(30px) brightness(1.2);
-  }
-  66% {
-    opacity: 0.6;
-    filter: blur(25px) brightness(1.1);
-  }
-}
-
-/* Spore release and float */
-@keyframes spore-release {
-  0% {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-  30% {
-    opacity: 0.7;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(-20%);
-  }
-}
-
-@keyframes spore-float {
-  0% {
-    transform: translateY(0) translateX(0);
-  }
-  25% {
-    transform: translateY(-30px) translateX(20px);
-  }
-  50% {
-    transform: translateY(-50px) translateX(-10px);
-  }
-  75% {
-    transform: translateY(-20px) translateX(-20px);
-  }
-  100% {
-    transform: translateY(0) translateX(0);
-  }
-}
-
-/* Tendrils growing effect overlay */
-.game-message.lost.fungi_attack .tendril-growth {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 0;
-  background: linear-gradient(to top, 
-    rgba(0, 255, 127, 0.6) 0%, 
-    rgba(64, 255, 255, 0.3) 50%, 
-    transparent 100%);
-  animation: tendril-climb 5s ease-out forwards;
-  mix-blend-mode: screen;
-}
-
-@keyframes tendril-climb {
-  0% {
-    height: 0;
-  }
-  50% {
-    height: 50%;
-  }
-  100% {
-    height: 100%;
-  }
-}
-
-
-/* Fungi creature death - luminescent horror theme */
+/* ========== MAIN FUNGI DEATH CONTAINER ========== */
+/* Luminescent horror death with complex bioluminescent effects and spore systems */
 .game-message.lost.fungi {
   min-height: 700px;
   font-family: 'MedievalSharp', cursive;
   font-size: 1.8rem;
-  color: #C8E6C9;
+  color: #C8E6C9; /* Light green for fungi/nature infected theme */
+  /* Fungi death background image with full coverage */
   background: url('../images/fungideath.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border: 2px solid #4CAF50;
+  border: 2px solid #4CAF50; /* Green border for nature/fungi theme */
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* Contain complex bioluminescent effects */
   animation: fungi-takeover 5s ease-in-out;
+  
+  /* ========== ENHANCED TEXT EFFECTS ========== */
+  /* Multi-layer text shadow system with fungi luminescence theming */
+  text-shadow:
+    0 0 20px rgba(0, 255, 127, 0.8), /* Primary green glow */
+    0 0 40px rgba(64, 255, 255, 0.6), /* Secondary cyan glow */
+    2px 2px 4px rgba(0, 0, 0, 1), /* Black outline for contrast */
+    0 0 60px rgba(127, 255, 212, 0.4); /* Extended light cyan aura */
+  
+  /* ========== COMPREHENSIVE LUMINESCENT BORDER SYSTEM ========== */
+  /* Multi-layer box shadow system creating full luminescent atmosphere */
+  box-shadow: 
+    inset 0 0 100px rgba(0, 255, 127, 0.3), /* Inner green glow */
+    inset 0 0 50px rgba(64, 255, 255, 0.2), /* Inner cyan glow */
+    0 0 30px rgba(127, 255, 212, 0.4), /* Outer light cyan aura */
+    0 0 60px rgba(0, 255, 200, 0.3); /* Extended outer cyan-green aura */
 }
 
-/* Luminescent fungi glow effect */
+/* ========== BIOLUMINESCENT GLOW SYSTEM ========== */
+/* Multi-point luminescent fungi glow using ::before pseudo-element */
 .game-message.lost.fungi::before {
   content: '';
   position: absolute;
@@ -1594,18 +1604,20 @@ background: url('../images/sandwraith.png'), linear-gradient(to bottom, #1a1a1a,
   left: 0;
   right: 0;
   bottom: 0;
+  /* Five-point bioluminescent glow system with varied intensities */
   background: 
-    radial-gradient(circle at 20% 30%, rgba(0, 255, 127, 0.3) 0%, transparent 40%),
-    radial-gradient(circle at 80% 20%, rgba(64, 255, 255, 0.25) 0%, transparent 35%),
-    radial-gradient(circle at 10% 80%, rgba(0, 255, 200, 0.3) 0%, transparent 45%),
-    radial-gradient(circle at 70% 70%, rgba(127, 255, 212, 0.25) 0%, transparent 40%),
-    radial-gradient(circle at 50% 50%, rgba(0, 255, 127, 0.2) 0%, transparent 50%);
+    radial-gradient(circle at 20% 30%, rgba(0, 255, 127, 0.3) 0%, transparent 40%), /* Green-cyan glow */
+    radial-gradient(circle at 80% 20%, rgba(64, 255, 255, 0.25) 0%, transparent 35%), /* Cyan-aqua glow */
+    radial-gradient(circle at 10% 80%, rgba(0, 255, 200, 0.3) 0%, transparent 45%), /* Cyan-green glow */
+    radial-gradient(circle at 70% 70%, rgba(127, 255, 212, 0.25) 0%, transparent 40%), /* Light cyan glow */
+    radial-gradient(circle at 50% 50%, rgba(0, 255, 127, 0.2) 0%, transparent 50%); /* Central green glow */
   animation: bioluminescence-pulse 3s ease-in-out infinite;
   pointer-events: none;
-  mix-blend-mode: screen;
+  mix-blend-mode: screen; /* Additive light blending for realistic luminescence */
 }
 
-/* Spore particles floating effect */
+/* ========== FLOATING SPORE PARTICLE SYSTEM ========== */
+/* Atmospheric spore particles using ::after pseudo-element */
 .game-message.lost.fungi::after {
   content: '';
   position: absolute;
@@ -1613,186 +1625,186 @@ background: url('../images/sandwraith.png'), linear-gradient(to bottom, #1a1a1a,
   left: 0;
   right: 0;
   bottom: 0;
+  /* Six-point spore particle system with high-intensity spots */
   background-image: 
-    radial-gradient(circle at 15% 20%, rgba(127, 255, 212, 0.8) 0%, transparent 2%),
-    radial-gradient(circle at 40% 40%, rgba(0, 255, 127, 0.6) 0%, transparent 1.5%),
-    radial-gradient(circle at 70% 25%, rgba(64, 255, 255, 0.7) 0%, transparent 1%),
-    radial-gradient(circle at 25% 70%, rgba(127, 255, 212, 0.6) 0%, transparent 1.5%),
-    radial-gradient(circle at 85% 60%, rgba(0, 255, 200, 0.8) 0%, transparent 2%),
-    radial-gradient(circle at 60% 85%, rgba(0, 255, 127, 0.7) 0%, transparent 1%);
+    radial-gradient(circle at 15% 20%, rgba(127, 255, 212, 0.8) 0%, transparent 2%), /* Bright cyan spore */
+    radial-gradient(circle at 40% 40%, rgba(0, 255, 127, 0.6) 0%, transparent 1.5%), /* Green spore */
+    radial-gradient(circle at 70% 25%, rgba(64, 255, 255, 0.7) 0%, transparent 1%), /* Aqua spore */
+    radial-gradient(circle at 25% 70%, rgba(127, 255, 212, 0.6) 0%, transparent 1.5%), /* Light cyan spore */
+    radial-gradient(circle at 85% 60%, rgba(0, 255, 200, 0.8) 0%, transparent 2%), /* Cyan-green spore */
+    radial-gradient(circle at 60% 85%, rgba(0, 255, 127, 0.7) 0%, transparent 1%); /* Green spore */
   background-size: 100% 100%;
-  animation: spore-float 10s linear infinite;
-  pointer-events: none;
-  opacity: 0;
   animation: spore-release 5s ease-out forwards;
+  pointer-events: none;
+  opacity: 0; /* Start invisible, animated to visible */
 }
 
-/* Main fungi takeover animation */
-@keyframes fungi-takeover {
-  0% {
-    filter: brightness(1) contrast(1) hue-rotate(0deg);
-    transform: scale(1);
-  }
-  20% {
-    filter: brightness(1.3) contrast(1.2) hue-rotate(-10deg);
-    transform: scale(1.02);
-  }
-  40% {
-    filter: brightness(1.1) contrast(1.3) hue-rotate(10deg) blur(1px);
-    transform: scale(0.98);
-  }
-  60% {
-    filter: brightness(0.9) contrast(1.4) hue-rotate(20deg) blur(2px) saturate(1.5);
-    transform: scale(0.97);
-  }
-  80% {
-    filter: brightness(0.6) contrast(1.5) hue-rotate(30deg) blur(3px) saturate(2);
-    transform: scale(0.95);
-  }
-  100% {
-    filter: brightness(0.3) contrast(1.6) hue-rotate(40deg) blur(4px) saturate(2.5);
-    transform: scale(0.93);
-  }
-}
-
-/* Bioluminescent pulsing */
-@keyframes bioluminescence-pulse {
-  0%, 100% {
-    opacity: 0.5;
-    filter: blur(20px);
-  }
-  33% {
-    opacity: 0.8;
-    filter: blur(30px) brightness(1.2);
-  }
-  66% {
-    opacity: 0.6;
-    filter: blur(25px) brightness(1.1);
-  }
-}
-
-/* Spore release and float */
-@keyframes spore-release {
-  0% {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-  30% {
-    opacity: 0.7;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(-20%);
-  }
-}
-
-@keyframes spore-float {
-  0% {
-    transform: translateY(0) translateX(0);
-  }
-  25% {
-    transform: translateY(-30px) translateX(20px);
-  }
-  50% {
-    transform: translateY(-50px) translateX(-10px);
-  }
-  75% {
-    transform: translateY(-20px) translateX(-20px);
-  }
-  100% {
-    transform: translateY(0) translateX(0);
-  }
-}
-
-/* Tendrils growing effect overlay */
+/* ========== FUNGI TENDRIL GROWTH EFFECT ========== */
+/* Growing fungi tendrils climbing effect class */
 .game-message.lost.fungi .tendril-growth {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 0;
+  height: 0; /* Start with no height */
+  /* Gradient suggesting growing fungi tendrils */
   background: linear-gradient(to top, 
-    rgba(0, 255, 127, 0.6) 0%, 
-    rgba(64, 255, 255, 0.3) 50%, 
-    transparent 100%);
+    rgba(0, 255, 127, 0.6) 0%, /* Bright green base */
+    rgba(64, 255, 255, 0.3) 50%, /* Cyan middle */
+    transparent 100%); /* Fade to transparent */
   animation: tendril-climb 5s ease-out forwards;
-  mix-blend-mode: screen;
+  mix-blend-mode: screen; /* Additive blending for glow effect */
 }
 
-@keyframes tendril-climb {
+/* ========== FUNGI INFECTION TAKEOVER ANIMATION ========== */
+/* Complex multi-stage fungi infection with progressive distortion effects */
+@keyframes fungi-takeover {
   0% {
-    height: 0;
-  }
-  50% {
-    height: 50%;
-  }
-  100% {
-    height: 100%;
-  }
-}
-
-/* Text effects */
-.game-message.lost.fungi {
-  text-shadow:
-    0 0 20px rgba(0, 255, 127, 0.8),
-    0 0 40px rgba(64, 255, 255, 0.6),
-    2px 2px 4px rgba(0, 0, 0, 1),
-    0 0 60px rgba(127, 255, 212, 0.4);
-  animation: text-spore-death 5s ease-out;
-}
-
-@keyframes text-spore-death {
-  0% {
-    opacity: 0;
-    transform: translateY(-20px);
-    letter-spacing: normal;
+    filter: brightness(1) contrast(1) hue-rotate(0deg); /* Normal human state */
+    transform: scale(1);
   }
   20% {
-    opacity: 1;
-    transform: translateY(0);
+    filter: brightness(1.3) contrast(1.2) hue-rotate(-10deg); /* Initial infection glow */
+    transform: scale(1.02); /* Slight swelling from infection */
+  }
+  40% {
+    filter: brightness(1.1) contrast(1.3) hue-rotate(10deg) blur(1px); /* Infection spreading */
+    transform: scale(0.98); /* Beginning transformation */
   }
   60% {
-    letter-spacing: 2px;
-    filter: blur(0px);
+    filter: brightness(0.9) contrast(1.4) hue-rotate(20deg) blur(2px) saturate(1.5); /* Heavy infection */
+    transform: scale(0.97); /* Further transformation */
+  }
+  80% {
+    filter: brightness(0.6) contrast(1.5) hue-rotate(30deg) blur(3px) saturate(2); /* Near complete takeover */
+    transform: scale(0.95); /* Advanced transformation */
   }
   100% {
-    letter-spacing: 4px;
-    filter: blur(2px);
-    opacity: 0.5;
-    transform: translateY(10px);
+    filter: brightness(0.3) contrast(1.6) hue-rotate(40deg) blur(4px) saturate(2.5); /* Complete fungi conversion */
+    transform: scale(0.93); /* Final fungi form */
   }
 }
 
-/* Extra glow on the edges for luminescence */
-.game-message.lost.fungi {
-  box-shadow: 
-    inset 0 0 100px rgba(0, 255, 127, 0.3),
-    inset 0 0 50px rgba(64, 255, 255, 0.2),
-    0 0 30px rgba(127, 255, 212, 0.4),
-    0 0 60px rgba(0, 255, 200, 0.3);
+/* ========== BIOLUMINESCENT PULSE ANIMATION ========== */
+/* Three-stage pulsing animation for organic bioluminescent effect */
+@keyframes bioluminescence-pulse {
+  0%, 100% {
+    opacity: 0.5;
+    filter: blur(20px); /* Soft base glow */
+  }
+  33% {
+    opacity: 0.8;
+    filter: blur(30px) brightness(1.2); /* Peak intensity with enhanced brightness */
+  }
+  66% {
+    opacity: 0.6;
+    filter: blur(25px) brightness(1.1); /* Medium intensity */
+  }
 }
 
+/* ========== SPORE RELEASE ANIMATION SYSTEM ========== */
 
+/* Initial spore release and positioning animation */
+@keyframes spore-release {
+  0% {
+    opacity: 0;
+    transform: translateY(100%); /* Start below viewport */
+  }
+  30% {
+    opacity: 0.7;
+    transform: translateY(0); /* Rise to normal position */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-20%); /* Final floating position above normal */
+  }
+}
 
-/* Crystal sleep death - hypnotic crystal theme */
+/* Continuous floating motion for released spores */
+@keyframes spore-float {
+  0% {
+    transform: translateY(0) translateX(0); /* Starting position */
+  }
+  25% {
+    transform: translateY(-30px) translateX(20px); /* Float up and right */
+  }
+  50% {
+    transform: translateY(-50px) translateX(-10px); /* Peak height, drift left */
+  }
+  75% {
+    transform: translateY(-20px) translateX(-20px); /* Descend, continue left */
+  }
+  100% {
+    transform: translateY(0) translateX(0); /* Return to starting position */
+  }
+}
+
+/* ========== TENDRIL CLIMBING ANIMATION ========== */
+/* Progressive tendril growth animation - bottom to top growth */
+@keyframes tendril-climb {
+  0% {
+    height: 0; /* No visible tendrils */
+  }
+  50% {
+    height: 50%; /* Tendrils reach halfway up */
+  }
+  100% {
+    height: 100%; /* Tendrils completely cover the area */
+  }
+}
+/* ==================== CRYSTAL SLEEP ENCHANTMENT DEATH SCENE ==================== */
+
+/* ========== CRYSTAL SLEEP DEATH CONTAINER ========== */
+/* Hypnotic crystal-induced eternal slumber with mystical enchantment theming */
 .game-message.lost.crystal_sleep {
   min-height: 700px;
-  font-family: 'Uncial Antiqua', cursive;
+  font-family: 'Uncial Antiqua', cursive; /* Ancient mystical script font */
   font-size: 1.6rem;
-  color: #E1F5FE;
+  color: #E1F5FE; /* Light blue for crystal/ice theme */
+  /* Crystal sleep death background image */
   background: url('../images/crystal_sleep_death.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border: 2px solid #B39DDB;
+  border: 2px solid #B39DDB; /* Purple border for mystical crystal theme */
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* Contain crystal enchantment effects */
   animation: crystal-lullaby 6s ease-in-out;
 }
 
+/* ========== CRYSTAL LULLABY ANIMATION ========== */
+/* Hypnotic crystal enchantment animation inducing eternal sleep */
+@keyframes crystal-lullaby {
+  0% {
+    filter: brightness(1) contrast(1) hue-rotate(0deg);
+    transform: scale(1);
+  }
+  20% {
+    filter: brightness(1.2) contrast(1.1) hue-rotate(10deg); /* Crystal glow intensifies */
+    transform: scale(1.01);
+  }
+  40% {
+    filter: brightness(1.1) contrast(1.2) hue-rotate(20deg) blur(0.5px); /* Hypnotic blur begins */
+    transform: scale(0.99);
+  }
+  60% {
+    filter: brightness(0.9) contrast(1.3) hue-rotate(30deg) blur(1px) saturate(1.3); /* Deep enchantment */
+    transform: scale(0.98);
+  }
+  80% {
+    filter: brightness(0.7) contrast(1.4) hue-rotate(40deg) blur(2px) saturate(1.5); /* Near sleep state */
+    transform: scale(0.97);
+  }
+  100% {
+    filter: brightness(0.5) contrast(1.5) hue-rotate(50deg) blur(3px) saturate(1.8); /* Eternal slumber */
+    transform: scale(0.95);
+  }
+}
 
-/* Base darkness death display */
+/* ==================== DARKNESS DEATH SCENE SYSTEM ==================== */
+
+/* ========== BASE DARKNESS DEATH CONTAINER ========== */
+/* Foundation container for both torch and lantern darkness deaths */
 .darkness-death-display {
   min-height: 650px;
   padding: 20px;
@@ -1802,55 +1814,59 @@ background: url('../images/sandwraith.png'), linear-gradient(to bottom, #1a1a1a,
   background-position: center;
   border-radius: 10px;
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* Contain darkness animation effects */
 }
 
-/* Torch darkness death - NO OVERLAY so you can see the image */
+/* ========== TORCH DARKNESS DEATH SCENE ========== */
+/* Torch extinguishing death with warm-toned darkness progression */
 .torch-darkness-death {
   background-image: url('../images/torch_darkness.png');
-  background-color: transparent; /* Ensure no background color */
-  border: 2px solid #331a00;
-  animation: fade-to-darkness 20s ease-in forwards;
-  filter: brightness(1.3); /* Start bright immediately */
+  background-color: transparent; /* Clean background to showcase image */
+  border: 2px solid #331a00; /* Dark brown border for torch theme */
+  animation: fade-to-darkness 20s ease-in forwards; /* Slower fade for torch */
+  filter: brightness(1.3); /* Enhanced initial brightness for dramatic contrast */
 }
 
-/* Lantern darkness death - NO OVERLAY so you can see the image */
+/* ========== LANTERN DARKNESS DEATH SCENE ========== */
+/* Magical lantern failure death with mystical darkness progression */
 .lantern-darkness-death {
   background-image: url('../images/lantern_darkness.png');
-  background-color: transparent; /* Ensure no background color */
-  border: 2px solid #1a1a33;
-  animation: fade-to-darkness 10s ease-in forwards;
-  filter: brightness(1.3); /* Start bright immediately */
+  background-color: transparent; /* Clean background to showcase image */
+  border: 2px solid #1a1a33; /* Dark blue border for magical lantern theme */
+  animation: fade-to-darkness 10s ease-in forwards; /* Faster fade for magical failure */
+  filter: brightness(1.3); /* Enhanced initial brightness for dramatic contrast */
 }
 
-/* Slow fade to black animation over 10 seconds - STARTS BRIGHTER */
+/* ========== PROGRESSIVE DARKNESS ANIMATION ========== */
+/* Gradual transition from light to complete darkness with enhanced contrast */
 @keyframes fade-to-darkness {
   0% {
-    filter: brightness(1.3) contrast(1.1); /* 130% brightness initially */
+    filter: brightness(1.3) contrast(1.1); /* 130% brightness - dramatic starting point */
   }
   20% {
-    filter: brightness(1.2) contrast(1);   /* Still bright */
+    filter: brightness(1.2) contrast(1); /* Still bright - false security */
   }
   40% {
-    filter: brightness(1) contrast(1);     /* Normal brightness */
+    filter: brightness(1) contrast(1); /* Normal brightness - transition begins */
   }
   60% {
-    filter: brightness(0.7) contrast(1.1);
+    filter: brightness(0.7) contrast(1.1); /* Dimming accelerates */
   }
   80% {
-    filter: brightness(0.4) contrast(1.2);
+    filter: brightness(0.4) contrast(1.2); /* Heavy darkness approaching */
   }
   90% {
-    filter: brightness(0.2) contrast(1.3);
+    filter: brightness(0.2) contrast(1.3); /* Near complete darkness */
   }
   100% {
-    filter: brightness(0.05) contrast(1.5);
+    filter: brightness(0.05) contrast(1.5); /* Total darkness with high contrast */
   }
 }
 
-/* Content area for darkness death messages - TRANSPARENT initially */
+/* ========== DARKNESS DEATH MESSAGE POSITIONING ========== */
+/* Content area with progressive background darkening for readability */
 .darkness-death-content {
-  background-color: transparent; /* NO BACKGROUND initially */
+  background-color: transparent; /* Start completely transparent */
   border-radius: 8px;
   padding: 30px;
   position: absolute;
@@ -1861,67 +1877,73 @@ background: url('../images/sandwraith.png'), linear-gradient(to bottom, #1a1a1a,
   animation: darken-text-background 10s ease-in forwards;
 }
 
-/* Text background slowly darkens - starts COMPLETELY transparent */
+/* ========== PROGRESSIVE TEXT BACKGROUND DARKENING ========== */
+/* Text background gradually darkens for readability as scene dims */
 @keyframes darken-text-background {
   0%, 30% {
-    background-color: transparent; /* Clear for first 3 seconds */
+    background-color: transparent; /* Completely clear for first 30% */
   }
   50% {
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.3); /* Light darkening begins */
   }
   70% {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.6); /* Medium background opacity */
   }
   100% {
-    background-color: rgba(0, 0, 0, 0.95);
+    background-color: rgba(0, 0, 0, 0.95); /* Near-opaque for final readability */
   }
 }
 
-/* Death message styling for darkness deaths */
+/* ========== DARKNESS DEATH MESSAGE STYLING ========== */
+/* Base message styling with coordinated text fading animation */
 .darkness-death-display .game-message {
   font-size: 1.3rem;
   animation: text-fade-to-black 10s ease-in forwards;
 }
 
-/* Text slowly fades to black */
+/* ========== TEXT COLOR PROGRESSION ANIMATION ========== */
+/* Text color gradually fades from bright to dark coordinated with scene */
 @keyframes text-fade-to-black {
   0% {
-    color: #FFB74D;
+    color: #FFB74D; /* Warm orange - torch/lantern glow */
     text-shadow: 
-      0 0 20px rgba(255, 140, 0, 0.5),
-      2px 2px 6px rgba(0, 0, 0, 1);
+      0 0 20px rgba(255, 140, 0, 0.5), /* Strong warm glow */
+      2px 2px 6px rgba(0, 0, 0, 1); /* Black outline for contrast */
   }
   50% {
-    color: #CC9033;
+    color: #CC9033; /* Dimmed orange - fading light */
     text-shadow: 
-      0 0 10px rgba(255, 140, 0, 0.3),
-      2px 2px 4px rgba(0, 0, 0, 1);
+      0 0 10px rgba(255, 140, 0, 0.3), /* Reduced glow */
+      2px 2px 4px rgba(0, 0, 0, 1); /* Maintained contrast */
   }
   100% {
-    color: #1a1a1a;
-    text-shadow: none;
+    color: #1a1a1a; /* Very dark gray - nearly invisible */
+    text-shadow: none; /* No glow remaining */
   }
 }
 
-/* Specific styles for torch darkness */
+/* ========== TORCH-SPECIFIC MESSAGE STYLING ========== */
+/* Medieval themed font for traditional torch death scenario */
 .game-message.lost.torch_darkness,
 p.game-message.lost.torch_darkness,
 .darkness-death-display .game-message.lost.torch_darkness {
   font-family: 'MedievalSharp', cursive !important;
   font-size: 1.4rem !important;
-  /* Color handled by animation */
+  /* Color progression handled by text-fade-to-black animation */
 }
 
-/* Specific styles for lantern darkness */
+/* ========== LANTERN-SPECIFIC MESSAGE STYLING ========== */
+/* Ancient script font for magical lantern death scenario */
 .game-message.lost.lantern_darkness,
 p.game-message.lost.lantern_darkness,
 .darkness-death-display .game-message.lost.lantern_darkness {
   font-family: 'Uncial Antiqua', cursive !important;
   font-size: 1.5rem !important;
-  /* Color handled by animation */
+  /* Color progression handled by text-fade-to-black animation */
 }
 
-/* Optional: Add a final black overlay that appears at the end */
+/* ========== FINAL BLACKOUT OVERLAY EFFECT ========== */
+/* Ultimate darkness overlay that completes the death sequence */
 .darkness-death-display::after {
   content: '';
   position: absolute;
@@ -1929,84 +1951,100 @@ p.game-message.lost.lantern_darkness,
   left: 0;
   right: 0;
   bottom: 0;
-  background: black;
-  pointer-events: none;
-  opacity: 0;
+  background: black; /* Pure black overlay */
+  pointer-events: none; /* Don't block user interactions */
+  opacity: 0; /* Start invisible */
   animation: final-blackout 10s ease-in forwards;
 }
 
+/* ========== FINAL BLACKOUT ANIMATION ========== */
+/* Ultimate darkness animation completing the death sequence */
 @keyframes final-blackout {
   0%, 80% {
-    opacity: 0;
+    opacity: 0; /* Invisible for most of the sequence */
   }
   100% {
-    opacity: 0.9;
+    opacity: 0.9; /* Near-complete blackness at the end */
   }
 }
+/* ==================== CURSED ITEMS DEATH SCENE ==================== */
 
-/* Cursed items death */
+/* ========== CURSED ITEMS DEATH CONTAINER ========== */
+/* Malevolent cursed artifact death with acid/poison theming and supernatural glow */
 .game-message.lost.cursed_items {
   font-family: 'MedievalSharp', cursive;
- 
-  background: 
-    radial-gradient(circle at center, rgba(0, 255, 0, 0.3) 0%, transparent 50%),
-     url('../images/acid_death.png'),
-    linear-gradient(to bottom, #0a2a0a, #000000);
+  /* Complex layered background: supernatural glow + acid death image + dark gradient */
+  background:
+    radial-gradient(circle at center, rgba(0, 255, 0, 0.3) 0%, transparent 50%), /* Supernatural green glow */
+    url('../images/acid_death.png'), /* Acid death imagery */
+    linear-gradient(to bottom, #0a2a0a, #000000); /* Dark green to black gradient */
   min-height: 780px;
   font-size: 1.8rem;
-  color: #065606;
+  color: #065606; /* Dark green for cursed/poison theme */
+  /* Multi-layer text shadow with supernatural green glow effects */
   text-shadow:
-    0 0 20px rgba(0, 255, 0, 0.8),
-    0 0 40px rgba(0, 255, 0, 0.6),
-    2px 2px 4px rgba(0, 0, 0, 1);
+    0 0 20px rgba(0, 255, 0, 0.8), /* Primary green supernatural glow */
+    0 0 40px rgba(0, 255, 0, 0.6), /* Extended green aura */
+    2px 2px 4px rgba(0, 0, 0, 1); /* Black outline for contrast */
   animation: cursed-pulse 1s ease-in-out infinite;
 }
 
+/* ========== CURSED SUPERNATURAL PULSING ANIMATION ========== */
+/* Rapid pulsing animation suggesting malevolent supernatural energy */
 @keyframes cursed-pulse {
-  0%, 100% { 
-    filter: brightness(1) hue-rotate(0deg); 
+  0%, 100% {
+    filter: brightness(1) hue-rotate(0deg); /* Normal cursed state */
   }
-  50% { 
-    filter: brightness(1.3) hue-rotate(20deg); 
+  50% {
+    filter: brightness(1.3) hue-rotate(20deg); /* Intensified supernatural energy peak */
   }
 }
-/* Sulfur explosion death container */
+
+/* ==================== SULFUR EXPLOSION DEATH SYSTEM ==================== */
+
+/* ========== SULFUR EXPLOSION CONTAINER ========== */
+/* Multi-stage sulfur crystal explosion with progressive visual effects */
 .sulfur-explosion-display {
   min-height: 700px;
   width: 100%;
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* Contain complex explosion animations */
 }
 
-/* Base death message with image */
+/* ========== SULFUR EXPLOSION MESSAGE STYLING ========== */
+/* Base death message with sulfur explosion background and progressive fading */
 .sulfur-explosion-display .game-message.lost.sulfur_explosion {
   font-family: 'MedievalSharp', cursive;
-  background: url('../images/sulfur_death.png'), 
-              linear-gradient(to bottom, #332200, #000000);
+  /* Layered background: sulfur death image over warm gradient */
+  background: url('../images/sulfur_death.png'),
+              linear-gradient(to bottom, #332200, #000000); /* Brown to black gradient */
   background-size: cover;
   background-position: center;
   min-height: 700px;
   font-size: 1.8rem;
-  color: #ffff00;
+  color: #ffff00; /* Bright yellow for sulfur theme */
   padding: 40px;
+  /* Multi-layer yellow glow text shadow system */
   text-shadow:
-    0 0 20px rgba(255, 255, 0, 0.8),
-    0 0 40px rgba(255, 215, 0, 0.6),
-    2px 2px 4px rgba(0, 0, 0, 1);
+    0 0 20px rgba(255, 255, 0, 0.8), /* Primary yellow glow */
+    0 0 40px rgba(255, 215, 0, 0.6), /* Secondary golden glow */
+    2px 2px 4px rgba(0, 0, 0, 1); /* Black contrast outline */
   animation: image-fade-out 3s ease-out forwards;
 }
 
-/* Fade out the image */
+/* ========== PROGRESSIVE IMAGE FADE ANIMATION ========== */
+/* Background image gradually fades to prepare for explosion overlay effects */
 @keyframes image-fade-out {
   0%, 60% {
-    opacity: 1;
+    opacity: 1; /* Full visibility for first 60% of animation */
   }
   100% {
-    opacity: 0.3;
+    opacity: 0.3; /* Faded to allow explosion effects to show */
   }
 }
 
-/* Yellow dust explosion overlay */
+/* ========== CENTRAL SULFUR EXPLOSION EFFECT ========== */
+/* Main explosion burst using ::before pseudo-element */
 .sulfur-explosion-display::before {
   content: '';
   position: absolute;
@@ -2014,35 +2052,38 @@ p.game-message.lost.lantern_darkness,
   left: 50%;
   width: 50px;
   height: 50px;
-  background: radial-gradient(circle, 
-    rgba(255, 255, 0, 1) 0%, 
-    rgba(255, 215, 0, 0.8) 30%, 
-    rgba(255, 255, 0, 0.4) 60%, 
-    transparent 100%);
-  border-radius: 50%;
-  transform: translate(-50%, -50%) scale(0);
+  /* Radial gradient creating explosive sulfur burst appearance */
+  background: radial-gradient(circle,
+    rgba(255, 255, 0, 1) 0%, /* Bright yellow center */
+    rgba(255, 215, 0, 0.8) 30%, /* Golden middle ring */
+    rgba(255, 255, 0, 0.4) 60%, /* Fading yellow outer ring */
+    transparent 100%); /* Transparent edge for smooth blend */
+  border-radius: 50%; /* Perfect circle explosion */
+  transform: translate(-50%, -50%) scale(0); /* Start from center point, invisible */
   animation: sulfur-explosion 3s ease-out forwards;
-  animation-delay: 2s; /* Start after image begins fading */
-  pointer-events: none;
-  z-index: 10;
+  animation-delay: 2s; /* Delayed start after image fading begins */
+  pointer-events: none; /* Don't block user interactions */
+  z-index: 10; /* Above background, below text */
 }
 
-/* Explosion animation */
+/* ========== SULFUR EXPLOSION ANIMATION ========== */
+/* Central explosion burst animation with scaling and opacity changes */
 @keyframes sulfur-explosion {
   0% {
-    transform: translate(-50%, -50%) scale(0);
+    transform: translate(-50%, -50%) scale(0); /* Start invisible at center */
     opacity: 0;
   }
   20% {
-    opacity: 1;
+    opacity: 1; /* Peak visibility early in animation */
   }
   100% {
-    transform: translate(-50%, -50%) scale(40);
-    opacity: 0;
+    transform: translate(-50%, -50%) scale(40); /* Massive final scale */
+    opacity: 0; /* Fade out as explosion expands */
   }
 }
 
-/* Multiple dust particles for extra effect */
+/* ========== SULFUR DUST PARTICLE SYSTEM ========== */
+/* Multiple scattered dust particles using ::after pseudo-element */
 .sulfur-explosion-display::after {
   content: '';
   position: absolute;
@@ -2050,47 +2091,52 @@ p.game-message.lost.lantern_darkness,
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: 
-    radial-gradient(circle at 30% 40%, rgba(255, 255, 0, 0.8) 0%, transparent 5%),
-    radial-gradient(circle at 70% 30%, rgba(255, 215, 0, 0.6) 0%, transparent 4%),
-    radial-gradient(circle at 20% 70%, rgba(255, 255, 0, 0.7) 0%, transparent 3%),
-    radial-gradient(circle at 80% 60%, rgba(255, 200, 0, 0.5) 0%, transparent 6%),
-    radial-gradient(circle at 50% 80%, rgba(255, 255, 0, 0.6) 0%, transparent 4%);
-  transform: scale(0);
+  /* Multiple radial gradients creating scattered sulfur dust particles */
+  background-image:
+    radial-gradient(circle at 30% 40%, rgba(255, 255, 0, 0.8) 0%, transparent 5%), /* Bright yellow particle */
+    radial-gradient(circle at 70% 30%, rgba(255, 215, 0, 0.6) 0%, transparent 4%), /* Golden particle */
+    radial-gradient(circle at 20% 70%, rgba(255, 255, 0, 0.7) 0%, transparent 3%), /* Yellow particle */
+    radial-gradient(circle at 80% 60%, rgba(255, 200, 0, 0.5) 0%, transparent 6%), /* Orange-yellow particle */
+    radial-gradient(circle at 50% 80%, rgba(255, 255, 0, 0.6) 0%, transparent 4%); /* Bottom yellow particle */
+  transform: scale(0); /* Start invisible */
   animation: dust-particles 2.5s ease-out forwards;
-  animation-delay: 2.2s;
-  pointer-events: none;
-  z-index: 11;
+  animation-delay: 2.2s; /* Slightly delayed after main explosion */
+  pointer-events: none; /* Don't block user interactions */
+  z-index: 11; /* Above main explosion, below text */
 }
 
+/* ========== DUST PARTICLE ANIMATION ========== */
+/* Scattered dust particle expansion with rotation for dynamic effect */
 @keyframes dust-particles {
   0% {
-    transform: scale(0) rotate(0deg);
+    transform: scale(0) rotate(0deg); /* Start invisible with no rotation */
     opacity: 0;
   }
   30% {
-    opacity: 1;
+    opacity: 1; /* Peak particle visibility */
   }
   100% {
-    transform: scale(15) rotate(180deg);
-    opacity: 0;
+    transform: scale(15) rotate(180deg); /* Large scale with half rotation */
+    opacity: 0; /* Fade out as particles disperse */
   }
 }
 
-/* Text becomes more visible as dust settles */
+/* ========== TEXT VISIBILITY ENHANCEMENT ========== */
+/* Ensures death message remains visible above all explosion effects */
 .sulfur-explosion-display .game-message {
-  z-index: 12;
-  position: relative;
+  z-index: 12; /* Highest z-index for text visibility */
+  position: relative; /* Enable z-index stacking */
 }
 
+/* ==================== HIDDEN ROOM DISCOVERY SCENE ==================== */
 
-
-
-/* Hidden Room Display */
+/* ========== MAIN HIDDEN ROOM CONTAINER ========== */
+/* Ancient hidden chamber with mystical artifacts and atmospheric effects */
 .hidden-room-display {
   text-align: center;
   padding: 20px;
   margin: 15px 0;
+  /* Layered background: hidden room image over mystical gradient */
   background: url('../images/hiddenRoom.png'), 
               linear-gradient(135deg, #1a0033, #000033);
   background-size: cover;
@@ -2098,43 +2144,45 @@ p.game-message.lost.lantern_darkness,
   background-position: center;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
-  color: #e5a627;
-  border: 3px solid #4a3a7a;
+  color: #e5a627; /* Golden text for treasure/artifact theme */
+  border: 3px solid #4a3a7a; /* Purple border for mystical atmosphere */
   min-height: 600px;
-  position: relative;
-  overflow: hidden;
+  position: relative; /* For complex layered effects */
+  overflow: hidden; /* Contain animated elements */
 }
-/* Title styling */
+
+/* ========== HIDDEN ROOM TITLE STYLING ========== */
+/* Ancient chamber title with pulsing mystical glow effects */
 .hidden-room-title {
   font-family: 'MedievalSharp', cursive;
   font-size: 2.2rem;
-  color: #ffd700;
+  color: #ffd700; /* Bright gold for title prominence */
   margin-bottom: 10px;
+  /* Multi-layer text shadow with purple mystical glow */
   text-shadow: 
     2px 2px 4px rgba(0, 0, 0, 0.8),
     0 0 20px rgba(138, 43, 226, 0.6);
   animation: ancient-glow 3s ease-in-out infinite;
 }
 
-
+/* ========== ANCIENT MYSTICAL GLOW ANIMATION ========== */
+/* Pulsing glow animation suggesting ancient magical energy */
 @keyframes ancient-glow {
   0%, 100% { 
     text-shadow: 
       2px 2px 4px rgba(0, 0, 0, 0.8),
-      0 0 20px rgba(138, 43, 226, 0.6);
+      0 0 20px rgba(138, 43, 226, 0.6); /* Base mystical glow */
   }
   50% { 
     text-shadow: 
       2px 2px 4px rgba(0, 0, 0, 0.8),
-      0 0 30px rgba(138, 43, 226, 0.9),
-      0 0 40px rgba(255, 215, 0, 0.4);
+      0 0 30px rgba(138, 43, 226, 0.9), /* Intensified purple glow */
+      0 0 40px rgba(255, 215, 0, 0.4); /* Added golden highlight */
   }
 }
 
-
-
-
-/* Vortex overlay animation */
+/* ========== VORTEX OVERLAY ANIMATION SYSTEM ========== */
+/* Spinning vortex effect in center of hidden chamber */
 .vortex-overlay {
   position: absolute;
   top: 50%;
@@ -2142,66 +2190,75 @@ p.game-message.lost.lantern_darkness,
   width: 400px;
   height: 400px;
   transform: translate(-50%, -50%);
+  /* Radial gradient creating subtle vortex appearance */
   background: radial-gradient(circle at center, 
     transparent 0%, 
-    rgba(138, 43, 226, 0.1) 40%, 
+    rgba(138, 43, 226, 0.1) 40%, /* Light purple vortex */
     transparent 70%);
   animation: vortex-spin 15s linear infinite;
   pointer-events: none;
   z-index: 1;
 }
 
+/* ========== CONTINUOUS VORTEX SPINNING ANIMATION ========== */
+/* Slow, hypnotic vortex rotation for mysterious atmosphere */
 @keyframes vortex-spin {
   from { transform: translate(-50%, -50%) rotate(0deg); }
   to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* Artifacts glowing effect */
+/* ========== ARTIFACT GLOW EFFECT SYSTEM ========== */
+/* Multiple glowing points suggesting scattered ancient artifacts */
 .artifacts-glow {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  /* Multiple radial gradients creating scattered artifact glow points */
   background-image: 
-    radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.3) 0%, transparent 20%),
-    radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.3) 0%, transparent 25%),
-    radial-gradient(circle at 30% 80%, rgba(255, 140, 0, 0.3) 0%, transparent 20%),
-    radial-gradient(circle at 70% 70%, rgba(147, 112, 219, 0.3) 0%, transparent 25%);
+    radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.3) 0%, transparent 20%), /* Golden artifact */
+    radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.3) 0%, transparent 25%), /* Purple artifact */
+    radial-gradient(circle at 30% 80%, rgba(255, 140, 0, 0.3) 0%, transparent 20%), /* Orange artifact */
+    radial-gradient(circle at 70% 70%, rgba(147, 112, 219, 0.3) 0%, transparent 25%); /* Light purple artifact */
   animation: artifacts-pulse 4s ease-in-out infinite;
   pointer-events: none;
   z-index: 2;
 }
 
+/* ========== ARTIFACT PULSING ANIMATION ========== */
+/* Gentle pulsing suggesting dormant magical energy in artifacts */
 @keyframes artifacts-pulse {
   0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }
 }
 
-/* Message area */
+/* ========== HIDDEN ROOM MESSAGE AREA ========== */
+/* Transparent message container to showcase background effects */
 .hidden-room-message {
   position: relative;
-  z-index: 3;
+  z-index: 3; /* Above all background effects */
   margin-top: 30px;
   padding: 20px;
- background: transparent !important; /* Force transparent */
+  background: transparent !important; /* Force transparency */
   border: none !important;
   box-shadow: none !important;
 }
 
-/* Make sure the game message inside is visible but has no background */
+/* Enhanced text readability with strong shadows */
 .hidden-room-message .game-message {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  /* Keep the text visible with strong shadow for readability */
+  /* Triple-layer text shadow for maximum readability over complex background */
   text-shadow: 
     2px 2px 4px rgba(0, 0, 0, 0.9),
     0 0 8px rgba(0, 0, 0, 0.8),
     0 0 12px rgba(0, 0, 0, 0.7);
 }
 
-/* Add mystical particle effects */
+/* ========== MYSTICAL PARTICLE EFFECTS ========== */
+/* Floating mystical particles using ::before pseudo-element */
 .hidden-room-display::before {
   content: '';
   position: absolute;
@@ -2209,44 +2266,43 @@ p.game-message.lost.lantern_darkness,
   left: 0;
   right: 0;
   bottom: 0;
+  /* Multiple small radial gradients creating floating mystical particles */
   background-image: 
-    radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.8) 0%, transparent 1%),
-    radial-gradient(circle at 40% 40%, rgba(138, 43, 226, 0.6) 0%, transparent 1%),
-    radial-gradient(circle at 70% 30%, rgba(255, 215, 0, 0.7) 0%, transparent 1%),
-    radial-gradient(circle at 25% 70%, rgba(147, 112, 219, 0.6) 0%, transparent 1%),
-    radial-gradient(circle at 85% 60%, rgba(255, 140, 0, 0.8) 0%, transparent 1%);
+    radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.8) 0%, transparent 1%), /* White sparkle */
+    radial-gradient(circle at 40% 40%, rgba(138, 43, 226, 0.6) 0%, transparent 1%), /* Purple sparkle */
+    radial-gradient(circle at 70% 30%, rgba(255, 215, 0, 0.7) 0%, transparent 1%), /* Golden sparkle */
+    radial-gradient(circle at 25% 70%, rgba(147, 112, 219, 0.6) 0%, transparent 1%), /* Light purple sparkle */
+    radial-gradient(circle at 85% 60%, rgba(255, 140, 0, 0.8) 0%, transparent 1%); /* Orange sparkle */
   animation: mystical-float 10s linear infinite;
   pointer-events: none;
 }
 
+/* ========== MYSTICAL PARTICLE FLOATING ANIMATION ========== */
+/* Upward floating animation for mystical atmosphere */
 @keyframes mystical-float {
   from { transform: translateY(0); }
   to { transform: translateY(-100px); }
 }
 
+/* ==================== HIDDEN ROOM TRAP ACTIVATION SYSTEM ==================== */
 
-/* When trap is active, shake the entire room */
-
-/* Create a wrapper for the shake effect instead of shaking the background container */
-.hidden-room-display.trap-active .hidden-room-content {
-  animation: room-shake 0.3s ease-in-out infinite;
-}
-
-/* Remove the shake from the main container */
+/* ========== TRAP ACTIVATION VISUAL EFFECTS ========== */
+/* Enhanced styling when the hidden room trap becomes active */
 .hidden-room-display.trap-active {
+  animation: room-shake 0.3s ease-in-out infinite; /* Room shaking effect */
+  /* Background shifts to more ominous colors */
   background: url('../images/hiddenRoom.png'),
-    linear-gradient(135deg, #1a0033, #000033);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-attachment: fixed; /* This can help stabilize the background */
-  border-color: #ff0000;
+    linear-gradient(135deg, #330011, #110033);
+  border-color: #ff0000; /* Red border for danger */
+  /* Multi-layer box shadow with red danger glow */
   box-shadow: 
     0 5px 15px rgba(0, 0, 0, 0.8),
-    0 0 30px rgba(255, 0, 0, 0.6),
-    inset 0 0 30px rgba(255, 0, 0, 0.3);
+    0 0 30px rgba(255, 0, 0, 0.6), /* Red outer glow */
+    inset 0 0 30px rgba(255, 0, 0, 0.3); /* Red inner glow */
 }
-/* Shake only the content inside, not the background */
+
+/* ========== ROOM SHAKING ANIMATION ========== */
+/* Subtle shaking effect suggesting structural instability */
 @keyframes room-shake {
   0%, 100% { transform: translate(0, 0); }
   10% { transform: translate(-2px, -1px); }
@@ -2260,124 +2316,86 @@ p.game-message.lost.lantern_darkness,
   90% { transform: translate(-1px, 1px); }
 }
 
-/* Make the vortex more intense when trap is active */
+/* ========== ACTIVATED VORTEX ENHANCEMENT ========== */
+/* Intensified vortex when trap is active */
 .vortex-overlay.vortex-active {
-  animation: vortex-spin 2s linear infinite !important; /* Faster spin */
+  animation: vortex-spin 2s linear infinite !important; /* Much faster spin */
+  /* Enhanced vortex with red danger colors */
   background: radial-gradient(circle at center,
     transparent 0%,
-    rgba(255, 0, 0, 0.2) 30%,
-    rgba(138, 43, 226, 0.4) 50%,
-    rgba(255, 0, 0, 0.1) 70%,
+    rgba(255, 0, 0, 0.2) 30%, /* Red core */
+    rgba(138, 43, 226, 0.4) 50%, /* Purple middle */
+    rgba(255, 0, 0, 0.1) 70%, /* Red outer ring */
     transparent 90%) !important;
   transform-origin: center;
 }
 
+/* ==================== VORTEX TRAP DEATH SCENE ==================== */
 
-/* When trap is active, shake the entire room */
-.hidden-room-display.trap-active {
-  animation: room-shake 0.3s ease-in-out infinite;
-  /* Also make the background pulse red */
-  background: url('../images/hiddenRoom.png'),
-    linear-gradient(135deg, #330011, #110033);
-}
-
-/* Shake keyframes */
-@keyframes room-shake-alt {
-  0%, 100% { margin-left: 0; margin-top: 0; }
-  10% { margin-left: -2px; margin-top: -1px; }
-  20% { margin-left: 2px; margin-top: -2px; }
-  30% { margin-left: -3px; margin-top: 1px; }
-  40% { margin-left: 1px; margin-top: 2px; }
-  50% { margin-left: -1px; margin-top: -2px; }
-  60% { margin-left: 3px; margin-top: 1px; }
-  70% { margin-left: -2px; margin-top: 2px; }
-  80% { margin-left: 2px; margin-top: -1px; }
-  90% { margin-left: -1px; margin-top: 1px; }
-}
-
-/* Make the vortex more intense when trap is active */
-.vortex-overlay.vortex-active {
-  animation: vortex-spin 2s linear infinite !important; /* Faster spin */
-  background: radial-gradient(circle at center,
-    transparent 0%,
-    rgba(255, 0, 0, 0.2) 30%,
-    rgba(138, 43, 226, 0.4) 50%,
-    rgba(255, 0, 0, 0.1) 70%,
-    transparent 90%) !important;
-  transform-origin: center;
-}
-
-/* Add a pulsing red border when trap is active */
-.hidden-room-display.trap-active {
-  border-color: #ff0000;
-  box-shadow: 
-    0 5px 15px rgba(0, 0, 0, 0.8),
-    0 0 30px rgba(255, 0, 0, 0.6),
-    inset 0 0 30px rgba(255, 0, 0, 0.3);
-}
-
-
-/* Vortex trap death display */
+/* ========== VORTEX TRAP DEATH CONTAINER ========== */
+/* Ultimate vortex death scene with dimensional void theming */
 .vortex-trap-display {
   min-height: 700px;
   width: 100%;
   position: relative;
   overflow: hidden;
-  background: #000; /* Solid black base to prevent transparency issues */
+  background: #000; /* Solid black base preventing transparency issues */
 }
 
-
-
-
+/* ========== VORTEX TRAP DEATH MESSAGE ========== */
+/* Death message with swirling void animation and mystical effects */
 .vortex-trap-display .game-message.lost.vortex_trap {
   font-family: 'MedievalSharp', cursive;
+  /* Layered background: vortex death image over radial gradient */
   background: url('../images/vortex_death.png'),
     radial-gradient(circle at center,
-      rgba(138, 43, 226, 0.8) 0%,
-      rgba(0, 0, 0, 1) 60%);
+      rgba(138, 43, 226, 0.8) 0%, /* Purple center */
+      rgba(0, 0, 0, 1) 60%); /* Black outer edge */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   min-height: 700px;
   font-size: 1.8rem;
-  color: #e0b3ff;
+  color: #e0b3ff; /* Light purple for vortex theme */
   padding: 40px;
   margin: 0;
   text-align: center;
+  /* Multi-layer purple mystical text shadow */
   text-shadow:
-    0 0 20px rgba(138, 43, 226, 0.8),
-    0 0 40px rgba(147, 112, 219, 0.6),
-    2px 2px 4px rgba(0, 0, 0, 1);
-  /* Display immediately at full opacity */
-  opacity: 1;
-  animation: swirl-into-void 8s ease-in-out 3s forwards; /* 3s delay before swirl */
+    0 0 20px rgba(138, 43, 226, 0.8), /* Primary purple glow */
+    0 0 40px rgba(147, 112, 219, 0.6), /* Secondary light purple glow */
+    2px 2px 4px rgba(0, 0, 0, 1); /* Black contrast outline */
+  opacity: 1; /* Full visibility initially */
+  animation: swirl-into-void 8s ease-in-out 3s forwards; /* 3-second delay before swirl */
 }
 
-/* Swirl animation - more of a vortex effect */
+/* ========== SWIRL INTO VOID ANIMATION ========== */
+/* Complex swirling animation suggesting being pulled into dimensional void */
 @keyframes swirl-into-void {
   0% {
     transform: scale(1) rotate(0deg);
     opacity: 1;
   }
   50% {
-    transform: scale(0.8) rotate(180deg);
+    transform: scale(0.8) rotate(180deg); /* Half rotation with scaling */
     opacity: 0.8;
   }
   75% {
-    transform: scale(0.5) rotate(360deg);
+    transform: scale(0.5) rotate(360deg); /* Full rotation, smaller */
     opacity: 0.5;
   }
   90% {
-    transform: scale(0.2) rotate(540deg);
+    transform: scale(0.2) rotate(540deg); /* 1.5 rotations, very small */
     opacity: 0.2;
   }
   100% {
-    transform: scale(0) rotate(720deg);
+    transform: scale(0) rotate(720deg); /* 2 full rotations, completely gone */
     opacity: 0;
   }
 }
 
-/* Add a vortex overlay effect - start hidden, fade in with picture */
+/* ========== VORTEX BACKGROUND EFFECT ========== */
+/* Spinning vortex background using ::before pseudo-element */
 .vortex-trap-display::before {
   content: '';
   position: absolute;
@@ -2385,24 +2403,25 @@ p.game-message.lost.lantern_darkness,
   left: 50%;
   width: 200%;
   height: 200%;
+  /* Multi-ring radial gradient creating vortex tunnel effect */
   background: radial-gradient(
     circle at center,
     transparent 0%,
-    rgba(138, 43, 226, 0.2) 20%,
-    rgba(75, 0, 130, 0.4) 40%,
-    rgba(0, 0, 0, 0.8) 70%,
-    #000 100%
-  );
+    rgba(138, 43, 226, 0.2) 20%, /* Inner purple ring */
+    rgba(75, 0, 130, 0.4) 40%, /* Middle indigo ring */
+    rgba(0, 0, 0, 0.8) 70%, /* Dark outer ring */
+    #000 100%); /* Complete black edge */
   transform: translate(-50%, -50%);
-  opacity: 0;
+  opacity: 0; /* Start invisible */
   animation: 
-    fade-in 1s ease-in forwards,
-    vortex-bg-spin 6s linear 1s infinite; /* Start spinning after fade in */
+    fade-in 1s ease-in forwards, /* Fade in first */
+    vortex-bg-spin 6s linear 1s infinite; /* Then start spinning */
   pointer-events: none;
   z-index: 1;
 }
 
-/* Add spiral lines for extra vortex effect - also fade in */
+/* ========== SPIRAL LINES EFFECT ========== */
+/* Additional spiral pattern using ::after pseudo-element */
 .vortex-trap-display::after {
   content: '';
   position: absolute;
@@ -2410,103 +2429,116 @@ p.game-message.lost.lantern_darkness,
   left: 50%;
   width: 150%;
   height: 150%;
+  /* Conic gradient creating spiral arm pattern */
   background: conic-gradient(
     from 0deg,
     transparent 0deg,
-    rgba(138, 43, 226, 0.3) 45deg,
+    rgba(138, 43, 226, 0.3) 45deg, /* Purple spiral arm */
     transparent 90deg,
-    rgba(147, 112, 219, 0.3) 135deg,
+    rgba(147, 112, 219, 0.3) 135deg, /* Light purple spiral arm */
     transparent 180deg,
-    rgba(138, 43, 226, 0.3) 225deg,
+    rgba(138, 43, 226, 0.3) 225deg, /* Purple spiral arm */
     transparent 270deg,
-    rgba(147, 112, 219, 0.3) 315deg,
-    transparent 360deg
-  );
+    rgba(147, 112, 219, 0.3) 315deg, /* Light purple spiral arm */
+    transparent 360deg);
   transform: translate(-50%, -50%);
-  opacity: 0;
+  opacity: 0; /* Start invisible */
   animation: 
-    fade-in 1s ease-in forwards,
-    spiral-lines 4s linear 1s infinite; /* Start spinning after fade in */
+    fade-in 1s ease-in forwards, /* Fade in first */
+    spiral-lines 4s linear 1s infinite; /* Then start counter-rotating */
   pointer-events: none;
-  z-index: 0;
+  z-index: 0; /* Behind main vortex effect */
 }
 
-/* Simple fade in animation */
+/* ========== VORTEX ANIMATION KEYFRAMES ========== */
+
+/* Simple fade-in animation for vortex effects */
 @keyframes fade-in {
   to {
     opacity: 1;
   }
 }
 
+/* Main vortex background rotation */
 @keyframes vortex-bg-spin {
   from { transform: translate(-50%, -50%) rotate(0deg); }
   to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
+/* Counter-rotating spiral lines for enhanced vortex effect */
 @keyframes spiral-lines {
   from { transform: translate(-50%, -50%) rotate(0deg); }
   to { transform: translate(-50%, -50%) rotate(-360deg); }
 }
 
-/* Ensure text is above the vortex effect */
+/* ========== TEXT VISIBILITY MANAGEMENT ========== */
+/* Ensures death message remains visible above all vortex effects */
 .vortex-trap-display .game-message {
   position: relative;
-  z-index: 2;
+  z-index: 2; /* Above background vortex effects */
 }
 
+/* ==================== EXIT ROOM DISCOVERY SCENE ==================== */
 
-/* Exit Room Display - add to scenes.css */
+/* ========== MAIN EXIT ROOM CONTAINER ========== */
+/* Final game location with dynamic background based on player progression */
 .exit-room-display {
   text-align: center;
   padding: 20px;
   margin: 15px 0;
   border-radius: 10px;
   min-height: 700px;
-  position: relative;
-  overflow: hidden;
-  background-color: #000000; /* Black background for any empty space */
+  position: relative; /* Enable layered content positioning */
+  overflow: hidden; /* Contain background image properly */
+  background-color: #000000; /* Black fallback for any empty space */
 }
 
-/* Exit room background image */
+/* ========== DYNAMIC EXIT ROOM BACKGROUND ========== */
+/* Responsive background image showing current exit room state */
 .exit-room-display .exit-room-background {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Changed back to cover */
-  z-index: 0; /* Changed from -1 to 0 */
+  object-fit: cover; /* Fill container while maintaining aspect ratio */
+  z-index: 0; /* Behind text content but above container background */
 }
 
-/* Game message styling - transparent background */
+/* ========== EXIT ROOM MESSAGE STYLING ========== */
+/* High-contrast text overlay for readability over varying backgrounds */
 .exit-room-display .game-message {
   position: relative;
-  z-index: 1;
-  color: #ffffff;
-  text-shadow: 
-    2px 2px 4px rgba(0, 0, 0, 0.9),
-    -1px -1px 4px rgba(0, 0, 0, 0.9),
-    1px -1px 4px rgba(0, 0, 0, 0.9),
-    -1px 1px 4px rgba(0, 0, 0, 0.9);
+  z-index: 1; /* Above background image */
+  color: #ffffff; /* Pure white for maximum contrast */
+  /* Comprehensive text shadow for readability over any background */
+  text-shadow:
+    2px 2px 4px rgba(0, 0, 0, 0.9), /* Primary shadow */
+    -1px -1px 4px rgba(0, 0, 0, 0.9), /* Top-left shadow */
+    1px -1px 4px rgba(0, 0, 0, 0.9), /* Top-right shadow */
+    -1px 1px 4px rgba(0, 0, 0, 0.9); /* Bottom-left shadow */
   font-size: 1.3rem;
   font-weight: bold;
   line-height: 1.6;
-  padding: 20px 40px; /* Added horizontal padding to keep text away from edges */
-  background: transparent; /* Fully transparent */
-  margin-top: 20px; /* Position at top */
-  max-width: 90%; /* Prevent text from going to edges */
+  padding: 20px 40px; /* Horizontal padding keeps text from edges */
+  background: transparent; /* Fully transparent to show background */
+  margin-top: 20px; /* Position below any title elements */
+  max-width: 90%; /* Prevent text from reaching container edges */
   margin-left: auto;
   margin-right: auto;
 }
 
-/* Ladder extension scene with video */
+/* ==================== LADDER EXTENSION CINEMATIC SEQUENCE ==================== */
+
+/* ========== MAIN LADDER EXTENSION CONTAINER ========== */
+/* Cinematic container for magical ladder extension sequence with video integration */
 .ladder-extend-display {
   position: relative;
-  overflow: hidden;
-  /* Remove min-height and let content determine height */
+  overflow: hidden; /* Contain video and overlay elements */
+  /* Magical gradient background as fallback and enhancement */
   background: linear-gradient(to bottom,
-    rgba(255, 215, 0, 0.1) 0%,
-    rgba(0, 0, 0, 0.9) 70%);
+    rgba(255, 215, 0, 0.1) 0%, /* Light golden top */
+    rgba(0, 0, 0, 0.9) 70%); /* Dark bottom for text readability */
   animation: magical-reveal 1s ease-out;
   display: flex;
   flex-direction: column;
@@ -2514,62 +2546,102 @@ p.game-message.lost.lantern_darkness,
   justify-content: center;
 }
 
-/* Video background styling */
-.ladder-video-background {
-  position: relative; /* Changed from absolute */
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 80vh; /* Limit height to 80% of viewport */
-  object-fit: contain; /* Changed from cover to contain */
-  z-index: 0;
+/* ========== MAGICAL REVEAL ANIMATION ========== */
+/* Smooth entrance animation for ladder extension sequence */
+@keyframes magical-reveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
+/* ========== LADDER EXTENSION VIDEO BACKGROUND ========== */
+/* Responsive video player for ladder extension cinematic */
+.ladder-video-background {
+  position: relative; /* Natural document flow positioning */
+  width: auto;
+  height: auto;
+  max-width: 100%; /* Responsive width constraint */
+  max-height: 80vh; /* Limit height to 80% of viewport for proper viewing */
+  object-fit: contain; /* Maintain aspect ratio, show entire video */
+  z-index: 0; /* Behind overlay content */
+}
+
+/* ========== LADDER EXTENSION CONTENT OVERLAY ========== */
+/* Text and UI overlay positioned over video background */
 .ladder-extend-content {
-  position: absolute; /* Changed to absolute to overlay on video */
+  position: absolute; /* Overlay positioning over video */
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1;
+  z-index: 1; /* Above video background */
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-between; /* Distribute content top to bottom */
   padding: 40px;
-  pointer-events: none; /* Allow clicking through except on actual text */
+  pointer-events: none; /* Allow video interaction, enable only on text elements */
 }
 
+/* ========== LADDER EXTENSION TITLE ========== */
+/* Mystical title with animated golden glow effects */
 .ladder-extend-title {
-  font-family: 'Uncial Antiqua', cursive;
+  font-family: 'Uncial Antiqua', cursive; /* Ancient mystical script font */
   font-size: 1.5rem;
-  color: #FFD700;
+  color: #FFD700; /* Bright gold for magical theme */
   text-align: center;
+  /* Multi-layer golden glow text shadow */
   text-shadow:
-    0 0 20px rgba(255, 215, 0, 0.8),
-    0 0 40px rgba(255, 215, 0, 0.6),
-    2px 2px 4px rgba(0, 0, 0, 1);
+    0 0 20px rgba(255, 215, 0, 0.8), /* Primary golden glow */
+    0 0 40px rgba(255, 215, 0, 0.6), /* Extended golden aura */
+    2px 2px 4px rgba(0, 0, 0, 1); /* Black outline for contrast */
   animation: title-glow 2s ease-in-out infinite;
-  pointer-events: auto;
+  pointer-events: auto; /* Enable interactions for title */
 }
 
+/* ========== MAGICAL TITLE GLOW ANIMATION ========== */
+/* Pulsing golden glow animation for mystical atmosphere */
+@keyframes title-glow {
+  0%, 100% {
+    text-shadow:
+      0 0 20px rgba(255, 215, 0, 0.8),
+      0 0 40px rgba(255, 215, 0, 0.6),
+      2px 2px 4px rgba(0, 0, 0, 1);
+  }
+  50% {
+    text-shadow:
+      0 0 30px rgba(255, 215, 0, 1.0), /* Intensified glow at peak */
+      0 0 50px rgba(255, 215, 0, 0.8), /* Extended aura at peak */
+      2px 2px 4px rgba(0, 0, 0, 1);
+  }
+}
+
+/* ========== LADDER EXTENSION MESSAGE STYLING ========== */
+/* Message text overlay with golden theme and bottom positioning */
 .ladder-extend-display .game-message {
-  padding: 100px;
+  padding: 100px; /* Generous padding for visual breathing room */
   border-radius: 8px;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  color: #d7a308;
+  background: transparent !important; /* Force transparency to show video */
+  border: none !important; /* Clean appearance over video */
+  box-shadow: none !important; /* No shadows to interfere with video */
+  color: #d7a308; /* Rich gold color for magical theme */
   font-size: 1.5rem;
   text-align: center;
+  /* Golden glow text shadow for readability over video */
   text-shadow:
-    0 0 10px rgba(255, 215, 0, 0.5),
-    2px 2px 4px rgba(0, 0, 0, 1);
-  pointer-events: auto;
-  margin-top: auto; /* Push to bottom */
+    0 0 10px rgba(255, 215, 0, 0.5), /* Soft golden glow */
+    2px 2px 4px rgba(0, 0, 0, 1); /* Strong black outline for contrast */
+  pointer-events: auto; /* Enable interactions for message text */
+  margin-top: auto; /* Push to bottom of container for optimal positioning */
 }
+/* ==================== MAGICAL CATASTROPHE DEATH SCENE ==================== */
 
-
-/* Magical Catastrophe Death Display - add to scenes.css */
+/* ========== MAIN MAGICAL CATASTROPHE CONTAINER ========== */
+/* Ultimate magical disaster death scene with reality-warping effects */
 .magical-catastrophe-display {
   text-align: center;
   padding: 20px;
@@ -2577,12 +2649,24 @@ p.game-message.lost.lantern_darkness,
   border-radius: 10px;
   min-height: 700px;
   position: relative;
-  overflow: hidden;
-  background-color: #000000;
+  overflow: hidden; /* Contain complex magical effects */
+  background-color: #000000; /* Black base for void effect */
   animation: container-to-black 10s ease-in forwards;
+  
+  /* ========== PLASMA PARTICLE BACKGROUND SYSTEM ========== */
+  /* Multiple radial gradients creating scattered magical energy particles */
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(100, 200, 255, 0.4) 0%, transparent 2%), /* Blue plasma particle */
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.6) 0%, transparent 2%), /* White energy spark */
+    radial-gradient(circle at 50% 20%, rgba(0, 150, 255, 0.5) 0%, transparent 2%), /* Deep blue particle */
+    radial-gradient(circle at 30% 80%, rgba(200, 230, 255, 0.7) 0%, transparent 2%), /* Light blue particle */
+    radial-gradient(circle at 70% 40%, rgba(100, 200, 255, 0.5) 0%, transparent 2%); /* Medium blue particle */
+  background-size: 300% 300%; /* Large size for smooth movement */
+  animation: plasma-particles 3s linear infinite;
 }
 
-/* Vortex container that spins and shrinks */
+/* ========== PLASMA VORTEX EFFECT ========== */
+/* Spinning dimensional vortex using ::before pseudo-element */
 .magical-catastrophe-display::before {
   content: '';
   position: absolute;
@@ -2590,33 +2674,35 @@ p.game-message.lost.lantern_darkness,
   left: 50%;
   width: 120%;
   height: 120%;
+  /* Radial gradient creating dimensional rift appearance */
   background: radial-gradient(
     circle at center,
     transparent 0%,
-    rgba(100, 200, 255, 0.1) 20%,
-    rgba(0, 150, 255, 0.2) 40%,
-    rgba(255, 255, 255, 0.3) 60%,
-    transparent 100%
-  );
+    rgba(100, 200, 255, 0.1) 20%, /* Light blue inner ring */
+    rgba(0, 150, 255, 0.2) 40%, /* Medium blue middle ring */
+    rgba(255, 255, 255, 0.3) 60%, /* White outer ring */
+    transparent 100%);
   transform: translate(-50%, -50%);
   animation: plasma-vortex 10s ease-in forwards;
-  z-index: 1;
+  z-index: 1; /* Above background, below text */
 }
 
-/* Background image that also spins and shrinks */
+/* ========== MAGICAL CATASTROPHE BACKGROUND IMAGE ========== */
+/* Background image with synchronized spinning collapse animation */
 .magical-catastrophe-display .magical-catastrophe-background {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  z-index: 0;
+  object-fit: contain; /* Show entire image */
+  z-index: 0; /* Behind all other elements */
   animation: image-vortex-collapse 10s ease-in forwards;
-  transform-origin: center center;
+  transform-origin: center center; /* Rotate from center point */
 }
 
-/* Lightning bolt effects with fade-out wrapper */
+/* ========== LIGHTNING BOLT EFFECTS ========== */
+/* Multi-directional lightning strikes using ::after pseudo-element */
 .magical-catastrophe-display::after {
   content: '';
   position: absolute;
@@ -2624,153 +2710,155 @@ p.game-message.lost.lantern_darkness,
   left: 0;
   width: 100%;
   height: 100%;
+  /* Four linear gradients creating lightning bolt pattern */
   background-image: 
-    linear-gradient(45deg, transparent 45%, rgba(100, 200, 255, 0.8) 49%, rgba(255, 255, 255, 1) 50%, rgba(100, 200, 255, 0.8) 51%, transparent 55%),
-    linear-gradient(-45deg, transparent 45%, rgba(100, 200, 255, 0.8) 49%, rgba(255, 255, 255, 1) 50%, rgba(100, 200, 255, 0.8) 51%, transparent 55%),
-    linear-gradient(90deg, transparent 45%, rgba(0, 150, 255, 0.6) 49%, rgba(200, 230, 255, 1) 50%, rgba(0, 150, 255, 0.6) 51%, transparent 55%),
-    linear-gradient(0deg, transparent 45%, rgba(0, 150, 255, 0.6) 49%, rgba(200, 230, 255, 1) 50%, rgba(0, 150, 255, 0.6) 51%, transparent 55%);
-  background-size: 200% 200%;
+    linear-gradient(45deg, transparent 45%, rgba(100, 200, 255, 0.8) 49%, rgba(255, 255, 255, 1) 50%, rgba(100, 200, 255, 0.8) 51%, transparent 55%), /* Diagonal lightning */
+    linear-gradient(-45deg, transparent 45%, rgba(100, 200, 255, 0.8) 49%, rgba(255, 255, 255, 1) 50%, rgba(100, 200, 255, 0.8) 51%, transparent 55%), /* Opposite diagonal */
+    linear-gradient(90deg, transparent 45%, rgba(0, 150, 255, 0.6) 49%, rgba(200, 230, 255, 1) 50%, rgba(0, 150, 255, 0.6) 51%, transparent 55%), /* Horizontal lightning */
+    linear-gradient(0deg, transparent 45%, rgba(0, 150, 255, 0.6) 49%, rgba(200, 230, 255, 1) 50%, rgba(0, 150, 255, 0.6) 51%, transparent 55%); /* Vertical lightning */
+  background-size: 200% 200%; /* Large size for dramatic effect */
   background-position: center;
-  opacity: 0;
-  
-  z-index: 2;
-  pointer-events: none;
-}
-/* Plasma particles */
-.magical-catastrophe-display {
-  background-image: 
-    radial-gradient(circle at 20% 30%, rgba(100, 200, 255, 0.4) 0%, transparent 2%),
-    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.6) 0%, transparent 2%),
-    radial-gradient(circle at 50% 20%, rgba(0, 150, 255, 0.5) 0%, transparent 2%),
-    radial-gradient(circle at 30% 80%, rgba(200, 230, 255, 0.7) 0%, transparent 2%),
-    radial-gradient(circle at 70% 40%, rgba(100, 200, 255, 0.5) 0%, transparent 2%);
-  background-size: 300% 300%;
-  animation: plasma-particles 3s linear infinite;
+  opacity: 0; /* Start invisible, animated separately if needed */
+  z-index: 2; /* Above vortex, below text */
+  pointer-events: none; /* Don't block user interactions */
 }
 
-/* Game message styling for magical catastrophe */
+/* ========== MAGICAL CATASTROPHE MESSAGE STYLING ========== */
+/* Death message with complex magical glow effects and entrance animation */
 .magical-catastrophe-display .game-message.lost.magical_catastrophe {
   position: relative;
-  z-index: 10;
-  color: #8bc5d4;
+  z-index: 10; /* Above all magical effects */
+  color: #8bc5d4; /* Light blue for magical energy theme */
+  /* Multi-layer magical glow text shadow system */
   text-shadow: 
-    0 0 20px rgba(100, 200, 255, 1),
-    0 0 40px rgba(255, 255, 255, 0.8),
-    0 0 60px rgba(0, 150, 255, 0.6),
-    2px 2px 4px rgba(0, 0, 0, 0.9);
+    0 0 20px rgba(100, 200, 255, 1), /* Primary blue glow */
+    0 0 40px rgba(255, 255, 255, 0.8), /* Secondary white glow */
+    0 0 60px rgba(0, 150, 255, 0.6), /* Extended deep blue aura */
+    2px 2px 4px rgba(0, 0, 0, 0.9); /* Black outline for contrast */
   font-size: 1.5rem;
   font-weight: bold;
   line-height: 1.6;
   padding: 20px 40px;
-  background: transparent;
+  background: transparent; /* Show magical effects underneath */
   margin-top: 20px;
   max-width: 90%;
   margin-left: auto;
   margin-right: auto;
-  opacity: 0;
-  transform: translateY(20px);
+  opacity: 0; /* Start invisible */
+  transform: translateY(20px); /* Start slightly below final position */
   animation: text-fade-in-and-glow 10s ease-in forwards;
 }
 
-/* Combined text fade in and glow animation */
+/* ========== COMPLEX TEXT ENTRANCE AND GLOW ANIMATION ========== */
+/* Multi-stage text animation with fade-in and pulsing glow effects */
 @keyframes text-fade-in-and-glow {
   0%, 30% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(20px); /* Start below final position */
     text-shadow: 
-      0 0 20px #8bc5d4,
-
-      2px 2px 4px rgba(0, 0, 0, 0.9);
+      0 0 20px #8bc5d4, /* Basic blue glow */
+      2px 2px 4px rgba(0, 0, 0, 0.9); /* Black outline */
   }
   50% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0); /* Move to final position */
     text-shadow: 
-      0 0 20p #8bc5d4,
-  
-      2px 2px 4px rgba(0, 0, 0, 0.9);
+      0 0 20px #8bc5d4, /* Basic blue glow */
+      2px 2px 4px rgba(0, 0, 0, 0.9); /* Black outline */
   }
   60% {
     opacity: 1;
     transform: translateY(0);
     text-shadow: 
-      0 0 30px rgba(255, 255, 255, 1),
- 
-      2px 2px 6px rgba(0, 0, 0, 1);
+      0 0 30px rgba(255, 255, 255, 1), /* Intensified white glow */
+      2px 2px 6px rgba(0, 0, 0, 1); /* Stronger black outline */
   }
   70% {
     opacity: 1;
     transform: translateY(0);
     text-shadow: 
-      0 0 20px #8bc5d4,
-  
+      0 0 20px #8bc5d4, /* Return to basic blue */
       2px 2px 4px rgba(0, 0, 0, 0.9);
   }
   80% {
     opacity: 1;
     transform: translateY(0);
     text-shadow: 
-      0 0 30px rgba(255, 255, 255, 1),
-
+      0 0 30px rgba(255, 255, 255, 1), /* Second white glow pulse */
       2px 2px 6px rgba(0, 0, 0, 1);
   }
   90%, 100% {
     opacity: 1;
     transform: translateY(0);
     text-shadow: 
-      0 0 20px rgba(100, 200, 255, 1),
-
+      0 0 20px rgba(100, 200, 255, 1), /* Final magical blue glow */
       2px 2px 4px rgba(0, 0, 0, 0.9);
   }
 }
 
-/* Text fade in animation - REMOVED as it's now combined above */
+/* ========== MAGICAL CATASTROPHE ANIMATION KEYFRAMES ========== */
 
-/* Keep the original plasma glow animation for reference but it's not used */
-
-/* Container fade to black */
+/* Container background fade to complete void */
 @keyframes container-to-black {
   0%, 80% {
-    background-color: #000000;
+    background-color: #000000; /* Maintain black background */
   }
   100% {
     background-color: #000000;
-    background-image: none;
+    background-image: none; /* Remove particle effects at end */
   }
 }
 
-/* Vortex spin and shrink animation - with 3 second delay */
+/* Plasma particles floating animation */
+@keyframes plasma-particles {
+  0% {
+    background-position: 0% 0%, 100% 100%, 50% 0%, 0% 100%, 100% 50%;
+  }
+  33% {
+    background-position: 33% 33%, 66% 66%, 83% 33%, 33% 66%, 66% 83%;
+  }
+  66% {
+    background-position: 66% 66%, 33% 33%, 16% 66%, 66% 33%, 33% 16%;
+  }
+  100% {
+    background-position: 100% 100%, 0% 0%, 50% 100%, 100% 0%, 0% 50%;
+  }
+}
+
+/* ========== VORTEX COLLAPSE ANIMATION ========== */
+/* Spinning dimensional vortex collapse with 3-second delay */
 @keyframes plasma-vortex {
   0%, 30% {
-    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    transform: translate(-50%, -50%) rotate(0deg) scale(1); /* Normal state with delay */
     opacity: 0.8;
   }
   70% {
-    transform: translate(-50%, -50%) rotate(720deg) scale(0.8);
-    opacity: 1;
+    transform: translate(-50%, -50%) rotate(720deg) scale(0.8); /* 2 rotations, smaller */
+    opacity: 1; /* Peak visibility */
   }
   100% {
-    transform: translate(-50%, -50%) rotate(1440deg) scale(0);
+    transform: translate(-50%, -50%) rotate(1440deg) scale(0); /* 4 rotations, vanished */
     opacity: 0;
   }
 }
 
-/* Image vortex collapse - with 3 second delay */
+/* ========== IMAGE VORTEX COLLAPSE ANIMATION ========== */
+/* Background image spinning collapse with magical filter effects */
 @keyframes image-vortex-collapse {
   0%, 30% {
-    transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1); /* Normal state with delay */
     opacity: 1;
-    filter: brightness(1);
+    filter: brightness(1); /* Normal brightness */
   }
   65% {
-    transform: rotate(360deg) scale(0.6);
+    transform: rotate(360deg) scale(0.6); /* 1 rotation, 60% size */
     opacity: 1;
-    filter: brightness(1.5) hue-rotate(180deg);
+    filter: brightness(1.5) hue-rotate(180deg); /* Brighter with color shift */
   }
   100% {
-    transform: rotate(720deg) scale(0);
+    transform: rotate(720deg) scale(0); /* 2 rotations, completely collapsed */
     opacity: 0;
-    filter: brightness(2) hue-rotate(360deg);
+    filter: brightness(2) hue-rotate(360deg); /* Maximum brightness and full color cycle */
   }
 }
 
@@ -2832,85 +2920,116 @@ p.game-message.lost.lantern_darkness,
   }
 }
 
+/* ==================== VICTORY WIN SCENE SYSTEM ==================== */
 
-/* Win video scene */
+/* ========== MAIN WIN VIDEO CONTAINER ========== */
+/* Ultimate victory scene with video integration and celebratory effects */
 .win-video-display {
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* Contain celebratory effects */
+  /* Triumphant gradient background enhancing video content */
   background: linear-gradient(to bottom,
-    rgba(255, 215, 0, 0.1) 0%,
-    rgba(0, 0, 0, 0.9) 70%);
+    rgba(255, 215, 0, 0.1) 0%, /* Light golden top */
+    rgba(0, 0, 0, 0.9) 70%); /* Dark bottom for text contrast */
   animation: magical-reveal 1s ease-out;
-  /* Remove flex properties that add padding */
-  /* No min-height - let video determine height */
+  /* Container height determined by video content for responsive design */
 }
 
-/* Video element inside win display */
+/* ========== VICTORY VIDEO PLAYER ========== */
+/* Responsive video player for triumph cinematic sequence */
 .win-video-background {
   position: relative;
-  display: block; /* Add this */
+  display: block; /* Proper block element behavior */
   width: auto;
   height: auto;
-  max-width: 100%;
-  max-height: 60vh; /* Reduced from 80vh to fit better */
-  object-fit: contain;
-  margin: 0 auto; /* Center the video */
+  max-width: 100%; /* Responsive width constraint */
+  max-height: 60vh; /* Reduced height for better screen fit */
+  object-fit: contain; /* Show entire video maintaining aspect ratio */
+  margin: 0 auto; /* Center video horizontally */
 }
 
-/* Win message overlay */
+/* ========== WIN MESSAGE OVERLAY SYSTEM ========== */
+/* Text and UI overlay positioned over victory video */
 .win-message-overlay {
-  position: absolute;
+  position: absolute; /* Overlay positioning over video */
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1;
+  z-index: 1; /* Above video background */
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Changed from space-between to flex-start */
+  justify-content: flex-start; /* Align content to top */
   align-items: center; /* Center horizontally */
   padding: 20px;
-  pointer-events: none;
+  pointer-events: none; /* Allow video interaction by default */
   background: transparent;
 }
 
+/* ========== VICTORY TITLE STYLING ========== */
+/* Triumphant title with animated golden glow effects */
 .win-title {
-  font-family: 'Uncial Antiqua', cursive;
-  font-size: 1.7rem; /* Match ladder title size */
-  color: #FFD700;
+  font-family: 'Uncial Antiqua', cursive; /* Ancient mystical script font */
+  font-size: 1.7rem; /* Consistent with ladder scene sizing */
+  color: #FFD700; /* Bright gold for victory theme */
   text-align: center;
-  margin: 0; /* Remove margin */
-  padding: 10px 0; /* Small padding */
+  margin: 0; /* Clean spacing */
+  padding: 10px 0; /* Minimal vertical spacing */
+  /* Multi-layer golden victory glow text shadow */
   text-shadow:
-    0 0 20px rgba(255, 215, 0, 0.8),
-    0 0 40px rgba(255, 215, 0, 0.6),
-    2px 2px 4px rgba(0, 0, 0, 1);
+    0 0 20px rgba(255, 215, 0, 0.8), /* Primary golden glow */
+    0 0 40px rgba(255, 215, 0, 0.6), /* Extended golden aura */
+    2px 2px 4px rgba(0, 0, 0, 1); /* Black outline for contrast */
   animation: victory-pulse 2s ease-in-out infinite;
-  pointer-events: auto;
+  pointer-events: auto; /* Enable interactions for title */
 }
+
+/* ========== VICTORY PULSE ANIMATION ========== */
+/* Celebratory pulsing animation for triumph atmosphere */
+@keyframes victory-pulse {
+  0%, 100% {
+    text-shadow:
+      0 0 20px rgba(255, 215, 0, 0.8),
+      0 0 40px rgba(255, 215, 0, 0.6),
+      2px 2px 4px rgba(0, 0, 0, 1);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow:
+      0 0 30px rgba(255, 215, 0, 1.0), /* Intensified glow at peak */
+      0 0 50px rgba(255, 215, 0, 0.8), /* Extended aura at peak */
+      2px 2px 4px rgba(0, 0, 0, 1);
+    transform: scale(1.05); /* Slight scaling for celebration effect */
+  }
+}
+
+/* ========== WIN MESSAGE STYLING ========== */
+/* Victory message text with dynamic visibility controls */
 .win-video-display .game-message.won {
-  font-family: 'MedievalSharp';
-  padding: 20px; /* Changed from 300px */
+  font-family: 'MedievalSharp'; /* Medieval font for epic victory theme */
+  padding: 20px; /* Moderate padding for readability */
   border-radius: 8px;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  color: #570ea5;
+  background: transparent !important; /* Force transparency to show video */
+  border: none !important; /* Clean appearance over video */
+  box-shadow: none !important; /* No shadows to interfere with video */
+  color: #570ea5; /* Deep purple for regal victory theme */
   font-size: 1.9rem;
   font-weight: bold;
   text-align: center;
+  /* Victory-themed text shadow with warm golden glow */
   text-shadow:
-    0 0 20px rgba(112, 96, 4, 0.5),
-    2px 2px 18px rgba(0, 0, 0, 0.8);
+    0 0 20px rgba(112, 96, 4, 0.5), /* Warm golden glow */
+    2px 2px 18px rgba(0, 0, 0, 0.8); /* Strong black outline for contrast */
   line-height: 1.5;
-  pointer-events: auto;
-  margin-top: 20px; /* Small gap from top, removed 'auto' */
+  pointer-events: auto; /* Enable interactions for message text */
+  margin-top: 20px; /* Small gap from title */
   margin-bottom: 0;
-  max-width: 80%; /* Limit width so text doesn't stretch too wide */
-  transition: opacity 1s ease-in;
+  max-width: 80%; /* Prevent text from stretching too wide */
+  transition: opacity 1s ease-in; /* Smooth visibility transitions */
 }
 
-
+/* ========== WIN MESSAGE VISIBILITY STATES ========== */
+/* Dynamic visibility controls for win message timing */
 .win-video-display .game-message.won.hide {
   opacity: 0;
   visibility: hidden;
@@ -2922,27 +3041,21 @@ p.game-message.lost.lantern_darkness,
   animation: fadeInMessage 1s ease-in;
 }
 
+/* ========== WIN MESSAGE ENTRANCE ANIMATION ========== */
+/* Smooth fade-in with upward movement for victory message */
 @keyframes fadeInMessage {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(20px); /* Start below final position */
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0); /* Move to final position */
   }
 }
 
-
-
-
-
-
-
-
-
-
-/* Keep the celebration effects */
+/* ========== CELEBRATORY GLOW EFFECTS ========== */
+/* Ambient celebratory lighting using ::after pseudo-element */
 .win-video-display::after {
   content: '';
   position: absolute;
@@ -2950,10 +3063,37 @@ p.game-message.lost.lantern_darkness,
   left: 0;
   right: 0;
   bottom: 0;
+  /* Dual radial gradients creating scattered celebratory light points */
   background-image:
-    radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.3) 0%, transparent 50%);
+    radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.3) 0%, transparent 50%), /* Golden celebration light */
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.3) 0%, transparent 50%); /* White celebration sparkle */
   animation: celebration-glow 3s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 2;
+  pointer-events: none; /* Don't block user interactions */
+  z-index: 2; /* Above overlay content but below any UI elements */
+}
+
+/* ========== CELEBRATION GLOW ANIMATION ========== */
+/* Gentle pulsing celebration lighting for triumphant atmosphere */
+@keyframes celebration-glow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1; /* Peak celebratory brightness */
+    transform: scale(1.1); /* Slight expansion for celebration effect */
+  }
+}
+
+/* ========== MAGICAL REVEAL ANIMATION ========== */
+/* Smooth entrance animation for victory scene (inherited from ladder scene) */
+@keyframes magical-reveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

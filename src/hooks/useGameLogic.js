@@ -3086,6 +3086,9 @@ const useGameLogic = ({
     initializeLooseRocks(startingRoom);
     console.log("ROCKS_DEBUG: Called addLooseRocksToFirstRoom");
 
+    addItemToInventory('torch_oil'); // Add starting oil flask if not present
+
+
     // ========== TESTING ITEMS (IGNORE FOR COMMENTS) ==========
     // Various addItemToInventory calls for testing purposes
     // These will be removed in final version
