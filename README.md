@@ -32,6 +32,14 @@ All **AI‑generated art, voice lines, and narrative MP3 scenes** were created s
 - **AI Collaboration**: Prompt engineering for code generation, content creation, and workflow optimization  
 
 ---
+## AI Tools Used
+- **Voice & Sound Effects**: [Minimax](https://www.minimax.io/audio), [ElevenLabs](https://elevenlabs.io/)  
+- **Video & Scene Creation**: [Pollo AI](https://pollo.ai/)  
+- **Code Collaboration & Optimization**: Conversational AI workflows  
+
+*All AI-assisted content was created for this project under the author’s direction and integrated into the custom game engine.*
+
+---
 
 ## Licensing
 This project uses a **split license**:  

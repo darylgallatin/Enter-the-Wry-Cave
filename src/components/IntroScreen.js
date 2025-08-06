@@ -59,6 +59,9 @@ const paragraphs = [
   "Trapped in this stone comedy club, you need the treasure map, all artifacts, and an exit that's playing hide-and-seek. Your village awaits—already carving your memorial plaque and a sad epitaph."
 ];
 
+
+
+
 /**
  * Warning text for final atmospheric emphasis
  * 
@@ -85,6 +88,8 @@ const warningText =
  */
 const IntroScreen = () => {
   
+ const [showAbout, setShowAbout] = useState(false);
+
   // ========== GAME CONTEXT INTEGRATION ==========
   /**
    * Essential game functions for intro screen functionality
@@ -98,16 +103,7 @@ const IntroScreen = () => {
     hasSavedGame      // Function to check for existing save data
   } = useGame();
 
-  // ========== DEVELOPER TESTING STATE MANAGEMENT ==========
-  /**
-   * Developer testing mode state variables
-   * 
-   * These state variables enable developer testing functionality, allowing
-   * for quick testing of specific rooms and game scenarios during development.
-   */
-  const [testMode, setTestMode] = useState(false);      // Toggle for developer testing mode
-  const [testRoom, setTestRoom] = useState('');         // Specific room number for testing
-
+ 
   // ==================== BACKGROUND STYLING MANAGEMENT ====================
   /**
    * Body class management for intro-specific styling
@@ -130,12 +126,9 @@ const IntroScreen = () => {
    * scenarios.
    */
   const handleStartGame = () => {
-    if (testMode && testRoom) {
-      startGame(testRoom);
-    } else {
+  
       startGame();
-    }
-  };
+      };
 
   // ==================== CONTINUE GAME HANDLER ====================
   /**
@@ -148,16 +141,7 @@ const IntroScreen = () => {
     loadGame();
   };
 
-  // ==================== DEVELOPER MODE TOGGLE ====================
-  /**
-   * Developer testing mode toggle handler
-   * 
-   * This function manages the activation/deactivation of developer testing
-   * mode, controlling the visibility and functionality of testing features.
-   */
-  const toggleTestMode = () => {
-    setTestMode(!testMode);
-  };
+
 
   // ==================== MAIN COMPONENT RENDER ====================
   /**
@@ -168,18 +152,12 @@ const IntroScreen = () => {
    * developer testing features.
    */
   return (
+  <>
     <div className="intro-container">
-      
-      {/* ==================== GAME TITLE ==================== 
-       * Main game title with distinctive styling that establishes
-       * the game's personality and creates immediate visual impact.
-       */}
+      {/* ==================== GAME TITLE ==================== */}
       <h1 className="intro-title">Enter the Wry Descent</h1>
       
-      {/* ==================== ANIMATED STORY SECTION ==================== 
-       * Sophisticated animated storytelling component that creates an
-       * engaging narrative introduction with timed fade-in effects.
-       */}
+      {/* ==================== ANIMATED STORY SECTION ==================== */}
       <div className="intro-story">
         <FadeInParagraphs
           paragraphs={paragraphs}
@@ -189,12 +167,8 @@ const IntroScreen = () => {
         />
       </div>
       
-      {/* ==================== GAME CONTROLS SECTION ==================== 
-       * Primary interface controls for game initialization and continuation,
-       * including conditional save game functionality and developer tools.
-       */}
+      {/* ==================== GAME CONTROLS SECTION ==================== */}
       <div className="intro-controls">
-        
         {/* === PRIMARY START BUTTON ===  */}
         <button className="start-btn" onClick={handleStartGame}>
           Make Questionable Life Choices
@@ -207,36 +181,37 @@ const IntroScreen = () => {
           </button>
         )}
         
-        {/* ==================== DEVELOPER TESTING CONTROLS ==================== */}
-        <div className="test-controls">
-          <label className="test-toggle">
-            <input
-              type="checkbox"
-              checked={testMode}
-              onChange={toggleTestMode}
-            />
-            Developer Testing Mode
-          </label>
-          
-          {testMode && (
-            <div className="test-room-input">
-              <label>
-                Starting Room (1-30):
-                <input
-                  type="number"
-                  min="1"
-                  max="30"
-                  value={testRoom}
-                  onChange={(e) => setTestRoom(e.target.value)}
-                />
-              </label>
-              <p className="test-note">Note: Starting room will still avoid hazards</p>
-            </div>
-          )}
+        {/* === NEW ABOUT BUTTON === */}
+        <button className="about-btn" onClick={() => setShowAbout(true)}>
+          About
+        </button>
+      </div>
+
+      <footer style={{ marginTop: "20px", fontSize: "14px", color: "#FFD700" }}>
+        © 2025 Daryl Gallatin. dgallatin95@hotmail.com All Rights Reserved.
+      </footer>
+    </div>
+
+    {/* === MODAL OUTSIDE THE CLIPPED CONTAINER === */}
+    {showAbout && (
+      <div className="modal-overlay" onClick={() => setShowAbout(false)}>
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          {/* Close X button */}
+          <button className="modal-close" onClick={() => setShowAbout(false)}>&times;</button>
+          <h2>About This Game</h2>
+          <p><strong>Enter the Wry Descent</strong> © 2025</p>
+          <p>Created by: <strong>DARYL GALLATIN</strong></p>
+          <p>
+            A sarcastic cave-delving adventure built with React. 
+            Survive 30+ rooms of questionable design, acquire  treasure,
+            and maybe make it out alive to save the village. This game initially started out as a simple guessing game.
+          </p>
+          <p>Contact: <a href="mailto:dgallatin95@hotmail.com">dgallatin95@hotmail.com</a></p>
         </div>
       </div>
-    </div>
-  );
+    )}
+  </>
+);
 };
 
 export default IntroScreen;

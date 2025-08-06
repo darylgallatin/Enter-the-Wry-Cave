@@ -88,6 +88,10 @@ body.intro-active {
 /* Buttons */
 .intro-controls {
   margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px; /* space between buttons */
 }
 
 .start-btn {
@@ -99,6 +103,8 @@ body.intro-active {
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s;
+    width: 90%;
+  max-width: 400px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   margin-bottom: 20px;
@@ -124,6 +130,8 @@ body.intro-active {
   border: none;
   border-radius: 10px;
   cursor: pointer;
+   width: 75%;
+  max-width: 320px;
   transition: all 0.3s;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
@@ -133,9 +141,152 @@ body.intro-active {
   transform: translateY(-2px);
 }
 
-/* Developer test mode */
-.test-controls {
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  position: relative;
+  background: rgba(26, 42, 58, 0.95);
+  color: #FFD700;
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+  border: 3px solid rgba(255, 215, 0, 0.9);
+  border-radius: 20px;
+  text-align: center;
+  box-shadow:
+    0 0 25px rgba(255, 215, 0, 0.7),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+  transform: scale(0.95);
+  animation: popIn 0.3s forwards;
+}
+
+@keyframes popIn {
+  to {
+    transform: scale(1);
+  }
+}
+
+
+.modal-content h2 {
+  font-size: 28px;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  background: linear-gradient(to right, #E3E3E3, #FFD700, #E3E3E3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.modal-content a {
+  color: #FFD700;
+  text-decoration: underline;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #FFD700;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.7);
+  transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+  color: #fff;
+}
+
+
+.about-btn {
+  display: inline-block;
   margin-top: 20px;
-  font-size: 0.9rem;
-  color: #E0E0E0;
+  background: rgba(26, 42, 58, 0.75);
+  color: #FFD700;
+  font-size: 20px;
+  padding: 12px 24px;
+  border: 2px solid #FFD700;
+  border-radius: 12px;
+    width: 60%;
+  max-width: 240px;
+  cursor: pointer;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+  box-shadow: 
+    0 0 10px rgba(255, 215, 0, 0.6),
+    inset 0 0 6px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.about-btn:hover {
+  background: rgba(50, 50, 50, 0.85);
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.9),
+    inset 0 0 8px rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+
+.start-btn,
+.continue-btn,
+.about-btn {
+  display: block;         /* block-level element */
+  margin: 0 auto;         /* center horizontally */
+}
+
+
+/* Force proper centering for all buttons */
+.start-btn,
+.continue-btn,
+.about-btn {
+  display: block;
+  margin: 0 auto; /* centers horizontally regardless of width */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Reverse pyramid sizing with font emphasis */
+.start-btn {
+  width: 90%;
+  max-width: 400px;
+  font-size: 26px; /* slightly bigger */
+}
+
+.continue-btn {
+  width: 75%;
+  max-width: 320px;
+  font-size: 22px;
+}
+
+.about-btn {
+  width: 60%;
+  max-width: 240px;
+  font-size: 20px; /* slightly smaller */
+}
+
+/* Hover grow effect for all buttons */
+.start-btn:hover,
+.continue-btn:hover,
+.about-btn:hover {
+  transform: scale(1.05); /* subtle "breathe" on hover */
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
 }
