@@ -20,6 +20,8 @@ Navigate 30+ twisted chambers, collect strange treasures, possibly save the vill
 ### Development Notes
 This project evolved over **6 months of development**.  
 While **AI tools assisted with code generation**, I personally handled **system architecture, creative direction, prompt engineering, testing, asset integration**, and **sourced/licensed all third‑party sound and music**.  
+ChatGPT and ClaudeAI were the main AI development tools. I extensively used ClaudeAI after about the first 6 weeks as it seemed better suited when the project started getting large, but I still used  ChatGPT for the  image content generation and  some additonial development or optimization. 
+
 All **AI‑generated art, voice lines, and narrative MP3 scenes** were created specifically for this game.
 
 ---
