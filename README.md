@@ -20,6 +20,7 @@ Navigate 30+ twisted chambers, collect strange treasures, possibly save the vill
 ### Development Notes
 This project evolved over **6 months of development**.  
 While **AI tools assisted with code generation**, I personally handled **system architecture, creative direction, prompt engineering, testing, asset integration**, and **sourced/licensed all third‑party sound and music**.  
+
 ChatGPT and ClaudeAI were the main AI development tools. I extensively used ClaudeAI after about the first 6 weeks as it seemed better suited when the project started getting large, but I still used  ChatGPT for the  image content generation and  some additonial development or optimization. 
 
 All **AI‑generated art, voice lines, and narrative MP3 scenes** were created specifically for this game.
@@ -32,6 +33,7 @@ All **AI‑generated art, voice lines, and narrative MP3 scenes** were created s
 - **Build Tools**: Create React App  
 - **Version Control**: Git & GitHub  
 - **AI Collaboration**: Prompt engineering for code generation, content creation, and workflow optimization
+- **Editor**: Visual Studio Code
 
  <p align="left" dir="auto">  
 <img src="https://camo.githubusercontent.com/4d605d05d722727e91b06670a00d118d9cdcdcdc53ac8b8c2c255fc8af1b86ed/68747470733a2f2f726561646d652d636f6d706f6e656e74732e76657263656c2e6170702f6170693f636f6d706f6e656e743d6c6f676f2666696c6c3d626c61636b266c6f676f3d726561637426616e696d6174696f6e3d7370696e2673766766696c6c3d313564386665" data-canonical-src="https://readme-components.vercel.app/api?component=logo&amp;fill=black&amp;logo=react&amp;animation=spin&amp;svgfill=15d8fe" style="max-width: 100%;">
