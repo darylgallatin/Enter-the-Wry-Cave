@@ -30,7 +30,7 @@ All **AI‑generated art, voice lines, and narrative MP3 scenes** were created s
 - **Build Tools**: Create React App  
 - **Version Control**: Git & GitHub  
 - **AI Collaboration**: Prompt engineering for code generation, content creation, and workflow optimization  
-img src="https://camo.githubusercontent.com/4d605d05d722727e91b06670a00d118d9cdcdcdc53ac8b8c2c255fc8af1b86ed/68747470733a2f2f726561646d652d636f6d706f6e656e74732e76657263656c2e6170702f6170693f636f6d706f6e656e743d6c6f676f2666696c6c3d626c61636b266c6f676f3d726561637426616e696d6174696f6e3d7370696e2673766766696c6c3d313564386665" data-canonical-src="https://readme-components.vercel.app/api?component=logo&amp;fill=black&amp;logo=react&amp;animation=spin&amp;svgfill=15d8fe" style="max-width: 100%;">
+<img src="https://camo.githubusercontent.com/4d605d05d722727e91b06670a00d118d9cdcdcdc53ac8b8c2c255fc8af1b86ed/68747470733a2f2f726561646d652d636f6d706f6e656e74732e76657263656c2e6170702f6170693f636f6d706f6e656e743d6c6f676f2666696c6c3d626c61636b266c6f676f3d726561637426616e696d6174696f6e3d7370696e2673766766696c6c3d313564386665" data-canonical-src="https://readme-components.vercel.app/api?component=logo&amp;fill=black&amp;logo=react&amp;animation=spin&amp;svgfill=15d8fe" style="max-width: 100%;">
 ---
 ## AI Tools Used
 - **Voice & Sound Effects**: [Minimax](https://www.minimax.io/audio), [ElevenLabs](https://elevenlabs.io/)  
