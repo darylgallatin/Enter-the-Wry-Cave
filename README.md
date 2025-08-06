@@ -46,7 +46,7 @@ All **AI‑generated art, voice lines, and narrative MP3 scenes** were created s
 ## AI Tools Used
 - **Voice & Sound Effects**: [Minimax](https://www.minimax.io/audio), [ElevenLabs](https://elevenlabs.io/)  
 - **Video & Scene Creation**: [Pollo AI](https://pollo.ai/)  
-- **Code Collaboration & Optimization**: Conversational AI workflows  
+- **Code Collaboration & Optimization**: Conversational AI workflows with ChatGPT and ClaudeAI 
 
 *All AI-assisted content was created for this project under the author’s direction and integrated into the custom game engine.*
 
