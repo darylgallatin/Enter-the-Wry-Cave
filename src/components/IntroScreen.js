@@ -52,7 +52,7 @@ import FadeInParagraphs from './FadeInParagraphs';
 const paragraphs = [
   "The village elder, three sheets to the wind on turnip wine, swore this cave held curse-breaking treasures. For generations, treasure hunters entered. None returned, though someone keeps leaving one-star Village Cryer reviews.",
   
-  "Following his napkin map through the thick brush and unfriendly wildlife to the entrance at dawn. As you step inside you see a little rodent looking up at you and you swear it winked at you like it knew it would be the last time it would see you. You step inside — A rude flash of light later, the entrance is gone—sealed like the cave's passive-aggressive way of saying 'welcome.'",
+  "Following his 'extensivly detailed' napkin map through the thick brush and unfriendly wildlife (the small skitterfangs dont like to be disturbed) to the entrance at dawn. As you step inside you see a little rodent looking up at you and you swear it winked at you like it knew it would be the last time it would see you. Even with its  little evil snarling  grin causing  you to hesitate, You still step inside — A rude flash of light later, the entrance is gone—sealed like the cave's passive-aggressive way of saying 'welcome.'",
   
   "Legend speaks of the Druika, an ancient horror with anger management issues and breath that could peel paint. The elder's slurred warnings: 'Bottomless pits! Giant bats! And the Druika cheats at everything! And then eats you! The audacity!'",
   
@@ -83,12 +83,13 @@ const warningText =
  * Main IntroScreen functional component
  * 
  * This component orchestrates the complete introduction experience, managing
- * narrative display, user interactions, developer tools, and transition to
+ * narrative display, user interactions,  and transition to
  * the main game. It serves as both a story gateway and a functional interface.
  */
 const IntroScreen = () => {
   
  const [showAbout, setShowAbout] = useState(false);
+ const [showCredits, setShowCredits] = useState(false);
 
   // ========== GAME CONTEXT INTEGRATION ==========
   /**
@@ -155,7 +156,7 @@ const IntroScreen = () => {
   <>
     <div className="intro-container">
       {/* ==================== GAME TITLE ==================== */}
-      <h1 className="intro-title">Enter the Wry Descent</h1>
+      <h1 className="intro-title">Enter the Wry Cave</h1>
       
       {/* ==================== ANIMATED STORY SECTION ==================== */}
       <div className="intro-story">
@@ -181,10 +182,14 @@ const IntroScreen = () => {
           </button>
         )}
         
-        {/* === NEW ABOUT BUTTON === */}
-        <button className="about-btn" onClick={() => setShowAbout(true)}>
-          About
-        </button>
+     <div className="info-buttons">
+  <button className="about-btn" onClick={() => setShowAbout(true)}>
+    About
+  </button>
+  <button className="credits-btn" onClick={() => setShowCredits(true)}>
+    Credits
+  </button>
+</div>
       </div>
 
       <footer style={{ marginTop: "20px", fontSize: "14px", color: "#FFD700" }}>
@@ -199,7 +204,7 @@ const IntroScreen = () => {
           {/* Close X button */}
           <button className="modal-close" onClick={() => setShowAbout(false)}>&times;</button>
           <h2>About This Game</h2>
-          <p><strong>Enter the Wry Descent</strong> © 2025</p>
+          <p><strong>Enter the Wry Cave</strong> © 2025</p>
           <p>Created by: <strong>DARYL GALLATIN</strong></p>
           <p>
             A sarcastic cave-delving adventure built with React. 
@@ -210,6 +215,41 @@ const IntroScreen = () => {
         </div>
       </div>
     )}
+
+    {showCredits && (
+  <div className="modal-overlay" onClick={() => setShowCredits(false)}>
+    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <button className="modal-close" onClick={() => setShowCredits(false)}>&times;</button>
+      <h2>Credits</h2>
+      <p>This game combines author-created AI assets and licensed third-party content.</p>
+
+      <h3>Author-Created Assets</h3>
+      <ul>
+        <li>Images & cutscene MP3s — CC-BY-NC 4.0</li>
+        <li>Sound effects & voice lines — CC-BY 4.0</li>
+        <li>Narrative content — CC-BY-NC 4.0</li>
+        <li>Game code — MIT License</li>
+      </ul>
+
+      <h3>Third-Party Sound & Music</h3>
+      <p><strong>From Freesound.org:</strong></p>
+      <ul>
+        <li>Time distortion_northern87 – CC0</li>
+        <li>Annulet of absorption – CC-BY 4.0</li>
+        <li>... etc</li>
+      </ul>
+
+      <p><strong>From OpenGameArt.org:</strong></p>
+      <ul>
+        <li>Beast Growl 3.wav – CC0</li>
+        <li>Cave theme.mp3 – CC-BY 3.0</li>
+        <li>... etc</li>
+      </ul>
+
+      <p>All remaining unlisted assets are from OpenGameArt or Freesound under CC0 or CC-BY licenses.</p>
+    </div>
+  </div>
+)}
   </>
 );
 };

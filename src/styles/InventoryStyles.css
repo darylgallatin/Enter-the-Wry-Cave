@@ -235,15 +235,16 @@
     font-style: italic;
   }
 
-  * Orb glowing effect */
+  /* Orb glowing effect */
+  
+  
   .orb-glowing {
     background-color: rgba(100, 149, 237, 0.2);
     border: 1px solid rgba(100, 149, 237, 0.5);
-    box-shadow: 0 0 10px rgba(100, 149, 237, 0.3);
+    box-shadow: 0px 0px 10px rgba(100, 149, 237, 0.3);
     animation: pulse-orb-temporary 2s 3; /* Pulse 3 times over 6 seconds total */
   }
-  
-  .pulse-orb {
+  .pulse-orb-temporary  {
     animation: pulse-orb 2s 3; /* 3 pulses only, not infinite */
   }
   
@@ -264,17 +265,17 @@
     0% {
       background-color: rgba(194, 215, 74, 0.2);
       border: 1px solid rgba(173, 200, 73, 0.5);
-      box-shadow: 0 4 30px rgba(203, 225, 11, 0.3);
+      box-shadow: 0px 4px 30px rgba(203, 225, 11, 0.3);
     }
     50% {
       background-color: rgba(194, 215, 74, 0.2);
       border: 1px solid rgba(173, 200, 73, 0.5);
-      box-shadow: 0 4 30px rgba(203, 225, 11, 0.3);
+      box-shadow: 0px 4px 30px rgba(203, 225, 11, 0.3);
     }
     100% {
       background-color: rgba(194, 215, 74, 0.2);
       border: 1px solid rgba(173, 200, 73, 0.5);
-      box-shadow: 0 4 30px rgba(203, 225, 11, 0.3);
+      box-shadow: 0px 4px 30px rgba(203, 225, 11, 0.3);
     }
   }
   

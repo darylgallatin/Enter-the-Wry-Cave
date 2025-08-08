@@ -529,7 +529,7 @@ const playWumpusScreamSound = () => {
         roomDescriptionMap,                      // All room descriptions and states
         specialRooms,                            // Special room properties and timers
         roomConnections,                         // Room connectivity map
-        
+       
         // ========== ENTITY POSITIONS ==========
         positions,                               // Wumpus, pits, bats, exit locations
         
@@ -539,7 +539,7 @@ const playWumpusScreamSound = () => {
         collectedTreasures,                      // Treasures found by player
         hasMap,                                  // Boolean: player has treasure map
         mapClue,                                 // Current map clue text
-        
+       
         // ========== MERCHANT SYSTEMS ==========
         giftShopRoom,                            // Gift shop location
         goblinCooldown,                          // Merchant interaction cooldown
@@ -1322,7 +1322,9 @@ const handleUseItem = (itemId) => {
     playTeleportSound,      // Teleportation sound effects
     playDistantWumpusSound, // Wumpus proximity audio cues
     playWumpusScreamSound,  // Wumpus death/injury sounds
-    
+   // playMapFoundSound,
+    //playTreasureFoundSound,
+
     // ========== EQUIPMENT CONTROL SYSTEMS ==========
     activateLantern,        // Toggle lantern on/off functionality
     
@@ -2062,7 +2064,7 @@ const handleWaterSpiritTrade = () => {
           return item;
         }));
         
-        setMessage("You offer a single gold coin to the water sprite. She bows her head to you and gracefully accepts it, and the waters part to let you pass.");
+        setMessage("You offer a single gold coin to the water sprite. She bows her head to you and gracefully accepts it, and disappears back into the water to let you pass.");
       } else {
         // If value is 1 or not defined, remove the entire item
         setInventory(prev => prev.filter(item => 
@@ -2084,16 +2086,30 @@ const handleWaterSpiritTrade = () => {
   }
   
   // Mark that player has paid the toll for this visit
-  setSpecialRooms(prev => ({
-    ...prev,
-    [currentPosition]: {
-      ...prev[currentPosition],
-      
-      tollPaid: true
+  setSpecialRooms(prev => {
+    const newState = { ...prev };
+    newState[currentPosition] = {
+      ...newState[currentPosition],
+      tollPaid: true,
+      nixieHasAppeared: false
     }
-  }));
-  
+    return newState;
+  });
+  // ADD THIS DEBUG CODE:
+console.log("After payment - specialRooms update:", {
+  currentPosition,
+  tollPaid: true,
+  nixieHasAppeared: false
+});
+setTimeout(() => {
+  setMessage(prev => prev + ""); // Tiny state change that forces re-render
+}, 10);
+// Also add this timeout to check the state after it's updated:
+setTimeout(() => {
+  console.log("Current specialRooms state:", specialRooms[currentPosition]);
+}, 100);
   // Hide the trade button
+  setMessage(prevMessage => prevMessage); 
   setShowWaterSpiritTradeButton(false);
   
   return true;
@@ -5486,7 +5502,8 @@ const {
   playPlushieMatingCallSound,          // Plushie creature special behavior
   playOldDoorOpeningSound,             // Door/portal opening
   playTrinketTrapDeathSound,           // Trap death sequence
-  
+  playMapFoundSound,
+  playTreasureFoundSound,
   // ========== MUSIC SYSTEM MANAGEMENT ==========
   playBackgroundMusic,                 // Ambient background music
   playSpecialRoomMusic,                // Location-specific music
@@ -6726,7 +6743,13 @@ const resetGameWithSound = () => {
   // FIRST: Stop victory and lose music (before enabling sounds)
   playVictoryMusicEnding(false);
   playLoseMusicEnding(false);
-  disableAllSounds();
+  playBackgroundMusic(false);
+  playSpecialRoomMusic(null);
+  
+  // Stop proximity-based looping sounds
+  playPitWindSound(false);
+  playBatFlapSound(false);
+  playDistantWumpusSound(false);
   
   // ========== TRANSITION AUDIO PLAYBACK ==========
   // THEN: Play the play again sound
@@ -6742,6 +6765,46 @@ const resetGameWithSound = () => {
     playBackgroundMusic(true);
   }, 100);
     
+ // Stop any creature-specific sounds
+  if (typeof stopNightCrawlerSound === 'function') {
+    stopNightCrawlerSound();
+  }
+
+  // Clear any special music timeouts
+  if (window.specialMusicTimeout) {
+    clearTimeout(window.specialMusicTimeout);
+    window.specialMusicTimeout = null;
+  }
+  
+  // Reset audio state references
+  deathSoundPlayed.current = false;
+  loseSoundPlayed.current = false;
+  winSoundListenerAdded.current = false;
+  victoryMusicStarted.current = false;
+  backgroundMusicStarted.current = false;
+  
+  // Comprehensive audio system cleanup
+  disableAllSounds();
+  
+  // Use the master cleanup function as a failsafe
+  cleanupSounds();
+
+// ========== TRANSITION AUDIO PLAYBACK ==========
+  // Short delay to ensure all audio is stopped before playing new sound
+  setTimeout(() => {
+    // Re-enable sounds
+    enableAllSounds();
+    
+    // Play the play again sound
+    playPlayAgainSound();
+    
+    // ========== BACKGROUND MUSIC RESTART ==========
+    // Restart background music with a delay to avoid overlap
+    setTimeout(() => {
+      playBackgroundMusic(true);
+    }, 100);
+  }, 50);
+
   // ========== WORLD REGENERATION SYSTEM ==========
   // Generate new positions for game entities
   const newPositions = generateGamePositions();
@@ -6777,10 +6840,16 @@ const resetGameWithSound = () => {
   setShowWaterSpiritTradeButton(false);
   
   // ========== CORE RESET EXECUTION ==========
-  // Call the original resetGame
-    resetGame();
+  // Call the original resetGame  as doing the above is not enough to reset the music as it will continue to play in the new game too
+  //Keeping  the reset functions for now in the hopes of figuring out later how to fully reset and stop all music/sounds before new game starts as tere are 
+  // some variables I'dlike to carry over into the new game when player resets
+  
+  setTimeout(() => {
+    window.location.reload();
+  }, 1350); // Adjust delay as needed
+   // resetGame();
 
-    console.log("=== GAME RESET COMPLETE ===");
+    
   };
 
 
@@ -7974,7 +8043,6 @@ const {
   addGiftShopItemToInventory,           // Gift shop purchase handler
   showNixieDisplay,                     // Nixie trade display state
   setShowNixieDisplay,                  // Nixie trade display setter
-  
 
   
   // ========== LIGHTING AND SURVIVAL SYSTEMS ==========
@@ -8035,6 +8103,8 @@ const {
   hasMap,                               // Boolean: does player have the map?
   setHasMap,                            // Function to set map possession status
   mapClue,                              // String: clue text from treasure map
+    playMapFoundSound,
+    playTreasureFoundSound,
   setBatEncounters,                     // Function to set bat encounter tracking
   
   // ========== LIGHTING AND SURVIVAL MECHANICS ==========
@@ -9702,7 +9772,7 @@ useEffect(() => {
     // TORCH DRAIN - happens in ALL rooms (moved outside safe room check)
     if (timeInRoom > 60 && Math.floor(timeInRoom) % 60 === 0) { // Every minute after the first
   setTorchLevel(prev => {
-    const newLevel = Math.max(0, prev - 45); // Extra 5% torch drain
+    const newLevel = Math.max(0, prev - 5); // Extra 5% torch drain
     console.log("Extra torch drain from staying in same room too long - new level:", newLevel);
     
     // CHECK FOR TORCH DEATH HERE
@@ -11262,6 +11332,8 @@ const value = {
     collectedTreasures,             // Array of collected treasure IDs
     hasMap,                         // Boolean - player has treasure map
     mapClue,                        // Treasure map clue text
+    playMapFoundSound,
+    playTreasureFoundSound,
     treasureDebugInfo,              // Debug information for treasure system
     shiftingRoomId,                 // ID of the shifting room
     
@@ -11269,7 +11341,8 @@ const value = {
     roomConnections,                // Room connection graph
     roomDescriptionMap,             // Map of all room descriptions
     specialRooms,                   // Special room configurations
-    
+    setSpecialRooms,                // Function to update special room
+
     // ========== USER INTERFACE ==========
     showIntro,                      // Boolean - show intro sequence
     

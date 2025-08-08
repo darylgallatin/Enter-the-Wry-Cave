@@ -196,7 +196,7 @@ export const handleUseWizardJournal = (dependencies) => {
     setMessage,
     inventory,
     setInventory,
-    showWaterSpiritTradeButton,
+   showWaterSpiritTradeButton,
     setShowWaterSpiritTradeButton,
     playNixieThankYouJournalSound,
   } = dependencies;
@@ -388,6 +388,7 @@ export const handleUseLooseRocks = (dependencies) => {
     playNixieWailingKillScream,
     setGameStatus,
     setDeathCause,
+    setShowWaterSpiritTradeButton
   } = dependencies;
 
   console.log("Using loose rocks in room", currentPosition);
@@ -601,7 +602,11 @@ export const handleUseLooseRocks = (dependencies) => {
             hasWaterSpirit: false
           }
         }));
-        
+
+        //disable gold trade button. Its kind of pointless to trade with a dead nixie
+
+        setShowWaterSpiritTradeButton(false);
+
         // ========== DELAYED DEATH CRY AUDIO ==========
         /**
          * Layered Audio Effect System

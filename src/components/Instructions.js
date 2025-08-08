@@ -97,7 +97,7 @@ const Instructions = () => {
          * and establishes the game's atmosphere and premise.
          */}
         <p className="instructions-intro">
-          You're exploring a maze-like cave system filled with mystery, danger, excitement and ancient treasures.
+          You're exploring a maze-like cave system filled with mystery, danger, excitement, sarcasm and ancient treasures.
         </p>
         
         {/* ========== MOVEMENT MECHANICS SECTION ========== 
@@ -137,6 +137,7 @@ const Instructions = () => {
           <li>Close to the bat? You'll hear flapping.</li>
           <li>Watch for subtle clues or you'll miss it!!!</li>
           <li>Near the exit? You'll feel fresh air.</li>
+          <li>EACH GAME IS DIFFERENT. Not always the same rooms or even items.</li>
            <li>The input field can be used for either 
             selecting a room number  or an item number</li>
         </ul>

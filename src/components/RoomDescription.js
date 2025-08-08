@@ -869,7 +869,7 @@ useEffect(() => {
         setShowWinMessage(false); // Reset message visibility
         
         // This message will show AFTER the video ends
-        setMessage("You've escaped the ancient cave with all the treasures to save the village...\n wait... what is this?\n\n\nWHAT DID YOU DO!?\n\n\n\nWhat's wrong with the trees?\nWhy is the sky differerent!\n\n~ To Be Continued ~");
+        setMessage("You've escaped the ancient cave with all the treasures to save the village...\n wait... what is this?\n\n\nWHAT DID YOU DO!?\n\n\n\nWhat's wrong with the trees?\nWhy is the sky differerent!\n\nYou thought this would be easy didnt you?\n\n~ To Be Continued ~");
       }, 100);
 
       return; // Exit early - don't process as a collectible item

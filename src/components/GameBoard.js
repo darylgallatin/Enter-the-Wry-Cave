@@ -52,6 +52,8 @@ const GameBoard = () => {
     currentPosition,                // Player's current room number
     roomConnections,                // Room connection graph
     history,                        // Game action history
+  
+
     
     // === CORE GAME FUNCTIONS ===
     handleGuess,                    // Player action handler
@@ -88,7 +90,8 @@ const GameBoard = () => {
     // === SPECIAL MECHANICS ===
     handleHiddenRoomTrap,           // Hidden room trap handler
     specialRooms,                   // Special room configurations
-    
+    setSpecialRooms,
+
     // === DISPLAY SYSTEMS ===
     showTreasureDisplay,            // Treasure display visibility
     foundTreasureInfo,              // Found treasure information
@@ -761,6 +764,7 @@ useEffect(() => {
  * 
  * @effects Updates showTranquilPoolDisplay state based on room content and display conflicts
  */
+// Update your existing tranquil pool useEffect
 useEffect(() => {
   // Don't show tranquil pool if other displays are active
   if (showMapDiscovery || showHiddenRoomDisplay) {
@@ -775,11 +779,73 @@ useEffect(() => {
     if (roomText.includes("tranquil pool") &&
         roomText.includes("perfect mirror")) {
       setShowTranquilPoolDisplay(true);
+      
+      // FORCE re-render by toggling state when nixie payment changes
+      if (specialRooms[currentPosition]?.tollPaid && 
+          specialRooms[currentPosition]?.nixieHasAppeared === false) {
+        setShowTranquilPoolDisplay(false);
+        setTimeout(() => setShowTranquilPoolDisplay(true), 1);
+      }
     } else {
       setShowTranquilPoolDisplay(false);
     }
   }
-}, [currentPosition, roomDescriptionMap, showMapDiscovery, showHiddenRoomDisplay]);
+}, [currentPosition, roomDescriptionMap, showMapDiscovery, showHiddenRoomDisplay, specialRooms]);
+
+
+// ==================== NIXIE DEATH SCENE CLEANUP CONTROLLER ====================
+/**
+ * Nixie death scene state management with room-based cleanup
+ * 
+ * This effect ensures that the nixie death scene display is properly reset when
+ * the player leaves the tranquil pool room. This prevents the death scene from
+ * persisting when the player returns to the room later, allowing for proper
+ * display state transitions.
+ * 
+ * Cleanup Features:
+ * - **Room-Based Reset**: Automatically clears death scene when leaving tranquil pool
+ * - **State Synchronization**: Ensures display matches actual room state
+ * - **Clean Transitions**: Prevents lingering death scene effects
+ * - **Proper State Management**: Maintains consistency between room visits
+ * 
+ * Technical Implementation:
+ * - **Position-Based Trigger**: Only affects rooms with tranquil pool descriptions
+ * - **Conditional Reset**: Only clears state when actually leaving the pool room
+ * - **State Preservation**: Maintains other nixie-related states appropriately
+ * - **Performance Optimized**: Minimal overhead with targeted state updates
+ * 
+ * @effects Clears showNixieDeathScene when player leaves tranquil pool room
+ */
+useEffect(() => {
+  // Check if we're currently in a tranquil pool room
+  const currentRoomText = roomDescriptionMap[currentPosition]?.text || "";
+  const isCurrentlyInTranquilPool = currentRoomText.includes("tranquil pool") && 
+                                   currentRoomText.includes("perfect mirror");
+  
+  // If we're NOT in a tranquil pool room, clear any death scene state
+  if (!isCurrentlyInTranquilPool && currentPosition) {
+    // Find any rooms that have death scenes active and clear them
+    setSpecialRooms(prev => {
+      const updated = { ...prev };
+      let hasChanges = false;
+      
+      // Loop through all rooms and clear death scenes for non-current rooms
+      Object.keys(updated).forEach(roomPos => {
+        if (parseInt(roomPos) !== currentPosition && updated[roomPos]?.showNixieDeathScene) {
+          updated[roomPos] = {
+            ...updated[roomPos],
+           
+            showNixieDeathScene: false
+          };
+          hasChanges = true;
+        }
+      });
+      
+      return hasChanges ? updated : prev;
+    });
+  }
+}, [currentPosition, roomDescriptionMap, setSpecialRooms]);
+
 
 // ==================== VORTEX TRAP DEATH DISPLAY CONTROLLER ====================
 /**
@@ -1364,6 +1430,21 @@ useEffect(() => {
     setShowNixieRageDeathDisplay(false);
   }
 }, [gameStatus, deathCause]);
+
+
+// Add this useEffect to watch for nixie payment
+useEffect(() => {
+  if (currentPosition && specialRooms[currentPosition]?.tollPaid && 
+      specialRooms[currentPosition]?.nixieHasAppeared === false) {
+    // Force a re-render by updating a local state
+    setShowTranquilPoolDisplay(false);
+    setTimeout(() => {
+      setShowTranquilPoolDisplay(true);
+    }, 10);
+  }
+}, [specialRooms, currentPosition]); // Watch for changes to specialRooms
+
+
 
 // ==================== UTILITY FUNCTIONS FOR DYNAMIC STYLING ====================
 
@@ -2221,14 +2302,18 @@ return (
        * Water-themed room with nixie encounter states
        */
       showTranquilPoolDisplay ? (
-        <div className={
-          currentPosition && specialRooms[currentPosition]?.showNixieDeathScene ? 
-          "nixie-death-scene-display" :
-          currentPosition && specialRooms[currentPosition]?.nixieHasAppeared ? 
-          "nixie-appearance-display" : 
-          "tranquil-pool-display"
-        }>
-          {!specialRooms[currentPosition]?.nixieHasAppeared && (
+<div className={
+currentPosition && specialRooms[currentPosition]?.showNixieDeathScene ?
+"nixie-death-scene-display" :
+// Only show nixie appearance if nixie has appeared AND is still active (not killed)
+currentPosition && specialRooms[currentPosition]?.nixieHasAppeared && 
+specialRooms[currentPosition]?.waterSpiritActive ?
+"nixie-appearance-display" :
+"tranquil-pool-display"  // Default to normal pool display
+}>
+
+
+{!specialRooms[currentPosition]?.nixieHasAppeared &&  (
             <>
               <div className="bio-glow-layer"></div>
               <div className="bio-glow-layer"></div>

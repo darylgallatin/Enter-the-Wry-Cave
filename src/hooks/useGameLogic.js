@@ -159,6 +159,7 @@ const useGameLogic = ({
   hasMap,                         // Boolean - does player have the map?
   setHasMap,                      // Function to update map possession
   mapClue,                        // Current map clue information
+
   setBatEncounters,               // Function to track bat encounter history
   
   // ========== LIGHTING SYSTEM ==========
@@ -3087,8 +3088,13 @@ const useGameLogic = ({
     console.log("ROCKS_DEBUG: Called addLooseRocksToFirstRoom");
 
     addItemToInventory('torch_oil'); // Add starting oil flask if not present
-
-
+//addItemToInventory('gold_coins');  
+//addItemToInventory('lantern');  
+//addItemToInventory('loose_rocks')
+//addGiftShopItemToInventory('canvas_bag');
+//addItemToInventory('wyrmglass');
+//setCollectedTreasures(['ruby', 'medallion', 'statue', 'amulet']);
+//setHasMap(true);
     // ========== TESTING ITEMS (IGNORE FOR COMMENTS) ==========
     // Various addItemToInventory calls for testing purposes
     // These will be removed in final version
@@ -3234,21 +3240,48 @@ const addGiftShopItemToInventory = (itemId) => {
       guess = parseInt(term);
     }
     
-    // ========== INPUT VALIDATION ==========
-    // Validate guess but DON'T change the main message
-    if (isNaN(guess) || guess < 1 || guess > 32) {
-      // Instead of setting a message, update the placeholder text in the input field
-      const inputElement = document.getElementById('term');
-      if (inputElement) {
-        inputElement.placeholder = 'Please enter a valid number (1-30)';
-        // Optionally flash the input field to indicate error
-        inputElement.classList.add('error-flash');
-        setTimeout(() => {
-          inputElement.classList.remove('error-flash');
-        }, 1000);
-      }
-      return;
+   
+// ========== INPUT VALIDATION ==========
+// Validate guess - restrict to rooms 1-30 only (no special rooms via input)
+if (isNaN(guess) || guess < 1 || guess > 30) {
+  // Instead of setting a message, update the placeholder text in the input field
+  const inputElement = document.getElementById('term');
+  if (inputElement) {
+    inputElement.placeholder = 'Please enter a valid number (1-30)';
+    // Optionally flash the input field to indicate error
+    inputElement.classList.add('error-flash');
+    setTimeout(() => {
+      inputElement.classList.remove('error-flash');
+    }, 1000);
+  }
+  return;
+}
+
+// ========== DEPLOYMENT MOVEMENT RESTRICTION ==========
+// FOR DEPLOYMENT: Only allow movement to connected rooms or staying in current room
+// Set TESTING_MODE to true to allow any room (for development)
+const TESTING_MODE = false; // Change to true for testing, false for deployment
+
+if (!TESTING_MODE && currentPosition) {
+  // Get the connected rooms for current position
+  const connectedRooms = roomConnections[currentPosition] || [];
+  
+  // Allow current room (staying put) or connected rooms
+  const allowedRooms = [currentPosition, ...connectedRooms];
+  
+  if (!allowedRooms.includes(guess)) {
+    const inputElement = document.getElementById('term');
+    if (inputElement) {
+      inputElement.placeholder = `You can only go to connected rooms: ${connectedRooms.join(', ')}`;
+      inputElement.classList.add('error-flash');
+      setTimeout(() => {
+        inputElement.classList.remove('error-flash');
+        inputElement.placeholder = 'Enter room number (1-30)';
+      }, 3000);
     }
+    return;
+  }
+}
 
     console.log("FLOATING: ", isFloating());
     

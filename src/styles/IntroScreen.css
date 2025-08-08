@@ -5,6 +5,8 @@ body.intro-active {
   background-color: #0d0d0d;
   margin: 0;
   padding: 0;
+    height: 100vh; /* force viewport height */
+ 
 }
 
 
@@ -14,6 +16,7 @@ body.intro-active {
 
 .intro-container {
     max-width: 800px;
+    height: 100vh; /* full height */
   margin: 40px auto;
   color: #ffffff !important; /* Force white for all child elements */
   background: rgba(26, 42, 58, 0.55);
@@ -247,6 +250,20 @@ body.intro-active {
 }
 
 
+/* Make credits look lighter without shrinking */
+.credits-btn {
+  opacity: 0.85;
+}
+
+.about-btn:hover,
+.credits-btn:hover {
+  background: rgba(50, 50, 50, 0.85);
+  box-shadow:
+    0 0 15px rgba(255, 215, 0, 0.9),
+    inset 0 0 7px rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
 .start-btn,
 .continue-btn,
 .about-btn {
@@ -276,7 +293,31 @@ body.intro-active {
   max-width: 320px;
   font-size: 22px;
 }
+.info-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* space between buttons */
+  margin-top: 10px;
+}
 
+
+.about-btn,
+.credits-btn {
+  width: auto; 
+  max-width: none;
+  font-size: 18px;         /* same font size */
+  padding: 10px 20px;      /* same padding */
+  background: rgba(26, 42, 58, 0.75);
+  color: #FFD700;
+  border: 2px solid #FFD700;
+  border-radius: 10px;
+  cursor: pointer;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+  box-shadow:
+    0 0 8px rgba(255, 215, 0, 0.6),
+    inset 0 0 5px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
 .about-btn {
   width: 60%;
   max-width: 240px;
