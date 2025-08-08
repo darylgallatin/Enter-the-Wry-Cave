@@ -20,6 +20,9 @@ Navigate 30+ twisted chambers, collect strange treasures, possibly save the vill
 ### Development Notes
 This project evolved over **6 months of development**.  
 While **AI tools assisted with code generation**, I personally handled **system architecture, creative direction, prompt engineering, testing, asset integration**, and **sourced/licensed all third‑party sound and music**.  
+
+ChatGPT and ClaudeAI were the main AI development tools. I extensively used ClaudeAI after about the first 6 weeks as it seemed better suited when the project started getting large, but I still used  ChatGPT for the  image content generation and  some additonial development or optimization. 
+
 All **AI‑generated art, voice lines, and narrative MP3 scenes** were created specifically for this game.
 
 ---
@@ -29,13 +32,21 @@ All **AI‑generated art, voice lines, and narrative MP3 scenes** were created s
 - **Styling**: Custom stylesheets  
 - **Build Tools**: Create React App  
 - **Version Control**: Git & GitHub  
-- **AI Collaboration**: Prompt engineering for code generation, content creation, and workflow optimization  
+- **AI Collaboration**: Prompt engineering for code generation, content creation, and workflow optimization
+- **Editor**: Visual Studio Code
 
----
+ <p align="left" dir="auto">  
+<img src="https://camo.githubusercontent.com/4d605d05d722727e91b06670a00d118d9cdcdcdc53ac8b8c2c255fc8af1b86ed/68747470733a2f2f726561646d652d636f6d706f6e656e74732e76657263656c2e6170702f6170693f636f6d706f6e656e743d6c6f676f2666696c6c3d626c61636b266c6f676f3d726561637426616e696d6174696f6e3d7370696e2673766766696c6c3d313564386665" data-canonical-src="https://readme-components.vercel.app/api?component=logo&amp;fill=black&amp;logo=react&amp;animation=spin&amp;svgfill=15d8fe" style="max-width: 100%;">
+<img src="https://camo.githubusercontent.com/4f64dc5977f8e4e5ade1d68cf075e232c342e16d8ee9944817551c39faf97e4d/68747470733a2f2f726561646d652d636f6d706f6e656e74732e76657263656c2e6170702f6170693f636f6d706f6e656e743d6c6f676f2666696c6c3d626c61636b266c6f676f3d6a6176617363726970742673766766696c6c3d663664663163" data-canonical-src="https://readme-components.vercel.app/api?component=logo&amp;fill=black&amp;logo=javascript&amp;svgfill=f6df1c" style="max-width: 100%;">
+  
+<img src="https://camo.githubusercontent.com/809441a75220722ad09e8dfa162410e7c6815c6fdc92b671c67d2cf3324b18f2/68747470733a2f2f726561646d652d636f6d706f6e656e74732e76657263656c2e6170702f6170693f636f6d706f6e656e743d6c6f676f2666696c6c3d626c61636b266c6f676f3d435353332673766766696c6c3d303238646431" data-canonical-src="https://readme-components.vercel.app/api?component=logo&amp;fill=black&amp;logo=CSS3&amp;svgfill=028dd1" style="max-width: 100%;">
+ </p>
+   
+   ---
 ## AI Tools Used
 - **Voice & Sound Effects**: [Minimax](https://www.minimax.io/audio), [ElevenLabs](https://elevenlabs.io/)  
 - **Video & Scene Creation**: [Pollo AI](https://pollo.ai/)  
-- **Code Collaboration & Optimization**: Conversational AI workflows  
+- **Code Collaboration & Optimization**: Conversational AI workflows with ChatGPT and ClaudeAI 
 
 *All AI-assisted content was created for this project under the author’s direction and integrated into the custom game engine.*
 
