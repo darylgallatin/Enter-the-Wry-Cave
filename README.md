@@ -45,7 +45,7 @@ All **AI‑generated art, voice lines, and narrative MP3 scenes** were created s
    ---
 ## AI Tools Used
 - **Voice & Sound Effects**: [Minimax](https://www.minimax.io/audio), [ElevenLabs](https://elevenlabs.io/)
-- **Static Scenes & Images**: ChatGPT, Leonardo AI
+- **Static Scenes & Images**: [ChatGPT](https://chatgpt.com/), [Leonardo AI](https://leonardo.ai/)
 - **Video Creation**: [Pollo AI](https://pollo.ai/)
 - **Code Collaboration & Optimization**: Conversational AI workflows with ChatGPT and ClaudeAI
 
