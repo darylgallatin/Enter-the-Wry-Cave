@@ -17,6 +17,31 @@ Navigate 30+ twisted chambers, collect strange treasures, possibly save the vill
 
 ---
 
+## Screenshots
+Here’s a peek inside the Wry Cave — its strange rooms, treasures, and hazards.
+
+<div align="center">
+  <p><strong>Game Cover</strong></p>
+  <img src="screenshots/Banner_image_bones_room2.jpg" alt="Banner Image" width="500">
+</div>
+
+<div align="center">
+  <p><strong>Intro Screen</strong></p>
+  <img src="screenshots/screenshot1.png" alt="Screenshot 1" width="500">
+</div>
+
+<div align="center">
+  <p><strong>Main Game — Room with an associated picture</strong></p>
+  <img src="screenshots/screenshot2.png" alt="Screenshot 2" width="500">
+</div>
+
+<div align="center">
+  <p><strong>Main Game — Room without an associated picture (most rooms don't, yet)</strong></p>
+  <img src="screenshots/screenshot3.png" alt="Screenshot 3" width="500">
+</div>
+
+
+
 ### Development Notes
 This project evolved over **6 months of development**.  
 While **AI tools assisted with code generation**, I personally handled **system architecture, creative direction, prompt engineering, testing, asset integration**, and **sourced/licensed all third‑party sound and music**.  
