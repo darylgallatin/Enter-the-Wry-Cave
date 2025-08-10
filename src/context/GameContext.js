@@ -879,7 +879,7 @@ const checkTemperatureEffects = (position) => {
         if (!nowEquipped) {
           // First level effect - drain torch
           setTorchLevel(prev => Math.max(prev - 5, 25));
-          setMessage("The extreme cold drains your warmth. Find protection soon! Oh Dear! Oh Dear!");
+          setMessage("The extreme cold drains your warmth.\nPut on  protection soon or leave this room!\n\n Oh Dear! Oh Dear!");
           
           // Second level timer - 10 seconds
           const secondColdTimer = setTimeout(() => {

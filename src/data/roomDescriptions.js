@@ -76,7 +76,7 @@ const roomDescriptions = [
   },
   {
     text: "You find yourself in a cavern decorated with ancient cave drawings depicting strange creatures engaged in what appears to be either ritual sacrifice or an aggressive game of charades.",
-    enhancedText: "You find yourself in a cavern with ancient cave drawings depicting strange creatures in disturbing detail. Your lantern illuminates previously hidden artwork—the creatures are shown hunting humans in organized packs with the efficiency of a well-run bureaucracy. Symbols around their heads might represent telepathic abilities, or possibly just very fancy hats. One painting shows a ceremonial offering that looks suspiciously like a potluck dinner gone horribly wrong.",
+    enhancedText: "You find yourself in a cavern with ancient cave drawings depicting strange creatures in disturbing detail. Your lantern illuminates previously hidden artwork—the creatures are shown hunting humans in organized packs with the efficiency of a well-run bureaucracy. Symbols around their heads might represent telepathic abilities, or possibly just very fancy hats. One painting shows a ceremonial offering that looks suspiciously like a potluck dinner gone horribly wrong.\n\n A small rodent you didnt see before stares at you mockingly,\n as if to say, 'You think you're the first to find this place? Please.'",
     mood: "ancient",
     hasWater: false,
     special: null,
@@ -215,7 +215,7 @@ const roomDescriptions = [
   hasWater: false,
   special: null,
   sound: "smell",
-  perception: "The bouquet of aromas teaches you smells have flavors, and they're all terrible. Your nose files for workers' compensation.",
+  perception: "The bouquet of aromas teaches you smells have flavors, and they're all terrible. Your nose files for workers' compensation. \nGross looking rodents stare up at you with a look that says, 'You think you're better than us?'",
   keywords: ["smell", "latrine", "stench"]
 },
   {
@@ -228,7 +228,7 @@ const roomDescriptions = [
     keywords: ["shrine", "offerings", "goblin"]
   },
   {
-    text: "You find a table with cards and chips scattered about. Even cave dwellers enjoy poker night, though the stakes appear to involve teeth and possibly souls.",
+    text: "You find a table with cards and chips scattered about. Even cave dwellers enjoy poker night, though the stakes appear to involve teeth,  what appears to be tentacle imprints  and possibly souls.",
     mood: "humorous",
     hasWater: false,
     special: null,
