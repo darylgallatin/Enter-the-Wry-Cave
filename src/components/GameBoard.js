@@ -148,7 +148,9 @@ const GameBoard = () => {
   const [showExitRoomDisplay, setShowExitRoomDisplay] = useState(false);        // Exit room interface
   const [showExitWithLadder, setShowExitWithLadder] = useState(false);          // Ladder exit variant
   const [showTranquilPoolDisplay, setShowTranquilPoolDisplay] = useState(false); // Tranquil pool interface
-  
+  const [showBoneRoomDisplay, setShowBoneRoomDisplay] = useState(false);
+
+
   // === DEATH SCENE DISPLAY STATE ===
   /**
    * Death scene display state variables
@@ -729,6 +731,58 @@ useEffect(() => {
     }
   }
 }, [currentPosition, roomDescriptionMap, showMapDiscovery]);
+
+
+
+// ==================== BONE ROOM DETECTION AND DISPLAY SYSTEM ====================
+/**
+ * Intelligent bone room detection with display priority management
+ * 
+ * This effect manages the detection and display of bone rooms while respecting
+ * display hierarchy to prevent interface conflicts. It uses sophisticated text
+ * analysis to identify bone room locations and coordinates with other display systems.
+ * 
+ * Bone Room Detection Features:
+ * - **Text-Based Recognition**: Analyzes room descriptions for bone keywords
+ * - **Multi-Keyword Validation**: Requires multiple specific text elements for accuracy
+ * - **Display Priority**: Defers to higher-priority displays like map discovery
+ * - **Dynamic Detection**: Updates automatically when room descriptions change
+ * 
+ * Text Analysis System:
+ * - **Keyword Matching**: Searches for "bones", "arranged in a pattern", and "crunch"
+ * - **Content Validation**: Ensures all required elements are present
+ * - **Case-Sensitive Matching**: Uses exact text matching for reliability
+ * - **Room Description Integration**: Works with dynamic room description system
+ * 
+ * Display Hierarchy Management:
+ * - **Priority Checking**: Defers to showMapDiscovery for display precedence
+ * - **Conflict Prevention**: Avoids simultaneous display of competing interfaces
+ * - **Clean State Management**: Properly handles display transitions
+ * - **Automatic Cleanup**: Removes display when conditions no longer met
+ * 
+ * @effects Updates showBoneRoomDisplay state based on room content and display priorities
+ */
+useEffect(() => {
+  // Don't show bone room if map is being displayed
+  if (showMapDiscovery) {
+    setShowBoneRoomDisplay(false);
+    return;
+  }
+  
+  // Check if current room has bone room description
+  if (currentPosition && roomDescriptionMap[currentPosition]) {
+    const roomText = roomDescriptionMap[currentPosition].text || "";
+    if (roomText.includes("bones") &&
+        roomText.includes("arranged in a pattern") &&
+        roomText.includes("crunch")) {
+      setShowBoneRoomDisplay(true);
+    } else {
+      setShowBoneRoomDisplay(false);
+    }
+  }
+}, [currentPosition, roomDescriptionMap, showMapDiscovery]);
+
+
 
 // ==================== TRANQUIL POOL DETECTION AND DISPLAY SYSTEM ====================
 /**
@@ -2338,6 +2392,18 @@ specialRooms[currentPosition]?.waterSpiritActive ?
         </div>
       ) : 
       
+      /* === BONE ROOM DISPLAY === 
+      * Ritual bone room interface
+      */
+      showBoneRoomDisplay ? (
+        <div className="bone-room-display">
+          <p className={`game-message ${gameStatus !== 'playing' ? gameStatus : ''}`}>
+            {message}
+          </p>
+        </div>
+      ) : 
+
+
       /* === GIFT SHOP DISPLAY === 
        * Comprehensive commerce interface with save/load controls
        */

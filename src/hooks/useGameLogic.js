@@ -2778,7 +2778,8 @@ const useGameLogic = ({
         // ========== NO GOLD INTERACTION ==========
         // Player has no gold - goblin is uninterested
         setShowTradeButton(false);
-        return " An orcish goblin smelling of alcohol and death comes out of nowhere, and eyeballs you. Then disappears with a growl, seemingly uninterested in you.";
+        console.log("no gold coins")
+        return "\n\nA An orcish goblin smelling of alcohol,death and ripe rotted onions comes out of nowhere, and eyeballs you. Then disappears with a growl, seemingly uninterested in you.";
       }
     } else {
       // ========== NOT IN GIFT SHOP ==========
@@ -3260,7 +3261,7 @@ if (isNaN(guess) || guess < 1 || guess > 30) {
 // ========== DEPLOYMENT MOVEMENT RESTRICTION ==========
 // FOR DEPLOYMENT: Only allow movement to connected rooms or staying in current room
 // Set TESTING_MODE to true to allow any room (for development)
-const TESTING_MODE = false; // Change to true for testing, false for deployment
+const TESTING_MODE = true; // Change to true for testing, false for deployment
 
 if (!TESTING_MODE && currentPosition) {
   // Get the connected rooms for current position
@@ -3590,7 +3591,8 @@ if (!TESTING_MODE && currentPosition) {
     // ========== TORCH AND LIGHTING SYSTEM ==========
     // Handle torch fuel depletion
     if (torchLevel > 0) {
-      setTorchLevel(prev => Math.max(0, prev - 5)); // Decrease by 5% per move
+      setTorchLevel(prev => Math.max(0, prev -4)); // Decrease by 4% per move PLayer will get about 25 moves before running out of light
+      //unless they find the other oil flask and/or the lantern and dont e additional light by not moving  or other special causes
     } else {
       // ========== DARKNESS DEATH CHECK ==========
       // Check if player has an active lantern when torch is out

@@ -205,6 +205,67 @@
   border: 1px solid rgba(157, 124, 255, 0.4); /* Subtle purple border */
 }
 
+/* Option 1: Darken image with overlay - Most effective */
+.bone-room-display {
+  background: url('../images/Bones_room.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: 2px solid #8b4513;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px;
+  min-height: 500px;
+  box-shadow: 0 0 15px rgba(139, 69, 19, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.bone-room-display::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Dark overlay to darken the image */
+  background: rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bone-room-display::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Spooky effects over the darkened image */
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.3) 2px, transparent 2px),
+    radial-gradient(circle at 70% 60%, rgba(160, 82, 45, 0.2) 1px, transparent 1px),
+    radial-gradient(circle at 40% 80%, rgba(205, 133, 63, 0.3) 1.5px, transparent 1.5px);
+  background-size: 50px 50px, 30px 30px, 40px 40px;
+  pointer-events: none;
+  opacity: 0.7;
+  z-index: 2;
+}
+
+.bone-room-display .game-message {
+  position: relative;
+  z-index: 3;
+  color: #f5deb3;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+  font-family: 'MedievalSharp', cursive;
+  font-size: 1.6rem; 
+  line-height: 1.6;
+}
+
+
+
+
+
 /* ==================== TRANQUIL POOL IMMERSIVE SCENE ==================== */
 
 /* ========== MAIN POOL CONTAINER ========== */
