@@ -3261,7 +3261,7 @@ if (isNaN(guess) || guess < 1 || guess > 30) {
 // ========== DEPLOYMENT MOVEMENT RESTRICTION ==========
 // FOR DEPLOYMENT: Only allow movement to connected rooms or staying in current room
 // Set TESTING_MODE to true to allow any room (for development)
-const TESTING_MODE = true; // Change to true for testing, false for deployment
+const TESTING_MODE = false; // Change to true for testing, false for deployment
 
 if (!TESTING_MODE && currentPosition) {
   // Get the connected rooms for current position

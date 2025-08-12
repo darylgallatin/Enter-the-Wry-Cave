@@ -85,7 +85,7 @@ const roomDescriptions = [
   },
   {
     text: "The room is littered with bones arranged in a pattern that suggests either ritualistic purpose or someone with too much time and a morbid sense of interior decorating. \nThe bones crunch as you try to step over them, but youre cave stepping skills leave a lot to be desired.\n",
-    enhancedText: "The room is littered with bones in a disturbing arrangement. Your lantern reveals gruesome details: tooth marks on human femurs (someone wasn't a vegetarian), deliberately arranged skulls forming a circle (cave art or dinner party seating?), and what appears to be a primitive altar made of larger bones—apparently even monsters need furniture. Fresh scratches in the stone suggest something still visits regularly, probably to rearrange the décor.",
+    enhancedText: "The room is littered with bones in a disturbing arrangement. Your lantern reveals gruesome details: tooth marks on human femurs (someone wasn't a vegetarian), deliberately arranged skulls forming a circle (cave art or dinner party seating?), The walls appear to be a deep, inky black with a glossy sheen. Fresh scratches in the walls suggest something still visits regularly, probably to rearrange the décor.",
     mood: "dangerous",
     hasWater: false,
     special: null,
