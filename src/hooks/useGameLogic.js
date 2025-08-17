@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-useless-escape, no-loop-func */
-
+//Main Game Logic Hook
+// This file contains the core game logic for the  Cave game
+// It manages player movement, room descriptions, encounters, and game state
 // ==================== IMPORTS ====================
 // Core React hooks for state management and references
 import { useRef } from 'react';

@@ -4399,8 +4399,8 @@ const placeItem = (itemId, roomId) => {
   // If this is the map fragment, assign a purpose first
   if (itemId === 'old_map') {
     // Generate a random purpose
-    //const purposes = ['danger_sense', 'secret_door', 'druika_tracker', 'flask_finder', 'treasure_enhancer', 'disintegrate', 'cursed', 'room_revealer','gold_finder'];
-    const purposes = ['cursed', 'cursed', 'cursed'];
+    const purposes = ['danger_sense', 'secret_door', 'druika_tracker', 'flask_finder', 'treasure_enhancer', 'disintegrate', 'cursed', 'room_revealer','gold_finder'];
+    
     const randomPurpose = purposes[Math.floor(Math.random() * purposes.length)];
     
     console.log(`Assigning purpose to map fragment in room ${roomId}: ${randomPurpose}`);
@@ -9444,7 +9444,8 @@ useEffect(() => {
  */
   useEffect(() => {
     if (!showIntro && currentPosition === null) {
-      startGameFromContext();
+      
+      startGameFromLogic();  //  replaced startGamefromContext  with thus as the other function just called this oen anyway
     }
   }, [showIntro, currentPosition]);
 
